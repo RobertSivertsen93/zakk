@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Save } from "lucide-react";
+import { ArrowLeft, Save, ArrowRight } from "lucide-react";
 
 interface ExtractActionButtonsProps {
   onBackClick: () => void;
