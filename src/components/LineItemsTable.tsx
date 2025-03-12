@@ -1,19 +1,16 @@
 
 import React, { useState } from 'react';
-import { ChevronDown, ChevronUp, Edit, Trash, ChevronLeft, ChevronRight, Check, X } from 'lucide-react';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { toast } from "@/lib/toast";
+import { LineItem } from './line-items/types';
+import LineItemRow from './line-items/LineItemRow';
+import EditableLineItemRow from './line-items/EditableLineItemRow';
+import TableHeader from './line-items/TableHeader';
+import TablePagination from './line-items/TablePagination';
 
-export type LineItem = {
-  id: string;
-  productNumber: string;
-  countryOfOrigin: string;
-  quantity: string;
-  unitPrice: string;
-  amount: string;
-};
+export type { LineItem };
 
 interface LineItemsTableProps {
   items: LineItem[];
@@ -34,6 +31,7 @@ const LineItemsTable: React.FC<LineItemsTableProps> = ({
   
   const totalPages = Math.ceil(items.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = Math.min(startIndex + itemsPerPage, items.length);
   const visibleItems = items.slice(startIndex, startIndex + itemsPerPage);
   
   const handlePrevPage = () => {
@@ -95,156 +93,50 @@ const LineItemsTable: React.FC<LineItemsTableProps> = ({
       </div>
       
       {expanded && (
-        <CardContent className="pt-4">
+        <div className="p-4">
           {items.length === 0 ? (
             <div className="text-center py-4 text-muted-foreground">No line items yet</div>
           ) : (
             <>
               <div className="overflow-x-auto">
                 <table className="w-full border-collapse">
-                  <thead>
-                    <tr className="bg-muted/50">
-                      <th className="text-left p-2 text-sm font-medium">Product #</th>
-                      <th className="text-left p-2 text-sm font-medium">Origin</th>
-                      <th className="text-left p-2 text-sm font-medium">Qty</th>
-                      <th className="text-right p-2 text-sm font-medium">Net Weight</th>
-                      <th className="text-right p-2 text-sm font-medium">Amount</th>
-                      <th className="text-right p-2 text-sm font-medium">Actions</th>
-                    </tr>
-                  </thead>
+                  <TableHeader />
                   <tbody>
                     {visibleItems.map((item) => (
                       editingItemId === item.id ? (
-                        <tr key={item.id} className="border-b bg-muted/10">
-                          <td className="p-2 text-sm">
-                            <Input 
-                              value={editFormData?.productNumber || ''} 
-                              onChange={(e) => handleFieldChange('productNumber', e.target.value)} 
-                              className="h-8 text-sm"
-                            />
-                          </td>
-                          <td className="p-2 text-sm">
-                            <Input 
-                              value={editFormData?.countryOfOrigin || ''} 
-                              onChange={(e) => handleFieldChange('countryOfOrigin', e.target.value)} 
-                              className="h-8 text-sm"
-                            />
-                          </td>
-                          <td className="p-2 text-sm">
-                            <Input 
-                              value={editFormData?.quantity || ''} 
-                              onChange={(e) => handleFieldChange('quantity', e.target.value)} 
-                              className="h-8 text-sm w-16"
-                              type="number"
-                              min="0"
-                            />
-                          </td>
-                          <td className="p-2 text-sm text-right">
-                            <Input 
-                              value={editFormData?.unitPrice || ''} 
-                              onChange={(e) => handleFieldChange('unitPrice', e.target.value)} 
-                              className="h-8 text-sm text-right w-24 ml-auto"
-                              type="number"
-                              min="0"
-                            />
-                          </td>
-                          <td className="p-2 text-sm text-right">
-                            <Input 
-                              value={editFormData?.amount || ''} 
-                              onChange={(e) => handleFieldChange('amount', e.target.value)} 
-                              className="h-8 text-sm text-right w-24 ml-auto"
-                              type="number"
-                              min="0"
-                            />
-                          </td>
-                          <td className="p-2 text-right">
-                            <div className="flex justify-end space-x-1">
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                onClick={saveEdit}
-                              >
-                                <Check className="h-4 w-4 text-green-500" />
-                              </Button>
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                onClick={cancelEdit}
-                              >
-                                <X className="h-4 w-4 text-red-500" />
-                              </Button>
-                            </div>
-                          </td>
-                        </tr>
+                        <EditableLineItemRow
+                          key={item.id}
+                          item={item}
+                          editFormData={editFormData!}
+                          onFieldChange={handleFieldChange}
+                          onSave={saveEdit}
+                          onCancel={cancelEdit}
+                        />
                       ) : (
-                        <tr key={item.id} className="border-b hover:bg-muted/20">
-                          <td className="p-2 text-sm">{item.productNumber}</td>
-                          <td className="p-2 text-sm">{item.countryOfOrigin}</td>
-                          <td className="p-2 text-sm">{item.quantity}</td>
-                          <td className="p-2 text-sm text-right">{item.unitPrice}</td>
-                          <td className="p-2 text-sm text-right">{item.amount}</td>
-                          <td className="p-2 text-right">
-                            <div className="flex justify-end space-x-1">
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  startEdit(item);
-                                }}
-                              >
-                                <Edit className="h-4 w-4" />
-                              </Button>
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleDelete(item.id);
-                                }}
-                              >
-                                <Trash className="h-4 w-4" />
-                              </Button>
-                            </div>
-                          </td>
-                        </tr>
+                        <LineItemRow
+                          key={item.id}
+                          item={item}
+                          onEdit={startEdit}
+                          onDelete={handleDelete}
+                        />
                       )
                     ))}
                   </tbody>
                 </table>
               </div>
               
-              {totalPages > 1 && (
-                <div className="flex justify-between items-center mt-4">
-                  <div className="text-sm text-muted-foreground">
-                    Showing {startIndex + 1} to {Math.min(startIndex + itemsPerPage, items.length)} of {items.length} items
-                  </div>
-                  <div className="flex space-x-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={handlePrevPage}
-                      disabled={currentPage === 1}
-                    >
-                      <ChevronLeft className="h-4 w-4" />
-                    </Button>
-                    <span className="flex items-center text-sm">
-                      Page {currentPage} of {totalPages}
-                    </span>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={handleNextPage}
-                      disabled={currentPage === totalPages}
-                    >
-                      <ChevronRight className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-              )}
+              <TablePagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                startIndex={startIndex}
+                endIndex={endIndex}
+                totalItems={items.length}
+                onPrevPage={handlePrevPage}
+                onNextPage={handleNextPage}
+              />
             </>
           )}
-        </CardContent>
+        </div>
       )}
     </Card>
   );
