@@ -55,9 +55,11 @@ const Extract = () => {
     navigate('/export');
   };
 
-  const handleEditItem = (id: string) => {
-    // In a real app, this would open an edit modal or form
-    toast.info(`Editing line item ${id}`);
+  const handleEditItem = (id: string, updatedItem: LineItem) => {
+    setLineItems(lineItems.map(item => 
+      item.id === id ? updatedItem : item
+    ));
+    toast.success('Line item updated');
   };
 
   const handleDeleteItem = (id: string) => {
@@ -100,25 +102,27 @@ const Extract = () => {
           </CardContent>
         </Card>
 
-        <div className="space-y-4">
-          <div className="flex justify-between items-center">
-            <h3 className="text-lg font-medium">Line Items</h3>
-            <Button 
-              variant="outline" 
-              size="sm" 
-              className="gap-1"
-              onClick={handleAddItem}
-            >
-              <Plus className="h-4 w-4" /> Add Item
-            </Button>
-          </div>
-          
-          <LineItemsTable 
-            items={lineItems} 
-            onEditItem={handleEditItem} 
-            onDeleteItem={handleDeleteItem} 
-          />
-        </div>
+        <Card className="glass-panel">
+          <CardContent className="p-6 space-y-6">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-medium">Line Items</h3>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="gap-1"
+                onClick={handleAddItem}
+              >
+                <Plus className="h-4 w-4" /> Add Item
+              </Button>
+            </div>
+            
+            <LineItemsTable 
+              items={lineItems} 
+              onEditItem={handleEditItem} 
+              onDeleteItem={handleDeleteItem} 
+            />
+          </CardContent>
+        </Card>
         
         <div className="flex flex-wrap justify-between gap-4">
           <Button 

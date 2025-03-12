@@ -1,8 +1,9 @@
 
 import React, { useState } from 'react';
-import { ChevronDown, ChevronUp, Edit, Trash, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronDown, ChevronUp, Edit, Trash, ChevronLeft, ChevronRight, Check, X } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { toast } from "@/lib/toast";
 
 export type LineItem = {
@@ -16,7 +17,7 @@ export type LineItem = {
 
 interface LineItemsTableProps {
   items: LineItem[];
-  onEditItem: (id: string) => void;
+  onEditItem: (id: string, updatedItem: LineItem) => void;
   onDeleteItem: (id: string) => void;
 }
 
@@ -27,6 +28,8 @@ const LineItemsTable: React.FC<LineItemsTableProps> = ({
 }) => {
   const [expanded, setExpanded] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
+  const [editingItemId, setEditingItemId] = useState<string | null>(null);
+  const [editFormData, setEditFormData] = useState<LineItem | null>(null);
   const itemsPerPage = 5;
   
   const totalPages = Math.ceil(items.length / itemsPerPage);
@@ -48,6 +51,33 @@ const LineItemsTable: React.FC<LineItemsTableProps> = ({
   const handleDelete = (id: string) => {
     onDeleteItem(id);
     toast.success('Line item removed');
+  };
+
+  const startEdit = (item: LineItem) => {
+    setEditingItemId(item.id);
+    setEditFormData({...item});
+  };
+
+  const cancelEdit = () => {
+    setEditingItemId(null);
+    setEditFormData(null);
+  };
+
+  const saveEdit = () => {
+    if (editFormData) {
+      onEditItem(editFormData.id, editFormData);
+      setEditingItemId(null);
+      setEditFormData(null);
+    }
+  };
+
+  const handleFieldChange = (field: keyof LineItem, value: string) => {
+    if (editFormData) {
+      setEditFormData({
+        ...editFormData,
+        [field]: value
+      });
+    }
   };
   
   return (
@@ -84,37 +114,101 @@ const LineItemsTable: React.FC<LineItemsTableProps> = ({
                   </thead>
                   <tbody>
                     {visibleItems.map((item) => (
-                      <tr key={item.id} className="border-b hover:bg-muted/20">
-                        <td className="p-2 text-sm">{item.productNumber}</td>
-                        <td className="p-2 text-sm">{item.countryOfOrigin}</td>
-                        <td className="p-2 text-sm">{item.quantity}</td>
-                        <td className="p-2 text-sm text-right">{item.unitPrice}</td>
-                        <td className="p-2 text-sm text-right">{item.amount}</td>
-                        <td className="p-2 text-right">
-                          <div className="flex justify-end space-x-1">
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                onEditItem(item.id);
-                              }}
-                            >
-                              <Edit className="h-4 w-4" />
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleDelete(item.id);
-                              }}
-                            >
-                              <Trash className="h-4 w-4" />
-                            </Button>
-                          </div>
-                        </td>
-                      </tr>
+                      editingItemId === item.id ? (
+                        <tr key={item.id} className="border-b bg-muted/10">
+                          <td className="p-2 text-sm">
+                            <Input 
+                              value={editFormData?.productNumber || ''} 
+                              onChange={(e) => handleFieldChange('productNumber', e.target.value)} 
+                              className="h-8 text-sm"
+                            />
+                          </td>
+                          <td className="p-2 text-sm">
+                            <Input 
+                              value={editFormData?.countryOfOrigin || ''} 
+                              onChange={(e) => handleFieldChange('countryOfOrigin', e.target.value)} 
+                              className="h-8 text-sm"
+                            />
+                          </td>
+                          <td className="p-2 text-sm">
+                            <Input 
+                              value={editFormData?.quantity || ''} 
+                              onChange={(e) => handleFieldChange('quantity', e.target.value)} 
+                              className="h-8 text-sm w-16"
+                              type="number"
+                              min="0"
+                            />
+                          </td>
+                          <td className="p-2 text-sm text-right">
+                            <Input 
+                              value={editFormData?.unitPrice || ''} 
+                              onChange={(e) => handleFieldChange('unitPrice', e.target.value)} 
+                              className="h-8 text-sm text-right w-24 ml-auto"
+                              type="number"
+                              min="0"
+                            />
+                          </td>
+                          <td className="p-2 text-sm text-right">
+                            <Input 
+                              value={editFormData?.amount || ''} 
+                              onChange={(e) => handleFieldChange('amount', e.target.value)} 
+                              className="h-8 text-sm text-right w-24 ml-auto"
+                              type="number"
+                              min="0"
+                            />
+                          </td>
+                          <td className="p-2 text-right">
+                            <div className="flex justify-end space-x-1">
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={saveEdit}
+                              >
+                                <Check className="h-4 w-4 text-green-500" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={cancelEdit}
+                              >
+                                <X className="h-4 w-4 text-red-500" />
+                              </Button>
+                            </div>
+                          </td>
+                        </tr>
+                      ) : (
+                        <tr key={item.id} className="border-b hover:bg-muted/20">
+                          <td className="p-2 text-sm">{item.productNumber}</td>
+                          <td className="p-2 text-sm">{item.countryOfOrigin}</td>
+                          <td className="p-2 text-sm">{item.quantity}</td>
+                          <td className="p-2 text-sm text-right">{item.unitPrice}</td>
+                          <td className="p-2 text-sm text-right">{item.amount}</td>
+                          <td className="p-2 text-right">
+                            <div className="flex justify-end space-x-1">
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  startEdit(item);
+                                }}
+                              >
+                                <Edit className="h-4 w-4" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleDelete(item.id);
+                                }}
+                              >
+                                <Trash className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          </td>
+                        </tr>
+                      )
                     ))}
                   </tbody>
                 </table>
