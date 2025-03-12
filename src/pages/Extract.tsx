@@ -1,24 +1,17 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { 
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { ArrowLeft, ArrowRight, Save, Plus, AlertTriangle, Upload, FileText, FileOutput } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
 import Dashboard from './Dashboard';
 import PdfPreview from '@/components/PdfPreview';
-import { InvoiceFormFields } from '@/components/FormFields';
 import LineItemsTable, { LineItem } from '@/components/LineItemsTable';
 import { toast } from "@/lib/toast";
-import { Card, CardContent } from "@/components/ui/card";
+import StepIndicator from '@/components/StepIndicator';
+import ConfirmNavigationDialog from '@/components/ConfirmNavigationDialog';
+import InvoiceDetails from '@/components/InvoiceDetails';
+import ExtractActionButtons from '@/components/ExtractActionButtons';
 
 const Extract = () => {
   const navigate = useNavigate();
@@ -108,31 +101,11 @@ const Extract = () => {
       description="Review and edit the extracted information"
     >
       <div className="space-y-8">
-        <div className="step-indicator">
-          <div className="step-item">
-            <div className="step-dot">1</div>
-            <span className="step-label">Upload PDF</span>
-          </div>
-          <div className="step-line step-line-active"></div>
-          <div className="step-item">
-            <div className="step-dot step-dot-active">2</div>
-            <span className="step-label step-label-active">Data Management</span>
-          </div>
-          <div className="step-line"></div>
-          <div className="step-item">
-            <div className="step-dot">3</div>
-            <span className="step-label">Export</span>
-          </div>
-        </div>
+        <StepIndicator currentStep={2} />
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <div className="space-y-6">
-            <Card className="glass-panel">
-              <CardContent className="p-6 space-y-6">
-                <h3 className="text-lg font-medium border-b pb-2">Invoice Information</h3>
-                <InvoiceFormFields initialData={extractedData} />
-              </CardContent>
-            </Card>
+            <InvoiceDetails extractedData={extractedData} />
 
             <Card className="glass-panel">
               <CardContent className="p-6 space-y-6">
@@ -164,58 +137,20 @@ const Extract = () => {
           )}
         </div>
         
-        <div className="flex flex-wrap justify-between gap-4">
-          <Button 
-            variant="outline" 
-            className="gap-2"
-            onClick={handleBackClick}
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Back to Upload
-          </Button>
-          
-          <div className="flex gap-2">
-            <Button 
-              variant="secondary" 
-              className="gap-2"
-              onClick={handleSaveChanges}
-            >
-              <Save className="h-4 w-4" />
-              Save Changes
-            </Button>
-            <Button 
-              className="gap-2"
-              onClick={handleContinue}
-            >
-              Continue to Export <ArrowRight className="h-4 w-4" />
-            </Button>
-          </div>
-        </div>
+        <ExtractActionButtons 
+          onBackClick={handleBackClick}
+          onSaveChanges={handleSaveChanges}
+          onContinue={handleContinue}
+        />
       </div>
 
-      <AlertDialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle className="flex items-center gap-2">
-              <AlertTriangle className="h-5 w-5 text-warning" />
-              Warning: You will lose all changes
-            </AlertDialogTitle>
-            <AlertDialogDescription>
-              Going back to the upload page will delete all the current data you've entered. 
-              Are you sure you want to continue?
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction 
-              onClick={handleConfirmBack}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-            >
-              Yes, go back
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <ConfirmNavigationDialog
+        open={showConfirmDialog}
+        onOpenChange={setShowConfirmDialog}
+        onConfirm={handleConfirmBack}
+        title="Warning: You will lose all changes"
+        description="Going back to the upload page will delete all the current data you've entered. Are you sure you want to continue?"
+      />
     </Dashboard>
   );
 };
