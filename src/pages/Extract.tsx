@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
@@ -12,7 +11,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { ArrowLeft, ArrowRight, Save, Plus, AlertTriangle } from "lucide-react";
+import { ArrowLeft, ArrowRight, Save, Plus, AlertTriangle, Upload, FileText, FileOutput } from "lucide-react";
 import Dashboard from './Dashboard';
 import { InvoiceFormFields } from '@/components/FormFields';
 import LineItemsTable, { LineItem } from '@/components/LineItemsTable';
@@ -107,11 +106,20 @@ const Extract = () => {
     >
       <div className="space-y-8">
         <div className="step-indicator">
-          <div className="step-dot"></div>
+          <div className="step-item">
+            <div className="step-dot"></div>
+            <span className="step-label">Upload PDF</span>
+          </div>
           <div className="step-line"></div>
-          <div className="step-dot step-dot-active"></div>
+          <div className="step-item">
+            <div className="step-dot step-dot-active"></div>
+            <span className="step-label step-label-active">Data Management</span>
+          </div>
           <div className="step-line"></div>
-          <div className="step-dot"></div>
+          <div className="step-item">
+            <div className="step-dot"></div>
+            <span className="step-label">Export</span>
+          </div>
         </div>
         
         <Card className="glass-panel">

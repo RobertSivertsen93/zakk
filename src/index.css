@@ -116,6 +116,10 @@
     @apply flex items-center justify-center gap-2 my-6;
   }
   
+  .step-item {
+    @apply flex flex-col items-center;
+  }
+  
   .step-dot {
     @apply w-2.5 h-2.5 rounded-full bg-muted transition-all duration-300;
   }
@@ -126,6 +130,14 @@
   
   .step-line {
     @apply w-16 h-0.5 bg-muted;
+  }
+  
+  .step-label {
+    @apply mt-2 text-xs font-medium text-muted-foreground;
+  }
+  
+  .step-label-active {
+    @apply text-primary font-semibold;
   }
   
   .field-row {
