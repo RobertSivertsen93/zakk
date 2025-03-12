@@ -1,7 +1,8 @@
+
 import React, { useState } from 'react';
 import { ChevronDown, ChevronUp, Edit, Trash, ChevronLeft, ChevronRight, Check, X } from 'lucide-react';
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/lib/toast";
 
@@ -80,7 +81,7 @@ const LineItemsTable: React.FC<LineItemsTableProps> = ({
   };
   
   return (
-    <Card className="w-full">
+    <Card className="w-full glass-panel">
       <div 
         className="flex justify-between items-center p-4 cursor-pointer border-b"
         onClick={() => setExpanded(!expanded)}
