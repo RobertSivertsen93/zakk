@@ -85,14 +85,6 @@ const Extract = () => {
     toast.success('New line item added');
   };
 
-  const handleBackClick = () => {
-    setShowConfirmDialog(true);
-  };
-
-  const handleConfirmBack = () => {
-    navigate('/upload');
-  };
-  
   const handlePdfSelected = (file: File) => {
     const url = URL.createObjectURL(file);
     setPdfUrl(url);
@@ -172,19 +164,10 @@ const Extract = () => {
         </div>
 
         <ExtractActionButtons 
-          onBackClick={handleBackClick}
           onSaveChanges={handleSaveChanges}
           showContinue={false}
         />
       </div>
-
-      <ConfirmNavigationDialog
-        open={showConfirmDialog}
-        onOpenChange={setShowConfirmDialog}
-        onConfirm={handleConfirmBack}
-        title="Warning: You will lose all changes"
-        description="Going back to the upload page will delete all the current data you've entered. Are you sure you want to continue?"
-      />
     </Dashboard>
   );
 };

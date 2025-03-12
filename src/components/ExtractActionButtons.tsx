@@ -1,50 +1,37 @@
 
 import React from 'react';
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Save, ArrowRight } from "lucide-react";
+import { Save, ArrowRight } from "lucide-react";
 
 interface ExtractActionButtonsProps {
-  onBackClick: () => void;
   onSaveChanges: () => void;
   onContinue?: () => void;
   showContinue?: boolean;
 }
 
 const ExtractActionButtons: React.FC<ExtractActionButtonsProps> = ({ 
-  onBackClick, 
   onSaveChanges,
   onContinue,
   showContinue = true
 }) => {
   return (
-    <div className="flex flex-wrap justify-between gap-4">
+    <div className="flex justify-end gap-4">
       <Button 
-        variant="outline" 
+        variant="secondary" 
         className="gap-2"
-        onClick={onBackClick}
+        onClick={onSaveChanges}
       >
-        <ArrowLeft className="h-4 w-4" />
-        Back to Upload
+        <Save className="h-4 w-4" />
+        Save Changes
       </Button>
-      
-      <div className="flex gap-2">
+      {showContinue && onContinue && (
         <Button 
-          variant="secondary" 
           className="gap-2"
-          onClick={onSaveChanges}
+          onClick={onContinue}
         >
-          <Save className="h-4 w-4" />
-          Save Changes
+          Continue to Export <ArrowRight className="h-4 w-4" />
         </Button>
-        {showContinue && onContinue && (
-          <Button 
-            className="gap-2"
-            onClick={onContinue}
-          >
-            Continue to Export <ArrowRight className="h-4 w-4" />
-          </Button>
-        )}
-      </div>
+      )}
     </div>
   );
 };
