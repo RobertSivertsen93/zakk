@@ -93,12 +93,12 @@ const LineItemsTable: React.FC<LineItemsTableProps> = ({
       </div>
       
       {expanded && (
-        <div className="p-4">
+        <div className="p-4 w-full">
           {items.length === 0 ? (
             <div className="text-center py-4 text-muted-foreground">No line items yet</div>
           ) : (
             <>
-              <div className="overflow-x-auto">
+              <div className="overflow-x-auto w-full">
                 <table className="w-full border-collapse">
                   <TableHeader />
                   <tbody>

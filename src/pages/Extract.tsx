@@ -103,10 +103,10 @@ const Extract = () => {
         <StepIndicator currentStep={2} />
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="space-y-6">
+          <div className="space-y-6 w-full">
             <InvoiceDetails extractedData={extractedData} />
 
-            <div className="space-y-4">
+            <div className="space-y-4 w-full">
               <div className="flex justify-between items-center">
                 <h3 className="text-lg font-medium">Line Items</h3>
                 <Button 
