@@ -6,4 +6,5 @@ export type LineItem = {
   quantity: string;
   unitPrice: string;
   amount: string;
+  alternativeProductNumbers?: string[]; // Added new property for alternative suggestions
 };

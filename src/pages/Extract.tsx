@@ -36,6 +36,7 @@ const Extract = () => {
       quantity: '2',
       unitPrice: '450',
       amount: '900',
+      alternativeProductNumbers: ['PRD-001', 'P001', 'PRODUCT-001'] // Example alternatives
     },
     {
       id: '2',
@@ -44,6 +45,7 @@ const Extract = () => {
       quantity: '1',
       unitPrice: '300',
       amount: '300',
+      alternativeProductNumbers: ['PRD-002', 'P002'] // Example alternatives
     }
   ]);
   
@@ -75,6 +77,7 @@ const Extract = () => {
       quantity: '1',
       unitPrice: '0',
       amount: '0',
+      alternativeProductNumbers: []
     };
     
     setLineItems([...lineItems, newItem]);

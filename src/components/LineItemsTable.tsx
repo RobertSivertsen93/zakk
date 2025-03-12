@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { Button } from "@/components/ui/button";
@@ -63,7 +62,11 @@ const LineItemsTable: React.FC<LineItemsTableProps> = ({
 
   const saveEdit = () => {
     if (editFormData) {
-      onEditItem(editFormData.id, editFormData);
+      const updatedItem = {
+        ...editFormData,
+        alternativeProductNumbers: items.find(i => i.id === editFormData.id)?.alternativeProductNumbers || []
+      };
+      onEditItem(updatedItem.id, updatedItem);
       setEditingItemId(null);
       setEditFormData(null);
     }
