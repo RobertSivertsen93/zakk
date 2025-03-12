@@ -14,13 +14,8 @@ const StepIndicator: React.FC<StepIndicatorProps> = ({ currentStep }) => {
       </div>
       <div className={`step-line ${currentStep > 1 ? 'step-line-active' : ''}`}></div>
       <div className="step-item">
-        <div className={`step-dot ${currentStep === 2 ? 'step-dot-active' : currentStep > 2 ? 'step-dot-completed' : ''}`}>2</div>
-        <span className={`step-label ${currentStep === 2 ? 'step-label-active' : currentStep > 2 ? 'step-label-completed' : ''}`}>Data Management</span>
-      </div>
-      <div className={`step-line ${currentStep > 2 ? 'step-line-active' : ''}`}></div>
-      <div className="step-item">
-        <div className={`step-dot ${currentStep === 3 ? 'step-dot-active' : ''}`}>3</div>
-        <span className={`step-label ${currentStep === 3 ? 'step-label-active' : ''}`}>Export</span>
+        <div className={`step-dot ${currentStep === 2 ? 'step-dot-active' : ''}`}>2</div>
+        <span className={`step-label ${currentStep === 2 ? 'step-label-active' : ''}`}>Extract & Export</span>
       </div>
     </div>
   );

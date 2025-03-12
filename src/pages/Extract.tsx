@@ -1,7 +1,6 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus } from "lucide-react";
+import { Plus, ArrowLeft, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Dashboard from './Dashboard';
 import PdfPreview from '@/components/PdfPreview';
@@ -11,6 +10,7 @@ import StepIndicator from '@/components/StepIndicator';
 import ConfirmNavigationDialog from '@/components/ConfirmNavigationDialog';
 import InvoiceDetails from '@/components/InvoiceDetails';
 import ExtractActionButtons from '@/components/ExtractActionButtons';
+import ExportOptions from '@/components/ExportOptions';
 
 const Extract = () => {
   const navigate = useNavigate();
@@ -18,8 +18,6 @@ const Extract = () => {
   const pdfUrl = sessionStorage.getItem('pdf-url') || '';
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   
-  // For demo purposes, we'll populate with sample data
-  // In a real app, this would come from the PDF processing service
   const extractedData = React.useMemo(() => ({
     invoiceNumber: 'INV-2023-0042',
     invoiceDate: '2023-12-03',
@@ -30,7 +28,6 @@ const Extract = () => {
     notes: 'Payment due within 15 days',
   }), []);
 
-  // Create sample line items for demonstration
   const [lineItems, setLineItems] = useState<LineItem[]>([
     {
       id: '1',
@@ -51,8 +48,6 @@ const Extract = () => {
   ]);
   
   const handleSaveChanges = () => {
-    // In a real app, this would save the changes to the server
-    // For demo, we'll just show a toast
     toast.success('Changes saved successfully');
   };
   
@@ -125,6 +120,14 @@ const Extract = () => {
                 onDeleteItem={handleDeleteItem} 
               />
             </div>
+
+            <ExportOptions 
+              data={{
+                ...extractedData,
+                lineItems
+              }}
+              onExport={() => {}}
+            />
           </div>
           
           {pdfUrl && (
@@ -137,7 +140,7 @@ const Extract = () => {
         <ExtractActionButtons 
           onBackClick={handleBackClick}
           onSaveChanges={handleSaveChanges}
-          onContinue={handleContinue}
+          showContinue={false}
         />
       </div>
 
