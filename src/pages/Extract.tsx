@@ -1,12 +1,13 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, ArrowLeft } from "lucide-react";
+import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Dashboard from './Dashboard';
 import PdfPreview from '@/components/PdfPreview';
+import PdfDropzone from '@/components/PdfDropzone';
 import LineItemsTable, { LineItem } from '@/components/LineItemsTable';
 import { toast } from "@/lib/toast";
-import StepIndicator from '@/components/StepIndicator';
 import ConfirmNavigationDialog from '@/components/ConfirmNavigationDialog';
 import InvoiceDetails from '@/components/InvoiceDetails';
 import ExtractActionButtons from '@/components/ExtractActionButtons';
@@ -14,8 +15,8 @@ import ExportOptions from '@/components/ExportOptions';
 
 const Extract = () => {
   const navigate = useNavigate();
-  const fileName = sessionStorage.getItem('pdf-file-name') || 'invoice.pdf';
-  const pdfUrl = sessionStorage.getItem('pdf-url') || '';
+  const [fileName, setFileName] = useState(sessionStorage.getItem('pdf-file-name') || '');
+  const [pdfUrl, setPdfUrl] = useState(sessionStorage.getItem('pdf-url') || '');
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   
   const extractedData = React.useMemo(() => ({
@@ -92,19 +93,42 @@ const Extract = () => {
     navigate('/upload');
   };
   
+  const handlePdfSelected = (file: File) => {
+    const url = URL.createObjectURL(file);
+    setPdfUrl(url);
+    setFileName(file.name);
+    
+    // Store in session storage
+    sessionStorage.setItem('pdf-url', url);
+    sessionStorage.setItem('pdf-file-name', file.name);
+  };
+  
   return (
     <Dashboard 
-      title={`Extract Data: ${fileName}`}
-      description="Review and edit the extracted information"
+      title="Extract Data"
+      description="Upload a PDF and review the extracted information"
     >
       <div className="space-y-12">
-        <StepIndicator currentStep={2} />
-        
-        {/* Section 1: PDF Preview */}
-        <section className="space-y-4">
-          <h2 className="text-xl font-semibold border-b pb-2">PDF Document</h2>
-          <div className="h-[500px]">
-            {pdfUrl && <PdfPreview pdfUrl={pdfUrl} />}
+        {/* Section 1: Upload and Preview - Side by side */}
+        <section className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {/* Left side: Upload area */}
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold border-b pb-2">Upload PDF Document</h2>
+            <PdfDropzone onPdfSelected={handlePdfSelected} />
+          </div>
+          
+          {/* Right side: PDF Preview */}
+          <div className="space-y-4">
+            <h2 className="text-xl font-semibold border-b pb-2">PDF Preview {fileName && `: ${fileName}`}</h2>
+            <div className="h-[400px]">
+              {pdfUrl ? (
+                <PdfPreview pdfUrl={pdfUrl} />
+              ) : (
+                <div className="h-full flex items-center justify-center border border-dashed rounded-lg bg-muted/20">
+                  <p className="text-muted-foreground">Upload a PDF to see preview</p>
+                </div>
+              )}
+            </div>
           </div>
         </section>
 
