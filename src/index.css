@@ -112,28 +112,34 @@
     @apply border-primary bg-primary/5;
   }
   
+  /* Enhanced timeline styling */
   .step-indicator {
-    @apply flex items-center justify-center gap-2 my-6;
+    @apply flex items-center justify-center my-8 max-w-2xl mx-auto;
   }
   
   .step-item {
-    @apply flex flex-col items-center;
+    @apply flex flex-col items-center relative z-10;
+    flex: 1;
   }
   
   .step-dot {
-    @apply w-2.5 h-2.5 rounded-full bg-muted transition-all duration-300;
+    @apply w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 bg-secondary border-2 border-muted text-muted-foreground;
   }
   
   .step-dot-active {
-    @apply bg-primary w-4 h-4;
+    @apply bg-primary border-primary text-primary-foreground w-10 h-10 shadow-md shadow-primary/20;
   }
   
   .step-line {
-    @apply w-16 h-0.5 bg-muted;
+    @apply h-1 bg-muted flex-grow mx-1 relative z-0;
+  }
+  
+  .step-line-active {
+    @apply bg-primary;
   }
   
   .step-label {
-    @apply mt-2 text-xs font-medium text-muted-foreground;
+    @apply mt-3 text-sm font-medium text-muted-foreground transition-all duration-300 whitespace-nowrap;
   }
   
   .step-label-active {
