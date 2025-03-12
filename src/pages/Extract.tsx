@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Plus, ArrowLeft, Download } from "lucide-react";
@@ -100,44 +101,58 @@ const Extract = () => {
       <div className="space-y-8">
         <StepIndicator currentStep={2} />
         
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="space-y-6 w-full">
-            <InvoiceDetails extractedData={extractedData} />
-
-            <div className="space-y-4 w-full">
-              <div className="flex justify-between items-center">
-                <h3 className="text-lg font-medium">Line Items</h3>
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  className="gap-1"
-                  onClick={handleAddItem}
-                >
-                  <Plus className="h-4 w-4" /> Add Item
-                </Button>
-              </div>
-              
-              <LineItemsTable 
-                items={lineItems} 
-                onEditItem={handleEditItem} 
-                onDeleteItem={handleDeleteItem} 
-              />
-            </div>
-
-            <ExportOptions 
-              data={{
-                ...extractedData,
-                lineItems
-              }}
-              onExport={() => {}}
-            />
-          </div>
-          
+        {/* New layout - PDF preview on top for mobile, side by side on larger screens */}
+        <div className="block lg:hidden mb-6">
           {pdfUrl && (
-            <div className="lg:sticky lg:top-6 h-[calc(100vh-12rem)]">
+            <div className="h-[400px] mb-6">
               <PdfPreview pdfUrl={pdfUrl} />
             </div>
           )}
+        </div>
+
+        <div className="flex flex-col gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Invoice Details - 1/3 width on desktop */}
+            <div className="lg:col-span-1">
+              <InvoiceDetails extractedData={extractedData} />
+              
+              <div className="mt-6">
+                <ExportOptions 
+                  data={{
+                    ...extractedData,
+                    lineItems
+                  }}
+                  onExport={() => {}}
+                />
+              </div>
+            </div>
+            
+            {/* PDF Preview for desktop - 2/3 width on desktop */}
+            <div className="hidden lg:block lg:col-span-2 h-[500px]">
+              {pdfUrl && <PdfPreview pdfUrl={pdfUrl} />}
+            </div>
+          </div>
+          
+          {/* Line Items - Full width */}
+          <div className="w-full space-y-4">
+            <div className="flex justify-between items-center">
+              <h3 className="text-lg font-medium">Line Items</h3>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="gap-1"
+                onClick={handleAddItem}
+              >
+                <Plus className="h-4 w-4" /> Add Item
+              </Button>
+            </div>
+            
+            <LineItemsTable 
+              items={lineItems} 
+              onEditItem={handleEditItem} 
+              onDeleteItem={handleDeleteItem} 
+            />
+          </div>
         </div>
         
         <ExtractActionButtons 

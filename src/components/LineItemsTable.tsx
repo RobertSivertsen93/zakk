@@ -26,7 +26,7 @@ const LineItemsTable: React.FC<LineItemsTableProps> = ({
   const [currentPage, setCurrentPage] = useState(1);
   const [editingItemId, setEditingItemId] = useState<string | null>(null);
   const [editFormData, setEditFormData] = useState<LineItem | null>(null);
-  const itemsPerPage = 5;
+  const itemsPerPage = 10;
   
   const totalPages = Math.ceil(items.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
