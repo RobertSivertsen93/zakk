@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { cn } from "@/lib/utils";
 import { Calendar as CalendarIcon, ChevronDown, HelpCircle, X } from "lucide-react";
@@ -221,7 +222,13 @@ const SelectField = ({
 };
 
 // Main invoice form fields component for the PDF extraction app
-export const InvoiceFormFields = ({ initialData = {} }: { initialData?: Record<string, string> }) => {
+export const InvoiceFormFields = ({ 
+  initialData = {}, 
+  showLineItems = true 
+}: { 
+  initialData?: Record<string, string>;
+  showLineItems?: boolean; 
+}) => {
   const [formData, setFormData] = React.useState<Record<string, FormField>>({
     invoiceNumber: {
       id: 'invoiceNumber',
@@ -277,6 +284,7 @@ export const InvoiceFormFields = ({ initialData = {} }: { initialData?: Record<s
       type: 'text',
       helpText: 'Additional notes or comments'
     },
+    // Line item fields are included but will be filtered out if showLineItems is false
     productNumber: {
       id: 'productNumber',
       label: 'Vørunummar',
@@ -324,23 +332,28 @@ export const InvoiceFormFields = ({ initialData = {} }: { initialData?: Record<s
     }));
   };
 
+  // Split fields into invoice info (first 7) and line items (rest)
+  const invoiceInfoFields = Object.values(formData).slice(0, 7);
+  const lineItemFields = Object.values(formData).slice(7);
+
   return (
     <div className="space-y-8">
-      <div className="glass-panel p-6 space-y-6">
-        <h3 className="text-lg font-medium border-b pb-2">Invoice Information</h3>
+      <div className="space-y-6">
         <FormFields 
-          fields={Object.values(formData).slice(0, 7)} 
+          fields={invoiceInfoFields} 
           onFieldChange={handleFieldChange}
         />
       </div>
       
-      <div className="glass-panel p-6 space-y-6">
-        <h3 className="text-lg font-medium border-b pb-2">Line Items</h3>
-        <FormFields 
-          fields={Object.values(formData).slice(7)} 
-          onFieldChange={handleFieldChange}
-        />
-      </div>
+      {showLineItems && (
+        <div className="glass-panel p-6 space-y-6">
+          <h3 className="text-lg font-medium border-b pb-2">Line Items</h3>
+          <FormFields 
+            fields={lineItemFields} 
+            onFieldChange={handleFieldChange}
+          />
+        </div>
+      )}
     </div>
   );
 };

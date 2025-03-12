@@ -10,9 +10,8 @@ interface InvoiceDetailsProps {
 const InvoiceDetails: React.FC<InvoiceDetailsProps> = ({ extractedData }) => {
   return (
     <Card className="glass-panel">
-      <CardContent className="p-6 space-y-6">
-        <h3 className="text-lg font-medium border-b pb-2">Invoice Information</h3>
-        <InvoiceFormFields initialData={extractedData} />
+      <CardContent className="p-6">
+        <InvoiceFormFields initialData={extractedData} showLineItems={false} />
       </CardContent>
     </Card>
   );
