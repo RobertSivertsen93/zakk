@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { ChevronDown, ChevronUp, Edit, Trash, ChevronLeft, ChevronRight, Check, X } from 'lucide-react';
 import { Button } from "@/components/ui/button";
@@ -107,7 +106,7 @@ const LineItemsTable: React.FC<LineItemsTableProps> = ({
                       <th className="text-left p-2 text-sm font-medium">Product #</th>
                       <th className="text-left p-2 text-sm font-medium">Origin</th>
                       <th className="text-left p-2 text-sm font-medium">Qty</th>
-                      <th className="text-right p-2 text-sm font-medium">Unit Price</th>
+                      <th className="text-right p-2 text-sm font-medium">Net Weight</th>
                       <th className="text-right p-2 text-sm font-medium">Amount</th>
                       <th className="text-right p-2 text-sm font-medium">Actions</th>
                     </tr>
@@ -214,7 +213,6 @@ const LineItemsTable: React.FC<LineItemsTableProps> = ({
                 </table>
               </div>
               
-              {/* Pagination controls */}
               {totalPages > 1 && (
                 <div className="flex justify-between items-center mt-4">
                   <div className="text-sm text-muted-foreground">

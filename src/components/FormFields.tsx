@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { cn } from "@/lib/utils";
 import { Calendar as CalendarIcon, ChevronDown, HelpCircle, X } from "lucide-react";
@@ -304,7 +303,7 @@ export const InvoiceFormFields = ({ initialData = {} }: { initialData?: Record<s
       label: 'Nettovekt',
       value: initialData.unitPrice || '',
       type: 'number',
-      helpText: 'Net price per unit'
+      helpText: 'Net weight per unit'
     },
     amount: {
       id: 'amount',
