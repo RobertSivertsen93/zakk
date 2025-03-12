@@ -2,7 +2,17 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ArrowRight, Save, Plus } from "lucide-react";
+import { 
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { ArrowLeft, ArrowRight, Save, Plus, AlertTriangle } from "lucide-react";
 import Dashboard from './Dashboard';
 import { InvoiceFormFields } from '@/components/FormFields';
 import LineItemsTable, { LineItem } from '@/components/LineItemsTable';
@@ -12,6 +22,7 @@ import { Card, CardContent } from "@/components/ui/card";
 const Extract = () => {
   const navigate = useNavigate();
   const fileName = sessionStorage.getItem('pdf-file-name') || 'invoice.pdf';
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   
   // For demo purposes, we'll populate with sample data
   // In a real app, this would come from the PDF processing service
@@ -80,6 +91,14 @@ const Extract = () => {
     setLineItems([...lineItems, newItem]);
     toast.success('New line item added');
   };
+
+  const handleBackClick = () => {
+    setShowConfirmDialog(true);
+  };
+
+  const handleConfirmBack = () => {
+    navigate('/upload');
+  };
   
   return (
     <Dashboard 
@@ -128,7 +147,7 @@ const Extract = () => {
           <Button 
             variant="outline" 
             className="gap-2"
-            onClick={() => navigate('/upload')}
+            onClick={handleBackClick}
           >
             <ArrowLeft className="h-4 w-4" />
             Back to Upload
@@ -152,6 +171,30 @@ const Extract = () => {
           </div>
         </div>
       </div>
+
+      <AlertDialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2">
+              <AlertTriangle className="h-5 w-5 text-warning" />
+              Warning: You will lose all changes
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              Going back to the upload page will delete all the current data you've entered. 
+              Are you sure you want to continue?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={handleConfirmBack}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Yes, go back
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Dashboard>
   );
 };
