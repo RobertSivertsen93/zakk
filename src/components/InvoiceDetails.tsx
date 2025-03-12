@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Card, CardContent } from "@/components/ui/card";
-import { InvoiceFormFields } from '@/components/FormFields';
+import InvoiceFormFields from '@/components/InvoiceFormFields';
 
 interface InvoiceDetailsProps {
   extractedData: Record<string, string>;
