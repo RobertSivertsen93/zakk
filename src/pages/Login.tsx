@@ -13,7 +13,7 @@ import {
   CardTitle 
 } from "@/components/ui/card";
 import { FileText, Lock, Mail, Eye, EyeOff } from "lucide-react";
-import { toast } from "@/components/ui/sonner";
+import { toast } from "@/lib/toast";
 import AnimatedTransition from '@/components/AnimatedTransition';
 
 const Login = () => {

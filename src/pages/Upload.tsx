@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
@@ -6,7 +5,7 @@ import { ArrowRight } from "lucide-react";
 import Dashboard from './Dashboard';
 import PdfDropzone from '@/components/PdfDropzone';
 import PdfPreview from '@/components/PdfPreview';
-import { toast } from "@/components/ui/sonner";
+import { toast } from "@/lib/toast";
 
 const Upload = () => {
   const navigate = useNavigate();

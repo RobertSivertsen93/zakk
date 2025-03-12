@@ -2,7 +2,7 @@
 import React from 'react';
 import { cn } from "@/lib/utils";
 import { Upload, File, FileText, AlertCircle } from "lucide-react";
-import { toast } from "@/components/ui/sonner";
+import { toast } from "@/lib/toast";
 
 type PdfDropzoneProps = {
   onPdfSelected: (file: File) => void;

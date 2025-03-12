@@ -1,11 +1,10 @@
-
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ArrowRight, Save } from "lucide-react";
 import Dashboard from './Dashboard';
 import { InvoiceFormFields } from '@/components/FormFields';
-import { toast } from "@/components/ui/sonner";
+import { toast } from "@/lib/toast";
 
 const Extract = () => {
   const navigate = useNavigate();

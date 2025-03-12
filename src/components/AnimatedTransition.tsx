@@ -7,13 +7,15 @@ type AnimatedTransitionProps = {
   show: boolean;
   className?: string;
   animation?: 'fade' | 'scale' | 'blur' | 'slide';
+  style?: React.CSSProperties;
 };
 
 const AnimatedTransition = ({ 
   children, 
   show, 
   className,
-  animation = 'fade' 
+  animation = 'fade',
+  style
 }: AnimatedTransitionProps) => {
   const [mounted, setMounted] = React.useState(false);
   
@@ -46,7 +48,7 @@ const AnimatedTransition = ({
   };
   
   return (
-    <div className={cn(getAnimationClasses(), className)}>
+    <div className={cn(getAnimationClasses(), className)} style={style}>
       {children}
     </div>
   );
