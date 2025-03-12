@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { 
@@ -13,6 +14,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { ArrowLeft, ArrowRight, Save, Plus, AlertTriangle, Upload, FileText, FileOutput } from "lucide-react";
 import Dashboard from './Dashboard';
+import PdfPreview from '@/components/PdfPreview';
 import { InvoiceFormFields } from '@/components/FormFields';
 import LineItemsTable, { LineItem } from '@/components/LineItemsTable';
 import { toast } from "@/lib/toast";
@@ -21,6 +23,7 @@ import { Card, CardContent } from "@/components/ui/card";
 const Extract = () => {
   const navigate = useNavigate();
   const fileName = sessionStorage.getItem('pdf-file-name') || 'invoice.pdf';
+  const pdfUrl = sessionStorage.getItem('pdf-url') || '';
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   
   // For demo purposes, we'll populate with sample data
@@ -122,34 +125,44 @@ const Extract = () => {
           </div>
         </div>
         
-        <Card className="glass-panel">
-          <CardContent className="p-6 space-y-6">
-            <h3 className="text-lg font-medium border-b pb-2">Invoice Information</h3>
-            <InvoiceFormFields initialData={extractedData} />
-          </CardContent>
-        </Card>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="space-y-6">
+            <Card className="glass-panel">
+              <CardContent className="p-6 space-y-6">
+                <h3 className="text-lg font-medium border-b pb-2">Invoice Information</h3>
+                <InvoiceFormFields initialData={extractedData} />
+              </CardContent>
+            </Card>
 
-        <Card className="glass-panel">
-          <CardContent className="p-6 space-y-6">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-medium">Line Items</h3>
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className="gap-1"
-                onClick={handleAddItem}
-              >
-                <Plus className="h-4 w-4" /> Add Item
-              </Button>
+            <Card className="glass-panel">
+              <CardContent className="p-6 space-y-6">
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-lg font-medium">Line Items</h3>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="gap-1"
+                    onClick={handleAddItem}
+                  >
+                    <Plus className="h-4 w-4" /> Add Item
+                  </Button>
+                </div>
+                
+                <LineItemsTable 
+                  items={lineItems} 
+                  onEditItem={handleEditItem} 
+                  onDeleteItem={handleDeleteItem} 
+                />
+              </CardContent>
+            </Card>
+          </div>
+          
+          {pdfUrl && (
+            <div className="lg:sticky lg:top-6 h-[calc(100vh-12rem)]">
+              <PdfPreview pdfUrl={pdfUrl} />
             </div>
-            
-            <LineItemsTable 
-              items={lineItems} 
-              onEditItem={handleEditItem} 
-              onDeleteItem={handleDeleteItem} 
-            />
-          </CardContent>
-        </Card>
+          )}
+        </div>
         
         <div className="flex flex-wrap justify-between gap-4">
           <Button 
