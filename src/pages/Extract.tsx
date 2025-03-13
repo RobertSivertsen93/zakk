@@ -13,7 +13,7 @@ import InvoiceDetails from '@/components/InvoiceDetails';
 import ExtractActionButtons from '@/components/ExtractActionButtons';
 import ExportOptions from '@/components/ExportOptions';
 
-const DataManagement = () => {
+const Extract = () => {
   const navigate = useNavigate();
   const [fileName, setFileName] = useState(sessionStorage.getItem('pdf-file-name') || '');
   const [pdfUrl, setPdfUrl] = useState(sessionStorage.getItem('pdf-url') || '');
@@ -55,17 +55,8 @@ const DataManagement = () => {
     toast.success('Changes saved successfully');
   };
   
-  const handleExport = (format: string) => {
-    // In a real app, this would trigger the export process
-    toast.success(`Exporting in ${format} format`);
-  };
-  
-  const handleProcessAnother = () => {
-    // Clear session storage
-    sessionStorage.removeItem('pdf-file-name');
-    sessionStorage.removeItem('pdf-url');
-    // Navigate to upload page
-    navigate('/upload');
+  const handleContinue = () => {
+    navigate('/handling');
   };
 
   const handleEditItem = (id: string, updatedItem: LineItem) => {
@@ -111,8 +102,8 @@ const DataManagement = () => {
   
   return (
     <Dashboard 
-      title="Data Management"
-      description="Upload a PDF, review and export the extracted information"
+      title="Extract Data"
+      description="Upload a PDF and review the extracted information"
     >
       <div className="space-y-8">
         {currentStep === 1 && (
@@ -176,40 +167,10 @@ const DataManagement = () => {
               />
             </section>
 
-            <section className="space-y-4">
-              <div className="border-b pb-2">
-                <h2 className="text-xl font-semibold">Export Options</h2>
-              </div>
-              <ExportOptions 
-                data={{
-                  ...extractedData,
-                  ...lineItems.reduce((acc, item) => ({
-                    ...acc,
-                    [`product_${item.id}`]: item.productNumber,
-                    [`origin_${item.id}`]: item.countryOfOrigin,
-                    [`quantity_${item.id}`]: item.quantity,
-                    [`price_${item.id}`]: item.unitPrice,
-                    [`amount_${item.id}`]: item.amount,
-                  }), {})
-                }}
-                onExport={handleExport}
-              />
-              
-              <div className="flex justify-end mt-6">
-                <Button
-                  variant="secondary"
-                  className="gap-2"
-                  onClick={handleProcessAnother}
-                >
-                  <Plus className="h-4 w-4" />
-                  Process Another PDF
-                </Button>
-              </div>
-            </section>
-
             <ExtractActionButtons 
               onSaveChanges={handleSaveChanges}
-              showContinue={false}
+              onContinue={handleContinue}
+              showContinue={true}
             />
           </div>
         )}
@@ -218,4 +179,4 @@ const DataManagement = () => {
   );
 };
 
-export default DataManagement;
+export default Extract;
