@@ -12,12 +12,14 @@ import ConfirmNavigationDialog from '@/components/ConfirmNavigationDialog';
 import InvoiceDetails from '@/components/InvoiceDetails';
 import ExtractActionButtons from '@/components/ExtractActionButtons';
 import ExportOptions from '@/components/ExportOptions';
+import StepIndicator from '@/components/StepIndicator';
 
 const Extract = () => {
   const navigate = useNavigate();
   const [fileName, setFileName] = useState(sessionStorage.getItem('pdf-file-name') || '');
   const [pdfUrl, setPdfUrl] = useState(sessionStorage.getItem('pdf-url') || '');
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [currentStep, setCurrentStep] = useState(pdfUrl ? 2 : 1);
   
   const extractedData = React.useMemo(() => ({
     invoiceNumber: 'INV-2023-0042',
@@ -89,6 +91,7 @@ const Extract = () => {
     const url = URL.createObjectURL(file);
     setPdfUrl(url);
     setFileName(file.name);
+    setCurrentStep(2);
     
     // Store in session storage
     sessionStorage.setItem('pdf-url', url);
@@ -100,73 +103,81 @@ const Extract = () => {
       title="Extract Data"
       description="Upload a PDF and review the extracted information"
     >
-      <div className="space-y-12">
-        {/* Section 1: Upload and Preview - Side by side */}
-        <section className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Left side: Upload area */}
-          <div className="space-y-4">
-            <h2 className="text-xl font-semibold border-b pb-2">Upload PDF Document</h2>
+      <div className="space-y-8">
+        {/* Step Indicator */}
+        <StepIndicator currentStep={currentStep} />
+        
+        {/* Step 1: Upload PDF */}
+        {currentStep === 1 && (
+          <section className="max-w-md mx-auto">
+            <h2 className="text-xl font-semibold border-b pb-2 mb-4">Upload Invoice PDF</h2>
             <PdfDropzone onPdfSelected={handlePdfSelected} />
-          </div>
-          
-          {/* Right side: PDF Preview */}
-          <div className="space-y-4">
-            <h2 className="text-xl font-semibold border-b pb-2">PDF Preview {fileName && `: ${fileName}`}</h2>
-            <div className="h-[400px]">
-              {pdfUrl ? (
-                <PdfPreview pdfUrl={pdfUrl} />
-              ) : (
-                <div className="h-full flex items-center justify-center border border-dashed rounded-lg bg-muted/20">
-                  <p className="text-muted-foreground">Upload a PDF to see preview</p>
+          </section>
+        )}
+
+        {/* Step 2: Review and Edit */}
+        {currentStep === 2 && (
+          <div className="space-y-10">
+            {/* Section 1: Invoice Info and PDF Preview - Side by side */}
+            <section className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {/* Left side: Invoice Information */}
+              <div className="space-y-4">
+                <h2 className="text-xl font-semibold border-b pb-2">Invoice Information</h2>
+                <InvoiceDetails extractedData={extractedData} />
+              </div>
+              
+              {/* Right side: PDF Preview */}
+              <div className="space-y-4">
+                <h2 className="text-xl font-semibold border-b pb-2">PDF Preview {fileName && `: ${fileName}`}</h2>
+                <div className="h-[400px]">
+                  {pdfUrl ? (
+                    <PdfPreview pdfUrl={pdfUrl} />
+                  ) : (
+                    <div className="h-full flex items-center justify-center border border-dashed rounded-lg bg-muted/20">
+                      <p className="text-muted-foreground">No PDF preview available</p>
+                    </div>
+                  )}
                 </div>
-              )}
+              </div>
+            </section>
+
+            {/* Section 2: Line Items */}
+            <section className="space-y-4">
+              <div className="flex justify-between items-center border-b pb-2">
+                <h2 className="text-xl font-semibold">Line Items</h2>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="gap-1"
+                  onClick={handleAddItem}
+                >
+                  <Plus className="h-4 w-4" /> Add Item
+                </Button>
+              </div>
+              
+              <LineItemsTable 
+                items={lineItems} 
+                onEditItem={handleEditItem} 
+                onDeleteItem={handleDeleteItem} 
+              />
+            </section>
+
+            <div className="flex justify-end">
+              <ExportOptions 
+                data={{
+                  ...extractedData,
+                  lineItems
+                }}
+                onExport={() => {}}
+              />
             </div>
+
+            <ExtractActionButtons 
+              onSaveChanges={handleSaveChanges}
+              showContinue={false}
+            />
           </div>
-        </section>
-
-        {/* Section 2: Invoice Information */}
-        <section className="space-y-4">
-          <h2 className="text-xl font-semibold border-b pb-2">Invoice Information</h2>
-          <div className="w-full">
-            <InvoiceDetails extractedData={extractedData} />
-          </div>
-        </section>
-
-        {/* Section 3: Line Items */}
-        <section className="space-y-4">
-          <div className="flex justify-between items-center border-b pb-2">
-            <h2 className="text-xl font-semibold">Line Items</h2>
-            <Button 
-              variant="outline" 
-              size="sm" 
-              className="gap-1"
-              onClick={handleAddItem}
-            >
-              <Plus className="h-4 w-4" /> Add Item
-            </Button>
-          </div>
-          
-          <LineItemsTable 
-            items={lineItems} 
-            onEditItem={handleEditItem} 
-            onDeleteItem={handleDeleteItem} 
-          />
-        </section>
-
-        <div className="flex justify-end">
-          <ExportOptions 
-            data={{
-              ...extractedData,
-              lineItems
-            }}
-            onExport={() => {}}
-          />
-        </div>
-
-        <ExtractActionButtons 
-          onSaveChanges={handleSaveChanges}
-          showContinue={false}
-        />
+        )}
       </div>
     </Dashboard>
   );
