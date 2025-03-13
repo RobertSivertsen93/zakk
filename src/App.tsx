@@ -7,8 +7,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Upload from "./pages/Upload";
-import Extract from "./pages/Extract";
-import Handling from "./pages/Handling";
+import DataManagement from "./pages/DataManagement";
 import NotFound from "./pages/NotFound";
 
 // Create a client
@@ -42,14 +41,9 @@ const App = () => (
               <Upload />
             </ProtectedRoute>
           } />
-          <Route path="/extract" element={
+          <Route path="/datamanagement" element={
             <ProtectedRoute>
-              <Extract />
-            </ProtectedRoute>
-          } />
-          <Route path="/handling" element={
-            <ProtectedRoute>
-              <Handling />
+              <DataManagement />
             </ProtectedRoute>
           } />
           
