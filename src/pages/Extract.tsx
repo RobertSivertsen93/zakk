@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Plus, ArrowLeft } from "lucide-react";
@@ -55,7 +56,7 @@ const Extract = () => {
   };
   
   const handleContinue = () => {
-    navigate('/export');
+    navigate('/handling');
   };
 
   const handleEditItem = (id: string, updatedItem: LineItem) => {
@@ -166,19 +167,10 @@ const Extract = () => {
               />
             </section>
 
-            <div className="flex justify-end">
-              <ExportOptions 
-                data={{
-                  ...extractedData,
-                  lineItems
-                }}
-                onExport={() => {}}
-              />
-            </div>
-
             <ExtractActionButtons 
               onSaveChanges={handleSaveChanges}
-              showContinue={false}
+              onContinue={handleContinue}
+              showContinue={true}
             />
           </div>
         )}

@@ -2,11 +2,11 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Upload, FilePlus2, FileText, FileOutput } from "lucide-react";
+import { ArrowLeft, FilePlus2 } from "lucide-react";
 import Dashboard from './Dashboard';
 import ExportOptions from '@/components/ExportOptions';
 
-const Export = () => {
+const Handling = () => {
   const navigate = useNavigate();
   const fileName = sessionStorage.getItem('pdf-file-name') || 'invoice.pdf';
   
@@ -45,28 +45,6 @@ const Export = () => {
       description="Choose format and export the extracted data"
     >
       <div className="space-y-8">
-        <div className="step-indicator">
-          <div className="step-item">
-            <div className="step-dot">1</div>
-            <span className="step-label">Upload PDF</span>
-          </div>
-          <div className="step-line step-line-active"></div>
-          <div className="step-item">
-            <div className="step-dot">2</div>
-            <span className="step-label">Data Management</span>
-          </div>
-          <div className="step-line step-line-active"></div>
-          <div className="step-item">
-            <div className="step-dot step-dot-active">3</div>
-            <span className="step-label step-label-active">Export</span>
-          </div>
-        </div>
-        
-        <ExportOptions 
-          data={extractedData}
-          onExport={handleExport}
-        />
-        
         <div className="flex flex-wrap justify-between gap-4">
           <Button 
             variant="outline" 
@@ -76,7 +54,14 @@ const Export = () => {
             <ArrowLeft className="h-4 w-4" />
             Back to Extraction
           </Button>
-          
+        </div>
+        
+        <ExportOptions 
+          data={extractedData}
+          onExport={handleExport}
+        />
+        
+        <div className="flex justify-end">
           <Button
             variant="secondary"
             className="gap-2"
@@ -91,4 +76,4 @@ const Export = () => {
   );
 };
 
-export default Export;
+export default Handling;
