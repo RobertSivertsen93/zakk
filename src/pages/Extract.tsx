@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus } from "lucide-react";
+import { Plus, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Dashboard from './Dashboard';
 import PdfPreview from '@/components/PdfPreview';
@@ -91,9 +91,12 @@ const Extract = () => {
     setFileName(file.name);
     setCurrentStep(2);
     
-    // Store in session storage
     sessionStorage.setItem('pdf-url', url);
     sessionStorage.setItem('pdf-file-name', file.name);
+  };
+
+  const handleBackToUpload = () => {
+    setCurrentStep(1);
   };
   
   return (
@@ -102,7 +105,6 @@ const Extract = () => {
       description="Upload a PDF and review the extracted information"
     >
       <div className="space-y-8">
-        {/* Step 1: Upload PDF */}
         {currentStep === 1 && (
           <section className="max-w-md mx-auto">
             <h2 className="text-xl font-semibold border-b pb-2 mb-4">Upload Invoice PDF</h2>
@@ -110,18 +112,26 @@ const Extract = () => {
           </section>
         )}
 
-        {/* Step 2: Review and Edit */}
         {currentStep === 2 && (
           <div className="space-y-10">
-            {/* Section 1: Invoice Info and PDF Preview - Side by side */}
+            <div>
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                className="mb-4 -ml-2 text-muted-foreground hover:text-foreground"
+                onClick={handleBackToUpload}
+              >
+                <ArrowLeft className="mr-1 h-4 w-4" />
+                Back to Upload
+              </Button>
+            </div>
+
             <section className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {/* Left side: Invoice Information */}
               <div className="space-y-4">
                 <h2 className="text-xl font-semibold border-b pb-2">Invoice Information</h2>
                 <InvoiceDetails extractedData={extractedData} />
               </div>
               
-              {/* Right side: PDF Preview */}
               <div className="space-y-4">
                 <h2 className="text-xl font-semibold border-b pb-2">PDF Preview {fileName && `: ${fileName}`}</h2>
                 <div className="h-[400px]">
@@ -136,7 +146,6 @@ const Extract = () => {
               </div>
             </section>
 
-            {/* Section 2: Line Items */}
             <section className="space-y-4">
               <div className="flex justify-between items-center border-b pb-2">
                 <h2 className="text-xl font-semibold">Line Items</h2>
