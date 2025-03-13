@@ -2,7 +2,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
-import { FileText, Upload, Edit3, Download, ArrowRight } from "lucide-react";
+import { PersonStanding, Upload, Edit3, Download, ArrowRight } from "lucide-react";
 import AnimatedTransition from '@/components/AnimatedTransition';
 
 const Index = () => {
@@ -41,8 +41,8 @@ const Index = () => {
       <header className="w-full border-b bg-background/80 backdrop-blur-md sticky top-0 z-50">
         <div className="container flex h-16 items-center justify-between px-4">
           <div className="flex items-center gap-2">
-            <FileText className="h-6 w-6 text-primary" />
-            <span className="font-medium text-lg">PDF Extractor</span>
+            <PersonStanding className="h-6 w-6 text-primary" />
+            <span className="font-medium text-lg">Zacchaeus</span>
           </div>
           
           <div className="flex items-center gap-4">
@@ -134,11 +134,11 @@ const Index = () => {
       <footer className="py-8 px-4 border-t">
         <div className="container flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="flex items-center gap-2">
-            <FileText className="h-5 w-5 text-primary" />
-            <span className="font-medium">PDF Extractor</span>
+            <PersonStanding className="h-5 w-5 text-primary" />
+            <span className="font-medium">Zacchaeus</span>
           </div>
           <div className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} PDF Extractor. All rights reserved.
+            © {new Date().getFullYear()} Zacchaeus. All rights reserved.
           </div>
         </div>
       </footer>
