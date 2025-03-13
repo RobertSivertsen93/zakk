@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Plus } from "lucide-react";
@@ -12,7 +11,6 @@ import ConfirmNavigationDialog from '@/components/ConfirmNavigationDialog';
 import InvoiceDetails from '@/components/InvoiceDetails';
 import ExtractActionButtons from '@/components/ExtractActionButtons';
 import ExportOptions from '@/components/ExportOptions';
-import StepIndicator from '@/components/StepIndicator';
 
 const Extract = () => {
   const navigate = useNavigate();
@@ -104,9 +102,6 @@ const Extract = () => {
       description="Upload a PDF and review the extracted information"
     >
       <div className="space-y-8">
-        {/* Step Indicator */}
-        <StepIndicator currentStep={currentStep} />
-        
         {/* Step 1: Upload PDF */}
         {currentStep === 1 && (
           <section className="max-w-md mx-auto">
