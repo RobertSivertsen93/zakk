@@ -55,8 +55,9 @@ const Extract = () => {
     toast.success('Changes saved successfully');
   };
   
-  const handleContinue = () => {
-    navigate('/handling');
+  const handleExport = (format: string) => {
+    // In a real app, this would trigger the export process
+    toast.success(`Exporting in ${format} format`);
   };
 
   const handleEditItem = (id: string, updatedItem: LineItem) => {
@@ -167,10 +168,24 @@ const Extract = () => {
               />
             </section>
 
+            <section className="space-y-4">
+              <h2 className="text-xl font-semibold border-b pb-2">Export Options</h2>
+              <ExportOptions 
+                data={{...extractedData, ...lineItems.reduce((acc, item) => ({
+                  ...acc,
+                  [`product_${item.id}_number`]: item.productNumber,
+                  [`product_${item.id}_origin`]: item.countryOfOrigin,
+                  [`product_${item.id}_quantity`]: item.quantity,
+                  [`product_${item.id}_price`]: item.unitPrice,
+                  [`product_${item.id}_amount`]: item.amount,
+                }), {})}}
+                onExport={handleExport}
+              />
+            </section>
+
             <ExtractActionButtons 
               onSaveChanges={handleSaveChanges}
-              onContinue={handleContinue}
-              showContinue={true}
+              showContinue={false}
             />
           </div>
         )}
@@ -180,3 +195,4 @@ const Extract = () => {
 };
 
 export default Extract;
+

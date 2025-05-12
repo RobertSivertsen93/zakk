@@ -8,7 +8,6 @@ import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Upload from "./pages/Upload";
 import Extract from "./pages/Extract";
-import Handling from "./pages/Handling";
 import NotFound from "./pages/NotFound";
 
 // Create a client
@@ -47,11 +46,6 @@ const App = () => (
               <Extract />
             </ProtectedRoute>
           } />
-          <Route path="/handling" element={
-            <ProtectedRoute>
-              <Handling />
-            </ProtectedRoute>
-          } />
           
           {/* 404 route */}
           <Route path="*" element={<NotFound />} />
@@ -62,3 +56,4 @@ const App = () => (
 );
 
 export default App;
+

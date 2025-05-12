@@ -29,7 +29,7 @@ const ExtractActionButtons: React.FC<ExtractActionButtonsProps> = ({
           className="gap-2"
           onClick={onContinue}
         >
-          Continue to Export <ArrowRight className="h-4 w-4" />
+          Export <ArrowRight className="h-4 w-4" />
         </Button>
       )}
     </div>
@@ -37,3 +37,4 @@ const ExtractActionButtons: React.FC<ExtractActionButtonsProps> = ({
 };
 
 export default ExtractActionButtons;
+
