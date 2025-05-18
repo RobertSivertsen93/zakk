@@ -37,4 +37,3 @@ const ExtractActionButtons: React.FC<ExtractActionButtonsProps> = ({
 };
 
 export default ExtractActionButtons;
-

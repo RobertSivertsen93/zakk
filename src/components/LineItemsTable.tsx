@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { Button } from "@/components/ui/button";
@@ -62,17 +63,13 @@ const LineItemsTable: React.FC<LineItemsTableProps> = ({
 
   const saveEdit = () => {
     if (editFormData) {
-      const updatedItem = {
-        ...editFormData,
-        alternativeProductNumbers: items.find(i => i.id === editFormData.id)?.alternativeProductNumbers || []
-      };
-      onEditItem(updatedItem.id, updatedItem);
+      onEditItem(editFormData.id, editFormData);
       setEditingItemId(null);
       setEditFormData(null);
     }
   };
 
-  const handleFieldChange = (field: keyof LineItem, value: string) => {
+  const handleFieldChange = (field: keyof LineItem, value: string | number) => {
     if (editFormData) {
       setEditFormData({
         ...editFormData,
@@ -88,7 +85,7 @@ const LineItemsTable: React.FC<LineItemsTableProps> = ({
         onClick={() => setExpanded(!expanded)}
       >
         <h3 className="text-lg font-medium">
-          Line Items ({items.length})
+          Útlisnar HS kotur og vørulýsingar
         </h3>
         <Button variant="ghost" size="icon">
           {expanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}

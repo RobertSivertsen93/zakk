@@ -33,21 +33,47 @@ const Extract = () => {
   const [lineItems, setLineItems] = useState<LineItem[]>([
     {
       id: '1',
-      productNumber: 'PROD-001',
+      productNumber: '6117.80.80',
       countryOfOrigin: 'Denmark',
       quantity: '2',
       unitPrice: '450',
       amount: '900',
-      alternativeProductNumbers: ['PRD-001', 'P001', 'PRODUCT-001'] // Example alternatives
+      description: 'Buff, 230 gsm - size 25*...',
+      confidencePercentage: 95,
+      alternativeProductNumbers: ['6117.80.10', '6117.90.00']
     },
     {
       id: '2',
-      productNumber: 'PROD-002',
+      productNumber: '9999.99.99',
       countryOfOrigin: 'Sweden',
       quantity: '1',
       unitPrice: '300',
       amount: '300',
-      alternativeProductNumbers: ['PRD-002', 'P002'] // Example alternatives
+      description: 'Opstart',
+      confidencePercentage: 50,
+      alternativeProductNumbers: ['9999.11.11', '9999.22.22']
+    },
+    {
+      id: '3',
+      productNumber: '4908.90.00',
+      countryOfOrigin: 'Norway',
+      quantity: '3',
+      unitPrice: '200',
+      amount: '600',
+      description: 'Prøvetryk (voksen + barn)',
+      confidencePercentage: 70,
+      alternativeProductNumbers: ['4908.10.00']
+    },
+    {
+      id: '4',
+      productNumber: '4901.99.00',
+      countryOfOrigin: 'Finland',
+      quantity: '1',
+      unitPrice: '250',
+      amount: '250',
+      description: 'Eksportdokumenter 3 cli-...',
+      confidencePercentage: 80,
+      alternativeProductNumbers: ['4901.91.00', '4901.10.00']
     }
   ]);
   
@@ -75,11 +101,13 @@ const Extract = () => {
     const newId = (lineItems.length + 1).toString();
     const newItem: LineItem = {
       id: newId,
-      productNumber: `PROD-${newId.padStart(3, '0')}`,
+      productNumber: `0000.00.00`,
       countryOfOrigin: '',
       quantity: '1',
       unitPrice: '0',
       amount: '0',
+      description: 'New item description',
+      confidencePercentage: 50,
       alternativeProductNumbers: []
     };
     
@@ -150,7 +178,7 @@ const Extract = () => {
 
             <section className="space-y-4">
               <div className="flex justify-between items-center border-b pb-2">
-                <h2 className="text-xl font-semibold">Line Items</h2>
+                <h2 className="text-xl font-semibold">Faktura #1</h2>
                 <Button 
                   variant="outline" 
                   size="sm" 
@@ -174,10 +202,8 @@ const Extract = () => {
                 data={{...extractedData, ...lineItems.reduce((acc, item) => ({
                   ...acc,
                   [`product_${item.id}_number`]: item.productNumber,
-                  [`product_${item.id}_origin`]: item.countryOfOrigin,
-                  [`product_${item.id}_quantity`]: item.quantity,
-                  [`product_${item.id}_price`]: item.unitPrice,
-                  [`product_${item.id}_amount`]: item.amount,
+                  [`product_${item.id}_description`]: item.description,
+                  [`product_${item.id}_confidence`]: item.confidencePercentage,
                 }), {})}}
                 onExport={handleExport}
               />
@@ -195,4 +221,3 @@ const Extract = () => {
 };
 
 export default Extract;
-

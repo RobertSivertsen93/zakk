@@ -13,7 +13,7 @@ import { LineItem } from './types';
 interface EditableLineItemRowProps {
   item: LineItem;
   editFormData: LineItem;
-  onFieldChange: (field: keyof LineItem, value: string) => void;
+  onFieldChange: (field: keyof LineItem, value: string | number) => void;
   onSave: () => void;
   onCancel: () => void;
 }
@@ -33,6 +33,9 @@ const EditableLineItemRow: React.FC<EditableLineItemRowProps> = ({
     onFieldChange('productNumber', alternative);
     setShowAlternatives(false);
   };
+
+  // Confidence percentage options
+  const percentageOptions = [50, 70, 80, 95];
 
   return (
     <tr className="border-b bg-muted/10">
@@ -75,63 +78,43 @@ const EditableLineItemRow: React.FC<EditableLineItemRowProps> = ({
               </Popover>
             )}
           </div>
-          {hasAlternatives && (
-            <div className="text-xs text-muted-foreground pl-1">
-              {alternatives.length} alternatives available
-            </div>
-          )}
         </div>
       </td>
       <td className="p-2 text-sm">
         <Input 
-          value={editFormData?.countryOfOrigin || ''} 
-          onChange={(e) => onFieldChange('countryOfOrigin', e.target.value)} 
+          value={editFormData?.description || ''} 
+          onChange={(e) => onFieldChange('description', e.target.value)} 
           className="h-8 text-sm"
         />
       </td>
-      <td className="p-2 text-sm">
-        <Input 
-          value={editFormData?.quantity || ''} 
-          onChange={(e) => onFieldChange('quantity', e.target.value)} 
-          className="h-8 text-sm w-16"
-          type="number"
-          min="0"
-        />
-      </td>
-      <td className="p-2 text-sm text-right">
-        <Input 
-          value={editFormData?.unitPrice || ''} 
-          onChange={(e) => onFieldChange('unitPrice', e.target.value)} 
-          className="h-8 text-sm text-right w-24 ml-auto"
-          type="number"
-          min="0"
-        />
-      </td>
-      <td className="p-2 text-sm text-right">
-        <Input 
-          value={editFormData?.amount || ''} 
-          onChange={(e) => onFieldChange('amount', e.target.value)} 
-          className="h-8 text-sm text-right w-24 ml-auto"
-          type="number"
-          min="0"
-        />
-      </td>
       <td className="p-2 text-right">
-        <div className="flex justify-end space-x-1">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={onSave}
+        <div className="flex items-center justify-end gap-2">
+          <select 
+            value={editFormData?.confidencePercentage || 50}
+            onChange={(e) => onFieldChange('confidencePercentage', parseInt(e.target.value))}
+            className="h-8 text-sm rounded border px-2"
           >
-            <Check className="h-4 w-4 text-green-500" />
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={onCancel}
-          >
-            <X className="h-4 w-4 text-red-500" />
-          </Button>
+            {percentageOptions.map(percent => (
+              <option key={percent} value={percent}>{percent}%</option>
+            ))}
+          </select>
+          
+          <div className="flex justify-end space-x-1">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={onSave}
+            >
+              <Check className="h-4 w-4 text-green-500" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={onCancel}
+            >
+              <X className="h-4 w-4 text-red-500" />
+            </Button>
+          </div>
         </div>
       </td>
     </tr>

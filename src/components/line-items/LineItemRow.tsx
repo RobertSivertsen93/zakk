@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Edit, Trash, Info } from 'lucide-react';
+import { Edit, Trash, Info, Copy } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { 
   Tooltip,
@@ -25,62 +25,57 @@ const LineItemRow: React.FC<LineItemRowProps> = ({
   const alternatives = item.alternativeProductNumbers || [];
   const hasAlternatives = alternatives.length > 0;
   
+  // Determine confidence color based on percentage
+  const getConfidenceColor = (percentage: number) => {
+    if (percentage >= 80) return "bg-green-500";
+    if (percentage >= 70) return "bg-yellow-500";
+    if (percentage >= 50) return "bg-red-500";
+    return "bg-gray-500";
+  };
+  
   return (
     <tr className="border-b hover:bg-muted/20">
       <td className="p-2 text-sm">
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-2">
           {item.productNumber}
-          {hasAlternatives && (
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button variant="ghost" size="icon" className="h-6 w-6 text-blue-500">
-                    <Info className="h-4 w-4" />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent className="w-64 p-2">
-                  <div className="space-y-2">
-                    <p className="text-xs font-medium">Alternative suggestions:</p>
-                    <ul className="text-xs space-y-1">
-                      {alternatives.map((alt, index) => (
-                        <li key={index} className="flex items-center gap-1">
-                          <span>{alt}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          )}
+          <div className="flex gap-1">
+            <Button variant="ghost" size="icon" className="h-6 w-6">
+              <Copy className="h-4 w-4 text-blue-500" />
+            </Button>
+            <Button variant="ghost" size="icon" className="h-6 w-6">
+              <Info className="h-4 w-4 text-blue-500" />
+            </Button>
+          </div>
         </div>
       </td>
-      <td className="p-2 text-sm">{item.countryOfOrigin}</td>
-      <td className="p-2 text-sm">{item.quantity}</td>
-      <td className="p-2 text-sm text-right">{item.unitPrice}</td>
-      <td className="p-2 text-sm text-right">{item.amount}</td>
+      <td className="p-2 text-sm">{item.description}</td>
       <td className="p-2 text-right">
-        <div className="flex justify-end space-x-1">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={(e) => {
-              e.stopPropagation();
-              onEdit(item);
-            }}
-          >
-            <Edit className="h-4 w-4" />
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={(e) => {
-              e.stopPropagation();
-              onDelete(item.id);
-            }}
-          >
-            <Trash className="h-4 w-4" />
-          </Button>
+        <div className="flex items-center justify-end gap-4">
+          <span className={`px-3 py-1 rounded-md text-white ${getConfidenceColor(item.confidencePercentage)}`}>
+            {item.confidencePercentage}%
+          </span>
+          <div className="flex justify-end space-x-1">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={(e) => {
+                e.stopPropagation();
+                onEdit(item);
+              }}
+            >
+              <Edit className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={(e) => {
+                e.stopPropagation();
+                onDelete(item.id);
+              }}
+            >
+              <Trash className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
       </td>
     </tr>
