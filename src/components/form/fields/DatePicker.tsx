@@ -15,11 +15,13 @@ import { FormField } from '../FormFields';
 interface DatePickerProps {
   field: FormField;
   onChange: (value: string) => void;
+  disabled?: boolean; // Added disabled prop
 }
 
 export const DatePicker = ({ 
   field, 
-  onChange 
+  onChange,
+  disabled = false
 }: DatePickerProps) => {
   const [date, setDate] = React.useState<Date | undefined>(
     field.value ? new Date(field.value) : undefined
@@ -41,8 +43,10 @@ export const DatePicker = ({
           variant="outline"
           className={cn(
             "w-full justify-start text-left font-normal",
-            !date && "text-muted-foreground"
+            !date && "text-muted-foreground",
+            disabled && "opacity-50 cursor-not-allowed"
           )}
+          disabled={disabled}
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
           {date ? format(date, 'PP') : <span>Pick a date</span>}
@@ -55,6 +59,7 @@ export const DatePicker = ({
           onSelect={handleSelect}
           initialFocus
           className="pointer-events-auto"
+          disabled={disabled}
         />
       </PopoverContent>
     </Popover>

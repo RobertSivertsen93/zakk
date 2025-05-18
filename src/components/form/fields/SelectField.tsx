@@ -12,16 +12,19 @@ import { FormField } from '../FormFields';
 interface SelectFieldProps {
   field: FormField;
   onChange: (value: string) => void;
+  disabled?: boolean; // Added disabled prop
 }
 
 export const SelectField = ({ 
   field, 
-  onChange 
+  onChange,
+  disabled = false
 }: SelectFieldProps) => {
   return (
     <Select 
       value={field.value} 
       onValueChange={onChange}
+      disabled={disabled}
     >
       <SelectTrigger className="w-full">
         <SelectValue placeholder={`Select ${field.label}`} />

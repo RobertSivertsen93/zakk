@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Plus, ArrowLeft } from "lucide-react";
@@ -130,7 +129,15 @@ const Extract = () => {
   };
   
   const handleSaveInvoiceDetails = (updatedData: Record<string, string>) => {
-    setExtractedData(updatedData);
+    setExtractedData({
+      invoiceNumber: updatedData.invoiceNumber || extractedData.invoiceNumber,
+      invoiceDate: updatedData.invoiceDate || extractedData.invoiceDate,
+      dueDate: updatedData.dueDate || extractedData.dueDate,
+      sender: updatedData.sender || extractedData.sender,
+      documentNumber: updatedData.documentNumber || extractedData.documentNumber,
+      paymentMethod: updatedData.paymentMethod || extractedData.paymentMethod,
+      notes: updatedData.notes || extractedData.notes,
+    });
     toast.success('Invoice details updated successfully');
   };
   
