@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import PdfUploadSection from './PdfUploadSection';
 import ExtractDataSection from './ExtractDataSection';
@@ -7,6 +6,7 @@ import ExportSection from './ExportSection';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { FileText, List, Upload, Download } from "lucide-react";
 import StepIndicator from "@/components/StepIndicator";
+import { Button } from "@/components/ui/button";
 
 const ExtractContent = () => {
   const [fileName, setFileName] = useState(sessionStorage.getItem('pdf-file-name') || '');
