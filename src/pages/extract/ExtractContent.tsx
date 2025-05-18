@@ -2,7 +2,6 @@
 import React, { useState } from 'react';
 import PdfUploadSection from './PdfUploadSection';
 import ExtractDataSection from './ExtractDataSection';
-import StepIndicator from '@/components/StepIndicator';
 
 const ExtractContent = () => {
   const [fileName, setFileName] = useState(sessionStorage.getItem('pdf-file-name') || '');
@@ -26,8 +25,6 @@ const ExtractContent = () => {
 
   return (
     <div className="space-y-8">
-      <StepIndicator currentStep={currentStep} />
-      
       {currentStep === 1 && (
         <PdfUploadSection onPdfSelected={handlePdfSelected} />
       )}

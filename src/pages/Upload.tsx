@@ -5,7 +5,6 @@ import { UploadIcon, FileText } from "lucide-react";
 import Dashboard from './Dashboard';
 import PdfDropzone from '@/components/PdfDropzone';
 import { toast } from "@/lib/toast";
-import StepIndicator from '@/components/StepIndicator';
 
 const Upload = () => {
   const navigate = useNavigate();
@@ -43,8 +42,6 @@ const Upload = () => {
       description="Upload a PDF invoice to extract data"
     >
       <div className="space-y-8">
-        <StepIndicator currentStep={1} />
-        
         <div className="flex justify-center">
           <div className="max-w-lg w-full">
             <PdfDropzone onPdfSelected={handlePdfSelected} />
