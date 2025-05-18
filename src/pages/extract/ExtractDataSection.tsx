@@ -6,15 +6,17 @@ interface ExtractDataSectionProps {
   pdfUrl: string;
   fileName: string;
   onBackToUpload: () => void;
+  onComplete?: () => void;
 }
 
 const ExtractDataSection: React.FC<ExtractDataSectionProps> = ({ 
   pdfUrl, 
-  fileName
+  fileName,
+  onComplete
 }) => {
   return (
     <div className="space-y-10">
-      <InvoiceDataSection pdfUrl={pdfUrl} fileName={fileName} />
+      <InvoiceDataSection pdfUrl={pdfUrl} fileName={fileName} onComplete={onComplete} />
     </div>
   );
 };
