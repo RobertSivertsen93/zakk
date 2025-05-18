@@ -20,7 +20,7 @@ const Extract = () => {
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [currentStep, setCurrentStep] = useState(pdfUrl ? 2 : 1);
   
-  const extractedData = React.useMemo(() => ({
+  const [extractedData, setExtractedData] = useState({
     invoiceNumber: 'INV-2023-0042',
     invoiceDate: '2023-12-03',
     dueDate: '2023-12-15',
@@ -28,7 +28,7 @@ const Extract = () => {
     documentNumber: 'DOC-2023-0042',
     paymentMethod: 'EUR',
     notes: 'Payment due within 15 days',
-  }), []);
+  });
 
   const [lineItems, setLineItems] = useState<LineItem[]>([
     {
@@ -129,6 +129,11 @@ const Extract = () => {
     setCurrentStep(1);
   };
   
+  const handleSaveInvoiceDetails = (updatedData: Record<string, string>) => {
+    setExtractedData(updatedData);
+    toast.success('Invoice details updated successfully');
+  };
+  
   return (
     <Dashboard 
       title="Extract Data"
@@ -159,7 +164,10 @@ const Extract = () => {
             <section className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="space-y-4">
                 <h2 className="text-xl font-semibold border-b pb-2">Invoice Information</h2>
-                <InvoiceDetails extractedData={extractedData} />
+                <InvoiceDetails 
+                  extractedData={extractedData} 
+                  onSaveChanges={handleSaveInvoiceDetails}
+                />
               </div>
               
               <div className="space-y-4">

@@ -12,6 +12,7 @@ export type FormField = {
   options?: string[];
   required?: boolean;
   helpText?: string;
+  readOnly?: boolean;
 };
 
 type FormFieldsProps = {

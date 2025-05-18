@@ -9,11 +9,16 @@ export const renderFieldInput = (
   field: FormField, 
   onChange: (value: string) => void
 ) => {
+  // Apply readonly styles if field is readonly
+  const readOnlyClass = field.readOnly 
+    ? "bg-muted/30 text-muted-foreground cursor-not-allowed" 
+    : "";
+  
   switch (field.type) {
     case 'date':
-      return <DatePicker field={field} onChange={onChange} />;
+      return <DatePicker field={field} onChange={onChange} disabled={field.readOnly} />;
     case 'select':
-      return <SelectField field={field} onChange={onChange} />;
+      return <SelectField field={field} onChange={onChange} disabled={field.readOnly} />;
     case 'number':
       return (
         <Input
@@ -21,7 +26,8 @@ export const renderFieldInput = (
           type="number"
           value={field.value}
           onChange={(e) => onChange(e.target.value)}
-          className="w-full"
+          className={`w-full ${readOnlyClass}`}
+          readOnly={field.readOnly}
         />
       );
     case 'text':
@@ -31,7 +37,8 @@ export const renderFieldInput = (
           id={field.id}
           value={field.value}
           onChange={(e) => onChange(e.target.value)}
-          className="w-full"
+          className={`w-full ${readOnlyClass}`}
+          readOnly={field.readOnly}
         />
       );
   }
