@@ -32,3 +32,11 @@ export function useMediaQuery(query: string): boolean {
 
   return matches;
 }
+
+/**
+ * Custom hook that detects if the current viewport is mobile-sized
+ * @returns Boolean indicating if the viewport is mobile-sized (max-width: 768px)
+ */
+export function useIsMobile(): boolean {
+  return useMediaQuery("(max-width: 768px)");
+}
