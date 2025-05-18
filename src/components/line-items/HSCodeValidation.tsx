@@ -136,33 +136,12 @@ const HSCodeValidation: React.FC<HSCodeValidationProps> = ({
             </Tooltip>
           </TooltipProvider>
         )}
-
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                className="ml-1"
-              >
-                <Info className="h-4 w-4" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent side="top" className="max-w-sm">
-              <div className="space-y-2 p-1">
-                <p className="font-medium">HS Code Format</p>
-                <p className="text-xs">Format: XX.XX.XX or XXXX.XX.XX</p>
-                <p className="text-xs">HS codes are internationally standardized 6-digit codes. Countries may add additional digits for more specific classifications.</p>
-                <p className="text-xs font-medium mt-2">Tariffs and Import Duties</p>
-                <p className="text-xs">The correct HS code determines applicable taxes and duties on imports.</p>
-              </div>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
       </div>
 
+      {/* Show alternative HS codes if available */}
       {alternativeCodes && alternativeCodes.length > 0 && (
         <div className="flex flex-wrap gap-1 mt-1">
+          <span className="text-xs text-muted-foreground py-1">Alternatives:</span>
           {alternativeCodes.map(code => (
             <Button
               key={code}

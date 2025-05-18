@@ -1,11 +1,12 @@
+
 import React, { useState } from 'react';
 import { LineItem } from '@/components/line-items/types';
 import LineItemsTable from '@/components/LineItemsTable';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { PlusCircle, CheckCircle } from "lucide-react";
+import { PlusCircle, CheckCircle, History } from "lucide-react";
 import { toast } from "@/lib/toast";
-import ExtractActionButtons from '@/components/ExtractActionButtons';
+import HSCodeHistory from '@/components/line-items/HSCodeHistory';
 
 interface LineItemsSectionProps {
   onComplete?: () => void;
@@ -119,6 +120,19 @@ const LineItemsSection: React.FC<LineItemsSectionProps> = ({ onComplete }) => {
     }
   };
 
+  // Handle selecting a HS code from history
+  const handleSelectHSCode = (code: string, description: string) => {
+    if (items.length > 0) {
+      const firstItemId = items[0].id;
+      const updatedItem = {
+        ...items[0],
+        productNumber: code,
+        description: description || items[0].description
+      };
+      handleEditItem(firstItemId, updatedItem);
+    }
+  };
+
   return (
     <div className="space-y-6">
       <Card className="glass-panel">
@@ -130,10 +144,13 @@ const LineItemsSection: React.FC<LineItemsSectionProps> = ({ onComplete }) => {
                 Review and edit the line items extracted from the invoice.
               </p>
             </div>
-            <Button onClick={handleAddItem} className="gap-1">
-              <PlusCircle className="h-4 w-4" />
-              Add Item
-            </Button>
+            <div className="flex gap-2">
+              <HSCodeHistory onSelectCode={handleSelectHSCode} />
+              <Button onClick={handleAddItem} className="gap-1">
+                <PlusCircle className="h-4 w-4" />
+                Add Item
+              </Button>
+            </div>
           </div>
           
           <LineItemsTable 
