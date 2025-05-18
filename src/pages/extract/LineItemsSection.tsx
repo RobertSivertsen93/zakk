@@ -6,6 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";
 import { toast } from "@/lib/toast";
+import ExtractActionButtons from '@/components/ExtractActionButtons';
 
 const LineItemsSection: React.FC = () => {
   // Mock data for line items
@@ -50,6 +51,36 @@ const LineItemsSection: React.FC = () => {
       quantity: '10',
       unitPrice: '45',
       amount: '450'
+    },
+    {
+      id: '5',
+      productNumber: '8471.30.00',
+      countryOfOrigin: 'United States',
+      description: 'Laptop computers, 15-inch',
+      confidencePercentage: 90,
+      quantity: '5',
+      unitPrice: '800',
+      amount: '4000'
+    },
+    {
+      id: '6',
+      productNumber: '8523.49.25',
+      countryOfOrigin: 'Japan',
+      description: 'Optical media for data storage',
+      confidencePercentage: 85,
+      quantity: '100',
+      unitPrice: '3',
+      amount: '300'
+    },
+    {
+      id: '7',
+      productNumber: '9403.20.80',
+      countryOfOrigin: 'Italy',
+      description: 'Metal furniture components',
+      confidencePercentage: 65,
+      quantity: '50',
+      unitPrice: '12',
+      amount: '600'
     }
   ]);
 
@@ -79,6 +110,14 @@ const LineItemsSection: React.FC = () => {
     toast.success('New line item added');
   };
 
+  const handleSaveChanges = () => {
+    toast.success('All changes have been saved');
+  };
+
+  const handleContinue = () => {
+    toast.success('Proceeding to export');
+  };
+
   return (
     <div className="space-y-6">
       <Card className="glass-panel">
@@ -88,7 +127,7 @@ const LineItemsSection: React.FC = () => {
               <h2 className="text-xl font-semibold">Line Items</h2>
               <p className="text-sm text-muted-foreground mb-6">
                 Review and edit the line items extracted from the invoice. 
-                Pay attention to the confidence score which indicates the reliability of the HS code extraction.
+                Use the search and filters to quickly find specific items.
               </p>
             </div>
             <Button onClick={handleAddItem} className="gap-1">
@@ -102,6 +141,13 @@ const LineItemsSection: React.FC = () => {
             onEditItem={handleEditItem} 
             onDeleteItem={handleDeleteItem} 
           />
+
+          <div className="mt-6">
+            <ExtractActionButtons 
+              onSaveChanges={handleSaveChanges}
+              onContinue={handleContinue}
+            />
+          </div>
         </CardContent>
       </Card>
     </div>

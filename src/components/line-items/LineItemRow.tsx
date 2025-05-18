@@ -2,6 +2,7 @@
 import React from 'react';
 import { LineItem } from './types';
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Pen, Trash2 } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
@@ -9,9 +10,17 @@ interface LineItemRowProps {
   item: LineItem;
   onEdit: (item: LineItem) => void;
   onDelete: (id: string) => void;
+  isSelected: boolean;
+  onToggleSelect: (id: string) => void;
 }
 
-const LineItemRow: React.FC<LineItemRowProps> = ({ item, onEdit, onDelete }) => {
+const LineItemRow: React.FC<LineItemRowProps> = ({ 
+  item, 
+  onEdit, 
+  onDelete, 
+  isSelected, 
+  onToggleSelect 
+}) => {
   // Function to determine confidence indicator color
   const getConfidenceColor = (percentage: number) => {
     if (percentage >= 85) return "bg-green-500";
@@ -28,7 +37,14 @@ const LineItemRow: React.FC<LineItemRowProps> = ({ item, onEdit, onDelete }) => 
   
   return (
     <TooltipProvider>
-      <tr className="border-b hover:bg-muted/30">
+      <tr className={`border-b hover:bg-muted/30 ${isSelected ? 'bg-muted/40' : ''}`}>
+        <td className="py-3 px-2 text-sm">
+          <Checkbox 
+            checked={isSelected}
+            onCheckedChange={() => onToggleSelect(item.id)}
+            aria-label="Select row"
+          />
+        </td>
         <td className="py-3 px-4 text-sm">
           <div className="flex items-center">
             <div className="relative">
