@@ -1,3 +1,4 @@
+
 import React from "react";
 import {
   BrowserRouter,
@@ -12,6 +13,7 @@ import NotFound from "./pages/NotFound";
 import Extract from "./pages/extract/index";
 import { Toaster } from "@/components/ui/toaster"
 import { useToast } from "@/components/ui/use-toast"
+import { LanguageProvider } from "./contexts/LanguageContext";
 
 function App() {
   const { toast } = useToast()
@@ -55,14 +57,16 @@ function App() {
   ];
 
   return (
-    <BrowserRouter>
-      <Routes>
-        {routes.map((route, index) => (
-          <Route key={index} path={route.path} element={route.element} />
-        ))}
-      </Routes>
-      <Toaster />
-    </BrowserRouter>
+    <LanguageProvider>
+      <BrowserRouter>
+        <Routes>
+          {routes.map((route, index) => (
+            <Route key={index} path={route.path} element={route.element} />
+          ))}
+        </Routes>
+        <Toaster />
+      </BrowserRouter>
+    </LanguageProvider>
   );
 }
 

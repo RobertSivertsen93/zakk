@@ -4,11 +4,14 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { PersonStanding, LogOut } from "lucide-react";
+import LanguageSwitcher from './LanguageSwitcher';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const Navigation = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+  const { t } = useLanguage();
 
   // Check login status on mount and path change
   React.useEffect(() => {
@@ -44,11 +47,12 @@ const Navigation = () => {
         </div>
         
         <div className="flex items-center gap-2">
+          <LanguageSwitcher />
           <Button 
             variant="ghost" 
             size="icon" 
             onClick={handleLogout}
-            title="Logout"
+            title={t('logout')}
           >
             <LogOut className="h-5 w-5" />
           </Button>

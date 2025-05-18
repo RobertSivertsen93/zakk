@@ -7,6 +7,7 @@ import ExportSection from './ExportSection';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { FileText, List, Upload, Download, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useLanguage } from '@/contexts/LanguageContext';
 
 const ExtractContent = () => {
   const [fileName, setFileName] = useState(sessionStorage.getItem('pdf-file-name') || '');
@@ -14,6 +15,7 @@ const ExtractContent = () => {
   const [currentStep, setCurrentStep] = useState(pdfUrl ? 2 : 1);
   const [activeTab, setActiveTab] = useState<string>(pdfUrl ? "invoice" : "upload");
   const [completedSections, setCompletedSections] = useState<string[]>([]);
+  const { t } = useLanguage();
 
   const handlePdfSelected = (file: File) => {
     const url = URL.createObjectURL(file);
@@ -77,14 +79,14 @@ const ExtractContent = () => {
             onClick={handleBackToUpload}
           >
             <Upload className="mr-1 h-4 w-4" />
-            Back to Upload
+            {t('backToUpload')}
           </Button>
           
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabsList className="grid grid-cols-3 mb-8 w-full">
               <TabsTrigger value="invoice" className="flex items-center gap-2 relative py-3">
                 <FileText className="h-4 w-4" />
-                <span>Invoice</span>
+                <span>{t('invoice')}</span>
                 {isTabCompleted('invoice') && (
                   <span className="absolute right-2 top-1/2 transform -translate-y-1/2">
                     <Check className="h-3 w-3 text-green-500" />
@@ -93,7 +95,7 @@ const ExtractContent = () => {
               </TabsTrigger>
               <TabsTrigger value="lineitems" className="flex items-center gap-2 relative py-3">
                 <List className="h-4 w-4" />
-                <span>Line Items</span>
+                <span>{t('lineItems')}</span>
                 {isTabCompleted('lineitems') && (
                   <span className="absolute right-2 top-1/2 transform -translate-y-1/2">
                     <Check className="h-3 w-3 text-green-500" />
@@ -102,7 +104,7 @@ const ExtractContent = () => {
               </TabsTrigger>
               <TabsTrigger value="export" className="flex items-center gap-2 relative py-3">
                 <Download className="h-4 w-4" />
-                <span>Export</span>
+                <span>{t('export')}</span>
                 {isTabCompleted('export') && (
                   <span className="absolute right-2 top-1/2 transform -translate-y-1/2">
                     <Check className="h-3 w-3 text-green-500" />

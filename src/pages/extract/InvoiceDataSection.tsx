@@ -7,6 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CheckCircle, ZoomIn, ZoomOut, Settings } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useLanguage } from "@/contexts/LanguageContext";
 import {
   Popover,
   PopoverContent,
@@ -39,7 +40,7 @@ const InvoiceDataSection: React.FC<InvoiceDataSectionProps> = ({ pdfUrl, fileNam
   
   const [fontSize, setFontSize] = useState('medium');
   const [highContrast, setHighContrast] = useState(false);
-  const [language, setLanguage] = useState('en');
+  const { language, setLanguage } = useLanguage();
   const isMobile = useIsMobile();
   
   // Keyboard shortcut handling for accessibility
@@ -76,17 +77,43 @@ const InvoiceDataSection: React.FC<InvoiceDataSectionProps> = ({ pdfUrl, fileNam
     }
   };
   
-  // Language translations (simplified)
+  // Language translations
   const translations = {
     en: {
       title: 'Invoice Information',
       preview: 'PDF Preview',
       complete: 'Continue',
+      settings: 'Settings',
+      accessibility: 'Accessibility Settings',
+      adjustAppearance: 'Adjust the appearance to your preferences.',
+      fontSize: 'Font Size',
+      contrast: 'Contrast',
+      language: 'Language',
+      highContrastOn: 'High Contrast On',
+      highContrastOff: 'High Contrast Off',
+      noPreview: 'No PDF preview available',
+      small: 'Small',
+      medium: 'Medium',
+      large: 'Large',
+      xlarge: 'X-Large',
     },
-    es: {
-      title: 'Información de la Factura',
-      preview: 'Vista previa del PDF',
-      complete: 'Continuar',
+    fo: {
+      title: 'Fakturuupplýsingar',
+      preview: 'PDF Forskoðan',
+      complete: 'Hald fram',
+      settings: 'Stillingar',
+      accessibility: 'Atgongd Stillingar',
+      adjustAppearance: 'Broyt útsjóndina til tínar tørvar.',
+      fontSize: 'Font Stødd',
+      contrast: 'Kontrast',
+      language: 'Mál',
+      highContrastOn: 'Høgur Kontrast Á',
+      highContrastOff: 'Høgur Kontrast Frá',
+      noPreview: 'Eingin PDF forskoðan tøk',
+      small: 'Lítil',
+      medium: 'Miðal',
+      large: 'Stór',
+      xlarge: 'X-Stór',
     }
   };
   
@@ -118,51 +145,51 @@ const InvoiceDataSection: React.FC<InvoiceDataSectionProps> = ({ pdfUrl, fileNam
             <PopoverTrigger asChild>
               <Button variant="outline" size="sm" className="gap-2">
                 <Settings className="h-4 w-4" />
-                Settings
+                {t.settings}
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-80">
               <div className="grid gap-4">
                 <div className="space-y-2">
-                  <h4 className="font-medium leading-none">Accessibility Settings</h4>
+                  <h4 className="font-medium leading-none">{t.accessibility}</h4>
                   <p className="text-sm text-muted-foreground">
-                    Adjust the appearance to your preferences.
+                    {t.adjustAppearance}
                   </p>
                 </div>
                 <div className="grid gap-2">
                   <div className="grid grid-cols-3 items-center gap-4">
-                    <label>Font Size</label>
+                    <label>{t.fontSize}</label>
                     <Select value={fontSize} onValueChange={setFontSize} aria-label="Change font size">
                       <SelectTrigger className="col-span-2">
-                        <SelectValue placeholder="Font Size" />
+                        <SelectValue placeholder={t.fontSize} />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="small">Small</SelectItem>
-                        <SelectItem value="medium">Medium</SelectItem>
-                        <SelectItem value="large">Large</SelectItem>
-                        <SelectItem value="x-large">X-Large</SelectItem>
+                        <SelectItem value="small">{t.small}</SelectItem>
+                        <SelectItem value="medium">{t.medium}</SelectItem>
+                        <SelectItem value="large">{t.large}</SelectItem>
+                        <SelectItem value="x-large">{t.xlarge}</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
                   <div className="grid grid-cols-3 items-center gap-4">
-                    <label>Contrast</label>
+                    <label>{t.contrast}</label>
                     <Button
                       className="col-span-2"
                       variant={highContrast ? "default" : "outline"}
                       onClick={() => setHighContrast(!highContrast)}
                     >
-                      {highContrast ? "High Contrast On" : "High Contrast Off"}
+                      {highContrast ? t.highContrastOn : t.highContrastOff}
                     </Button>
                   </div>
                   <div className="grid grid-cols-3 items-center gap-4">
-                    <label>Language</label>
+                    <label>{t.language}</label>
                     <Select value={language} onValueChange={setLanguage} aria-label="Change language">
                       <SelectTrigger className="col-span-2">
-                        <SelectValue placeholder="Language" />
+                        <SelectValue placeholder={t.language} />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="en">English</SelectItem>
-                        <SelectItem value="es">Español</SelectItem>
+                        <SelectItem value="fo">Føroyskt</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -205,7 +232,7 @@ const InvoiceDataSection: React.FC<InvoiceDataSectionProps> = ({ pdfUrl, fileNam
                   className="h-full flex items-center justify-center border border-dashed rounded-lg bg-muted/20" 
                   role="region" 
                 >
-                  <p className="text-muted-foreground">No PDF preview available</p>
+                  <p className="text-muted-foreground">{t.noPreview}</p>
                 </div>
               )}
             </div>
