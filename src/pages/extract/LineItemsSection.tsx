@@ -138,18 +138,18 @@ const LineItemsSection: React.FC<LineItemsSectionProps> = ({ onComplete }) => {
 
   return (
     <div className="space-y-6">
-      <Card className="glass-panel">
+      <Card className="glass-panel shadow-lg border border-gray-100 bg-gradient-to-br from-white to-gray-50">
         <CardContent className="p-6">
-          <div className="flex justify-between items-center mb-6">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
             <div>
-              <h2 className="text-xl font-semibold">Line Items</h2>
-              <p className="text-sm text-muted-foreground">
+              <h2 className="text-xl font-semibold text-gray-800">Line Items</h2>
+              <p className="text-sm text-muted-foreground mt-1">
                 Review and edit the line items extracted from the invoice.
               </p>
             </div>
             <div className="flex gap-2">
               <HSCodeHistory onSelectCode={handleSelectHSCode} />
-              <Button onClick={handleAddItem} className="gap-1">
+              <Button onClick={handleAddItem} className="gap-1 bg-primary hover:bg-primary/90 transition-all duration-300 shadow-sm hover:shadow-md">
                 <PlusCircle className="h-4 w-4" />
                 Add Item
               </Button>
@@ -162,10 +162,10 @@ const LineItemsSection: React.FC<LineItemsSectionProps> = ({ onComplete }) => {
             onDeleteItem={handleDeleteItem} 
           />
 
-          <div className="mt-6 flex justify-end">
+          <div className="mt-8 flex justify-end">
             <Button 
               onClick={handleContinue}
-              className="gap-2"
+              className="gap-2 py-2 px-6 text-white bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary transition-all duration-300 shadow-md hover:shadow-lg transform hover:translate-y-[-1px]"
             >
               <CheckCircle className="h-4 w-4" />
               Continue

@@ -35,17 +35,17 @@ const PdfPreview = ({ pdfUrl }: PdfPreviewProps) => {
     <TooltipProvider>
       <div 
         className={cn(
-          "pdf-preview relative rounded-xl overflow-hidden border border-border transition-all duration-300",
-          isFullScreen ? "fixed inset-0 z-50 bg-background/95 rounded-none p-4" : "h-[600px]"
+          "pdf-preview relative rounded-xl overflow-hidden border border-gray-200 transition-all duration-300 shadow-lg",
+          isFullScreen ? "fixed inset-0 z-50 bg-background/95 rounded-none p-4 animate-fade-in" : "h-[600px]"
         )}
       >
-        <div className="absolute top-2 right-2 z-10 flex gap-1">
+        <div className="absolute top-3 right-3 z-10 flex gap-2">
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
                 size="icon"
                 variant="secondary"
-                className="h-8 w-8 bg-background/80 backdrop-blur-sm"
+                className="h-8 w-8 bg-white shadow-md backdrop-blur-sm hover:bg-gray-100 transition-colors"
                 onClick={() => setIsSearchOpen(!isSearchOpen)}
               >
                 <Search className="h-4 w-4" />
@@ -58,7 +58,7 @@ const PdfPreview = ({ pdfUrl }: PdfPreviewProps) => {
               <Button
                 size="icon"
                 variant="secondary"
-                className="h-8 w-8 bg-background/80 backdrop-blur-sm"
+                className="h-8 w-8 bg-white shadow-md backdrop-blur-sm hover:bg-gray-100 transition-colors"
                 onClick={toggleFullScreen}
               >
                 {isFullScreen ? (
@@ -76,19 +76,19 @@ const PdfPreview = ({ pdfUrl }: PdfPreviewProps) => {
           <Button 
             size="sm" 
             variant="secondary" 
-            className="gap-1" 
+            className="gap-1 bg-white shadow-md hover:bg-gray-100 transition-colors" 
             onClick={prevPage}
             disabled={currentPage <= 1}
           >
             <ChevronLeft className="h-4 w-4" /> Previous
           </Button>
-          <div className="bg-background/80 backdrop-blur-sm px-3 py-1.5 rounded-md text-sm">
+          <div className="bg-white shadow-md backdrop-blur-sm px-3 py-1.5 rounded-md text-sm font-medium">
             Page {currentPage} of {totalPages}
           </div>
           <Button 
             size="sm" 
             variant="secondary" 
-            className="gap-1" 
+            className="gap-1 bg-white shadow-md hover:bg-gray-100 transition-colors" 
             onClick={nextPage}
             disabled={currentPage >= totalPages}
           >

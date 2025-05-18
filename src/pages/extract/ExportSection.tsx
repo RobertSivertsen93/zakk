@@ -70,23 +70,23 @@ const ExportSection: React.FC = () => {
   const [exportFormat, setExportFormat] = React.useState('json');
   
   return (
-    <Card className="glass-panel">
+    <Card className="glass-panel shadow-lg border border-gray-100 bg-gradient-to-br from-white to-gray-50">
       <CardContent className="p-6 space-y-6">
         <div className="flex justify-between items-center">
-          <h2 className="text-xl font-semibold">Export Invoice</h2>
+          <h2 className="text-xl font-semibold text-gray-800">Export Invoice</h2>
         </div>
         <p className="text-sm text-muted-foreground">
           Export the invoice data in your preferred format.
         </p>
         
-        <div className="bg-muted/20 p-4 rounded-md flex gap-3 items-center mb-4">
-          <div className="p-2 rounded-full bg-muted flex items-center justify-center">
-            <Check className="h-5 w-5 text-green-500" />
+        <div className="bg-secondary/30 p-4 rounded-md flex gap-4 items-center mb-6 border border-secondary/50 shadow-sm">
+          <div className="p-3 rounded-full bg-green-100 flex items-center justify-center shadow-sm">
+            <Check className="h-5 w-5 text-green-600" />
           </div>
           <div>
-            <h3 className="font-medium">Ready to Export</h3>
+            <h3 className="font-medium text-gray-800">Ready to Export</h3>
             <p className="text-sm text-muted-foreground">
-              Your data is ready to be exported.
+              Your data has been processed and is ready to be exported.
             </p>
           </div>
         </div>
@@ -98,7 +98,7 @@ const ExportSection: React.FC = () => {
               value={exportFormat}
               onValueChange={setExportFormat}
             >
-              <SelectTrigger>
+              <SelectTrigger className="border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary/30 transition-all">
                 <SelectValue placeholder="Select format" />
               </SelectTrigger>
               <SelectContent>
@@ -112,7 +112,7 @@ const ExportSection: React.FC = () => {
           
           <Button 
             onClick={() => handleExport(exportFormat)}
-            className="mt-4 w-full flex items-center justify-center gap-2"
+            className="mt-8 w-full flex items-center justify-center gap-2 py-6 text-white bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary transition-all duration-300 shadow-md hover:shadow-lg transform hover:translate-y-[-1px]"
             size="lg"
           >
             <Download className="h-5 w-5" />

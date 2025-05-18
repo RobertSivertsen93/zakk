@@ -38,15 +38,15 @@ const InvoiceDetails: React.FC<InvoiceDetailsProps> = ({
   };
 
   return (
-    <Card>
+    <Card className="shadow-md border border-gray-200 bg-white">
       <CardContent className="p-6">
-        <div className="flex justify-between items-center mb-6">
-          <h3 className="text-lg font-medium">Invoice Information</h3>
+        <div className="flex justify-between items-center mb-6 pb-2 border-b">
+          <h3 className="text-lg font-medium text-gray-800">Invoice Information</h3>
           <Button
-            variant="ghost"
+            variant={isEditing ? "default" : "outline"}
             size="sm"
             onClick={() => isEditing ? handleSave() : setIsEditing(true)}
-            className="flex items-center gap-1"
+            className={`flex items-center gap-1 transition-all duration-300 ${isEditing ? 'bg-primary hover:bg-primary/90 shadow-sm' : 'hover:bg-secondary/60'}`}
           >
             {isEditing ? (
               <>
@@ -64,81 +64,81 @@ const InvoiceDetails: React.FC<InvoiceDetailsProps> = ({
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
-            <Label htmlFor="invoiceNumber" className="text-sm font-medium">Invoice Number</Label>
+            <Label htmlFor="invoiceNumber" className="text-sm font-medium text-gray-700">Invoice Number</Label>
             <Input
               id="invoiceNumber"
               value={formData.invoiceNumber}
               onChange={(e) => handleFieldChange('invoiceNumber', e.target.value)}
               readOnly={!isEditing}
-              className={!isEditing ? "bg-muted" : ""}
+              className={!isEditing ? "bg-muted border-gray-200" : "border-gray-300 focus:border-primary focus:ring-1 focus:ring-primary/30 transition-all"}
             />
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="invoiceDate" className="text-sm font-medium">Invoice Date</Label>
+            <Label htmlFor="invoiceDate" className="text-sm font-medium text-gray-700">Invoice Date</Label>
             <Input
               id="invoiceDate"
               type="date"
               value={formData.invoiceDate}
               onChange={(e) => handleFieldChange('invoiceDate', e.target.value)}
               readOnly={!isEditing}
-              className={!isEditing ? "bg-muted" : ""}
+              className={!isEditing ? "bg-muted border-gray-200" : "border-gray-300 focus:border-primary focus:ring-1 focus:ring-primary/30 transition-all"}
             />
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="dueDate" className="text-sm font-medium">Due Date</Label>
+            <Label htmlFor="dueDate" className="text-sm font-medium text-gray-700">Due Date</Label>
             <Input
               id="dueDate"
               type="date"
               value={formData.dueDate}
               onChange={(e) => handleFieldChange('dueDate', e.target.value)}
               readOnly={!isEditing}
-              className={!isEditing ? "bg-muted" : ""}
+              className={!isEditing ? "bg-muted border-gray-200" : "border-gray-300 focus:border-primary focus:ring-1 focus:ring-primary/30 transition-all"}
             />
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="sender" className="text-sm font-medium">Sender</Label>
+            <Label htmlFor="sender" className="text-sm font-medium text-gray-700">Sender</Label>
             <Input
               id="sender"
               value={formData.sender}
               onChange={(e) => handleFieldChange('sender', e.target.value)}
               readOnly={!isEditing}
-              className={!isEditing ? "bg-muted" : ""}
+              className={!isEditing ? "bg-muted border-gray-200" : "border-gray-300 focus:border-primary focus:ring-1 focus:ring-primary/30 transition-all"}
             />
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="documentNumber" className="text-sm font-medium">Document Number</Label>
+            <Label htmlFor="documentNumber" className="text-sm font-medium text-gray-700">Document Number</Label>
             <Input
               id="documentNumber"
               value={formData.documentNumber}
               onChange={(e) => handleFieldChange('documentNumber', e.target.value)}
               readOnly={!isEditing}
-              className={!isEditing ? "bg-muted" : ""}
+              className={!isEditing ? "bg-muted border-gray-200" : "border-gray-300 focus:border-primary focus:ring-1 focus:ring-primary/30 transition-all"}
             />
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="paymentMethod" className="text-sm font-medium">Currency</Label>
+            <Label htmlFor="paymentMethod" className="text-sm font-medium text-gray-700">Currency</Label>
             <Input
               id="paymentMethod"
               value={formData.paymentMethod}
               onChange={(e) => handleFieldChange('paymentMethod', e.target.value)}
               readOnly={!isEditing}
-              className={!isEditing ? "bg-muted" : ""}
+              className={!isEditing ? "bg-muted border-gray-200" : "border-gray-300 focus:border-primary focus:ring-1 focus:ring-primary/30 transition-all"}
             />
           </div>
           
           <div className="space-y-2 md:col-span-2">
-            <Label htmlFor="notes" className="text-sm font-medium">Notes</Label>
+            <Label htmlFor="notes" className="text-sm font-medium text-gray-700">Notes</Label>
             <Textarea
               id="notes"
               value={formData.notes}
               onChange={(e) => handleFieldChange('notes', e.target.value)}
               readOnly={!isEditing}
-              className={!isEditing ? "bg-muted" : ""}
+              className={!isEditing ? "bg-muted border-gray-200 min-h-[80px]" : "border-gray-300 focus:border-primary focus:ring-1 focus:ring-primary/30 min-h-[80px] transition-all"}
             />
           </div>
         </div>

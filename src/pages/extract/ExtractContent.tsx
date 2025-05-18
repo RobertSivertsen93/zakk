@@ -75,7 +75,7 @@ const ExtractContent = () => {
           <Button 
             variant="ghost" 
             size="sm" 
-            className="text-muted-foreground hover:text-foreground mb-4"
+            className="text-muted-foreground hover:text-foreground mb-4 transition-all duration-300"
             onClick={handleBackToUpload}
           >
             <Upload className="mr-1 h-4 w-4" />
@@ -83,8 +83,11 @@ const ExtractContent = () => {
           </Button>
           
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid grid-cols-3 mb-8 w-full">
-              <TabsTrigger value="invoice" className="flex items-center gap-2 relative py-3">
+            <TabsList className="grid grid-cols-3 mb-8 w-full bg-secondary/50 backdrop-blur-sm border shadow-sm">
+              <TabsTrigger 
+                value="invoice" 
+                className="flex items-center gap-2 relative py-3 transition-all duration-300 data-[state=active]:bg-white data-[state=active]:shadow-md"
+              >
                 <FileText className="h-4 w-4" />
                 <span>{t('invoice')}</span>
                 {isTabCompleted('invoice') && (
@@ -93,7 +96,10 @@ const ExtractContent = () => {
                   </span>
                 )}
               </TabsTrigger>
-              <TabsTrigger value="lineitems" className="flex items-center gap-2 relative py-3">
+              <TabsTrigger 
+                value="lineitems" 
+                className="flex items-center gap-2 relative py-3 transition-all duration-300 data-[state=active]:bg-white data-[state=active]:shadow-md"
+              >
                 <List className="h-4 w-4" />
                 <span>{t('lineItems')}</span>
                 {isTabCompleted('lineitems') && (
@@ -102,7 +108,10 @@ const ExtractContent = () => {
                   </span>
                 )}
               </TabsTrigger>
-              <TabsTrigger value="export" className="flex items-center gap-2 relative py-3">
+              <TabsTrigger 
+                value="export" 
+                className="flex items-center gap-2 relative py-3 transition-all duration-300 data-[state=active]:bg-white data-[state=active]:shadow-md"
+              >
                 <Download className="h-4 w-4" />
                 <span>{t('export')}</span>
                 {isTabCompleted('export') && (
@@ -113,7 +122,7 @@ const ExtractContent = () => {
               </TabsTrigger>
             </TabsList>
 
-            <TabsContent value="invoice">
+            <TabsContent value="invoice" className="animate-fade-in">
               <ExtractDataSection 
                 pdfUrl={pdfUrl} 
                 fileName={fileName} 
@@ -125,7 +134,7 @@ const ExtractContent = () => {
               />
             </TabsContent>
 
-            <TabsContent value="lineitems">
+            <TabsContent value="lineitems" className="animate-fade-in">
               <LineItemsSection 
                 onComplete={() => {
                   handleCompleteSection('line-items');
@@ -134,7 +143,7 @@ const ExtractContent = () => {
               />
             </TabsContent>
 
-            <TabsContent value="export">
+            <TabsContent value="export" className="animate-fade-in">
               <ExportSection />
             </TabsContent>
           </Tabs>

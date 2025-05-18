@@ -72,9 +72,9 @@ const PdfDropzone = ({ onPdfSelected }: PdfDropzoneProps) => {
       
       <div
         className={cn(
-          "pdf-dropzone min-h-[300px]",
-          isDragging && "pdf-dropzone-active",
-          selectedFile && "border-green-500 bg-green-50"
+          "pdf-dropzone min-h-[300px] transition-all duration-300 border-dashed border-2 rounded-xl p-8 text-center bg-secondary/50 hover:bg-secondary/80 cursor-pointer flex flex-col items-center justify-center shadow-sm hover:shadow-md",
+          isDragging && "border-primary bg-primary/10 scale-[1.02]",
+          selectedFile && "border-green-500 bg-green-50/30"
         )}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
@@ -83,13 +83,13 @@ const PdfDropzone = ({ onPdfSelected }: PdfDropzoneProps) => {
       >
         {selectedFile ? (
           <div className="animate-fade-in flex flex-col items-center">
-            <FileText className="h-16 w-16 text-green-500 mb-4" />
+            <FileText className="h-16 w-16 text-green-500 mb-4 animate-pulse-subtle" />
             <p className="font-medium text-lg mb-1">{selectedFile.name}</p>
             <p className="text-sm text-muted-foreground">
               {(selectedFile.size / (1024 * 1024)).toFixed(2)} MB
             </p>
             <button 
-              className="mt-4 text-sm text-primary underline focus:outline-none"
+              className="mt-4 text-sm text-primary underline focus:outline-none hover:text-primary/80 transition-colors"
               onClick={(e) => {
                 e.stopPropagation();
                 setSelectedFile(null);
