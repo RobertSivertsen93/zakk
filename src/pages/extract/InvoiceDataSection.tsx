@@ -4,13 +4,16 @@ import PdfPreview from '@/components/PdfPreview';
 import InvoiceDetails from '@/components/InvoiceDetails';
 import { toast } from "@/lib/toast";
 import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { CheckCircle } from "lucide-react";
 
 interface InvoiceDataSectionProps {
   pdfUrl: string;
   fileName: string;
+  onComplete?: () => void;
 }
 
-const InvoiceDataSection: React.FC<InvoiceDataSectionProps> = ({ pdfUrl, fileName }) => {
+const InvoiceDataSection: React.FC<InvoiceDataSectionProps> = ({ pdfUrl, fileName, onComplete }) => {
   const [extractedData, setExtractedData] = useState({
     invoiceNumber: 'INV-2023-0042',
     invoiceDate: '2023-12-03',
@@ -34,6 +37,12 @@ const InvoiceDataSection: React.FC<InvoiceDataSectionProps> = ({ pdfUrl, fileNam
     toast.success('Invoice details updated successfully');
   };
   
+  const handleComplete = () => {
+    if (onComplete) {
+      onComplete();
+    }
+  };
+  
   return (
     <Card className="glass-panel">
       <CardContent className="p-6 space-y-6">
@@ -49,6 +58,18 @@ const InvoiceDataSection: React.FC<InvoiceDataSectionProps> = ({ pdfUrl, fileNam
               extractedData={extractedData} 
               onSaveChanges={handleSaveInvoiceDetails}
             />
+            
+            {onComplete && (
+              <div className="mt-6 flex justify-end">
+                <Button 
+                  onClick={handleComplete}
+                  className="gap-2"
+                >
+                  <CheckCircle className="h-4 w-4" />
+                  Mark Section Complete
+                </Button>
+              </div>
+            )}
           </div>
           
           <div className="space-y-4">
