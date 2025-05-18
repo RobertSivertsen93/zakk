@@ -55,7 +55,7 @@ export const ValidatedFormField: React.FC<FormFieldProps> = ({
     value,
     onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => onChange(e.target.value),
     className: "w-full",
-    "aria-invalid": validationMessage ? "true" : undefined,
+    "aria-invalid": validationMessage ? true : undefined,
   };
 
   return (
