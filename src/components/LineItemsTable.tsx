@@ -105,7 +105,7 @@ const LineItemsTable: React.FC<LineItemsTableProps> = ({
               
               <div className="overflow-x-auto w-full rounded-md border border-gray-100">
                 <table className="w-full border-collapse">
-                  <TableHeader hasSelection={true} />
+                  <TableHeader hasSelection={false} />
                   <tbody>
                     {filteredItems.map((item) => (
                       editingItemId === item.id ? (
