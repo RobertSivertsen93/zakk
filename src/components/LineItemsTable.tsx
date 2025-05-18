@@ -1,10 +1,9 @@
 
 import React, { useState } from 'react';
-import { ChevronDown, ChevronUp, Edit, Search, Filter } from 'lucide-react';
+import { ChevronDown, ChevronUp, Search, Filter } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { toast } from "@/lib/toast";
 import { LineItem } from './line-items/types';
 import LineItemRow from './line-items/LineItemRow';
 import EditableLineItemRow from './line-items/EditableLineItemRow';
@@ -69,9 +68,9 @@ const LineItemsTable: React.FC<LineItemsTableProps> = ({
   };
   
   return (
-    <Card className="w-full">
+    <Card className="w-full border border-gray-200 shadow-sm rounded-lg overflow-hidden">
       <div 
-        className="flex justify-between items-center p-4 cursor-pointer border-b"
+        className="flex justify-between items-center p-4 cursor-pointer border-b bg-gray-50"
         onClick={() => setExpanded(!expanded)}
       >
         <h3 className="text-lg font-medium">
@@ -88,7 +87,7 @@ const LineItemsTable: React.FC<LineItemsTableProps> = ({
             <div className="text-center py-4 text-muted-foreground">No line items yet</div>
           ) : (
             <>
-              {/* Simple search */}
+              {/* Search and filter */}
               <div className="mb-4 flex gap-2">
                 <div className="relative flex-1">
                   <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -99,14 +98,14 @@ const LineItemsTable: React.FC<LineItemsTableProps> = ({
                     className="pl-9"
                   />
                 </div>
-                <Button variant="outline" size="icon">
+                <Button variant="outline" size="icon" className="border border-gray-200">
                   <Filter className="h-4 w-4" />
                 </Button>
               </div>
               
-              <div className="overflow-x-auto w-full">
+              <div className="overflow-x-auto w-full rounded-md border border-gray-100">
                 <table className="w-full border-collapse">
-                  <TableHeader hasSelection={false} />
+                  <TableHeader hasSelection={true} />
                   <tbody>
                     {filteredItems.map((item) => (
                       editingItemId === item.id ? (

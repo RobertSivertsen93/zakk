@@ -14,10 +14,10 @@ const TableHeader: React.FC<TableHeaderProps> = ({
   onSelectAll 
 }) => {
   return (
-    <thead className="bg-muted/30 text-sm">
-      <tr>
+    <thead>
+      <tr className="border-b border-gray-200">
         {hasSelection && (
-          <th className="py-3 px-2 text-left font-medium">
+          <th className="py-4 px-4 text-left">
             <Checkbox 
               checked={isAllSelected} 
               onCheckedChange={onSelectAll}
@@ -25,13 +25,23 @@ const TableHeader: React.FC<TableHeaderProps> = ({
             />
           </th>
         )}
-        <th className="py-3 px-4 text-left font-medium">HS Code</th>
-        <th className="py-3 px-4 text-left font-medium">Origin</th>
-        <th className="py-3 px-4 text-left font-medium">Description</th>
-        <th className="py-3 px-4 text-right font-medium">Qty</th>
-        <th className="py-3 px-4 text-right font-medium">Unit Price</th>
-        <th className="py-3 px-4 text-right font-medium">Amount</th>
-        <th className="py-3 px-4 text-right font-medium">
+        <th className="py-4 px-4 text-left font-medium text-gray-700">
+          <div className="flex flex-col">
+            <span>HS</span>
+            <span>Code</span>
+          </div>
+        </th>
+        <th className="py-4 px-4 text-left font-medium text-gray-700">Origin</th>
+        <th className="py-4 px-4 text-left font-medium text-gray-700">Description</th>
+        <th className="py-4 px-4 text-right font-medium text-gray-700">Qty</th>
+        <th className="py-4 px-4 text-right font-medium text-gray-700">
+          <div className="flex flex-col items-end">
+            <span>Unit</span>
+            <span>Price</span>
+          </div>
+        </th>
+        <th className="py-4 px-4 text-right font-medium text-gray-700">Amount</th>
+        <th className="py-4 px-4 text-right font-medium text-gray-700">
           <div className="flex items-center justify-end">
             <span>Confidence</span>
             <div className="ml-1 flex gap-1 items-center">
@@ -41,7 +51,7 @@ const TableHeader: React.FC<TableHeaderProps> = ({
             </div>
           </div>
         </th>
-        <th className="py-3 px-4 text-right font-medium">Actions</th>
+        <th className="py-4 px-4 text-center font-medium text-gray-700">Actions</th>
       </tr>
     </thead>
   );
