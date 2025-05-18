@@ -1,19 +1,34 @@
-import * as React from "react"
 
-const MOBILE_BREAKPOINT = 768
+import { useState, useEffect } from "react";
 
-export function useIsMobile() {
-  const [isMobile, setIsMobile] = React.useState<boolean | undefined>(undefined)
+/**
+ * Custom hook for responsive design that detects if a media query matches
+ * @param query CSS media query string (e.g., "(max-width: 768px)")
+ * @returns Boolean indicating if the media query matches
+ */
+export function useMediaQuery(query: string): boolean {
+  const [matches, setMatches] = useState<boolean>(false);
 
-  React.useEffect(() => {
-    const mql = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`)
-    const onChange = () => {
-      setIsMobile(window.innerWidth < MOBILE_BREAKPOINT)
-    }
-    mql.addEventListener("change", onChange)
-    setIsMobile(window.innerWidth < MOBILE_BREAKPOINT)
-    return () => mql.removeEventListener("change", onChange)
-  }, [])
+  useEffect(() => {
+    // Create media query list
+    const mediaQuery = window.matchMedia(query);
+    
+    // Set initial value
+    setMatches(mediaQuery.matches);
 
-  return !!isMobile
+    // Define callback for changes
+    const handleChange = (event: MediaQueryListEvent) => {
+      setMatches(event.matches);
+    };
+
+    // Add event listener
+    mediaQuery.addEventListener("change", handleChange);
+    
+    // Clean up
+    return () => {
+      mediaQuery.removeEventListener("change", handleChange);
+    };
+  }, [query]);
+
+  return matches;
 }
