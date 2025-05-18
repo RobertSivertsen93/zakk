@@ -6,13 +6,11 @@ import LineItemsSection from './LineItemsSection';
 import ExportSection from './ExportSection';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { FileText, List, Upload, Download } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import StepIndicator from "@/components/StepIndicator";
 
 const ExtractContent = () => {
   const [fileName, setFileName] = useState(sessionStorage.getItem('pdf-file-name') || '');
   const [pdfUrl, setPdfUrl] = useState(sessionStorage.getItem('pdf-url') || '');
-  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [currentStep, setCurrentStep] = useState(pdfUrl ? 2 : 1);
   const [activeTab, setActiveTab] = useState<string>(pdfUrl ? "invoice" : "upload");
   const [completedSections, setCompletedSections] = useState<string[]>([]);
@@ -60,22 +58,20 @@ const ExtractContent = () => {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       {currentStep === 1 ? (
         <PdfUploadSection onPdfSelected={handlePdfSelected} />
       ) : (
         <>
-          <div className="flex justify-between items-center mb-4">
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              className="-ml-2 text-muted-foreground hover:text-foreground"
-              onClick={handleBackToUpload}
-            >
-              <Upload className="mr-1 h-4 w-4" />
-              Back to Upload
-            </Button>
-          </div>
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="text-muted-foreground hover:text-foreground mb-4"
+            onClick={handleBackToUpload}
+          >
+            <Upload className="mr-1 h-4 w-4" />
+            Back to Upload
+          </Button>
           
           <StepIndicator 
             currentStep={currentStep} 
@@ -86,7 +82,7 @@ const ExtractContent = () => {
             <TabsList className="grid grid-cols-3 mb-8 w-full md:w-auto">
               <TabsTrigger value="invoice" className="flex items-center gap-2">
                 <FileText className="h-4 w-4" />
-                <span>Invoice Details</span>
+                <span>Invoice</span>
               </TabsTrigger>
               <TabsTrigger value="lineitems" className="flex items-center gap-2">
                 <List className="h-4 w-4" />

@@ -1,49 +1,18 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { toast } from "@/lib/toast";
 import { Card, CardContent } from "@/components/ui/card";
-import { Check, AlertTriangle } from "lucide-react";
-import ExportTemplates from '@/components/export/ExportTemplates';
-import HSCodeHistory from '@/components/line-items/HSCodeHistory';
-import { ValidationSection } from '@/components/validation/SectionValidator';
-import SectionValidator from '@/components/validation/SectionValidator';
+import { Check, Download } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const ExportSection: React.FC = () => {
-  const [validationStatus, setValidationStatus] = useState<ValidationSection>({
-    id: 'export',
-    title: 'Export Validation',
-    items: [
-      {
-        id: 'valid-hs-codes',
-        label: 'All HS codes are valid',
-        description: 'Each line item must have a properly formatted HS code',
-        isRequired: true,
-        status: 'pending'
-      },
-      {
-        id: 'country-origin',
-        label: 'Country of origin specified',
-        description: 'Each line item must have a country of origin',
-        isRequired: true,
-        status: 'pending'
-      },
-      {
-        id: 'complete-data',
-        label: 'Complete item data',
-        description: 'All line items have quantity, price and description',
-        isRequired: true,
-        status: 'pending'
-      },
-      {
-        id: 'customs-ready',
-        label: 'Ready for customs submission',
-        description: 'Invoice data meets all requirements for customs submission',
-        isRequired: false,
-        status: 'pending'
-      }
-    ]
-  });
-  
   // Mock data that would come from actual application state
   const mockData = {
     invoiceNumber: 'INV-2023-0042',
@@ -77,102 +46,79 @@ const ExportSection: React.FC = () => {
     ]
   };
   
-  const handleExport = (format: string, templateId: string) => {
-    toast.success(`Exporting in ${format.toUpperCase()} format using ${templateId} template`);
-  };
-  
-  const handleValidate = () => {
-    // Simulate validation process
-    toast.info('Validating export data...');
+  const handleExport = (format: string) => {
+    toast.success(`Exporting in ${format.toUpperCase()} format`);
     
-    // Simulate validation process completing
-    setTimeout(() => {
-      // Update validation statuses
-      const updatedSection = { ...validationStatus };
-      
-      // Check for valid HS codes
-      const hasValidHSCodes = mockData.lineItems.every(
-        item => item.productNumber && /^\d{4}\.\d{2}\.\d{2}$/.test(item.productNumber)
-      );
-      updatedSection.items[0].status = hasValidHSCodes ? 'valid' : 'invalid';
-      
-      // Check for country of origin
-      const hasCountryOrigin = mockData.lineItems.every(
-        item => item.countryOfOrigin && item.countryOfOrigin.trim() !== ''
-      );
-      updatedSection.items[1].status = hasCountryOrigin ? 'valid' : 'invalid';
-      
-      // Check for complete data
-      const hasCompleteData = mockData.lineItems.every(
-        item => item.quantity && item.unitPrice && item.description
-      );
-      updatedSection.items[2].status = hasCompleteData ? 'valid' : 'warning';
-      
-      // Check overall customs readiness
-      const isCustomsReady = hasValidHSCodes && hasCountryOrigin && hasCompleteData;
-      updatedSection.items[3].status = isCustomsReady ? 'valid' : 'warning';
-      
-      setValidationStatus(updatedSection);
-      
-      toast.success('Validation complete');
-    }, 1500);
-  };
-  
-  const handleUpdateStatus = (itemId: string, status: 'valid' | 'invalid' | 'warning' | 'pending') => {
-    const updatedSection = { ...validationStatus };
-    const itemIndex = updatedSection.items.findIndex(item => item.id === itemId);
-    
-    if (itemIndex !== -1) {
-      updatedSection.items[itemIndex].status = status;
-      setValidationStatus(updatedSection);
+    // Create data string for JSON format
+    if (format === 'json') {
+      const dataString = JSON.stringify(mockData, null, 2);
+      const blob = new Blob([dataString], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `invoice-data.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } else {
+      // Handle other formats (CSV, XML, etc.)
+      toast.info(`${format.toUpperCase()} export would be implemented here`);
     }
   };
   
-  const handleSelectHistoricalCode = (code: string, description: string) => {
-    // In a real app, this would update a selected line item
-    toast.success(`Selected historical HS code: ${code}`);
-  };
+  const [exportFormat, setExportFormat] = React.useState('json');
   
   return (
     <Card className="glass-panel">
       <CardContent className="p-6 space-y-6">
         <div className="flex justify-between items-center">
-          <h2 className="text-xl font-semibold">Export Options</h2>
-          <div className="flex gap-2">
-            <HSCodeHistory onSelectCode={handleSelectHistoricalCode} />
-          </div>
+          <h2 className="text-xl font-semibold">Export Invoice</h2>
         </div>
         <p className="text-sm text-muted-foreground">
-          Export the validated invoice data to the customs system or download it in your preferred format.
+          Export the invoice data in your preferred format.
         </p>
-        
-        <SectionValidator
-          section={validationStatus}
-          onValidate={handleValidate}
-          onUpdateStatus={handleUpdateStatus}
-        />
         
         <div className="bg-muted/20 p-4 rounded-md flex gap-3 items-center mb-4">
           <div className="p-2 rounded-full bg-muted flex items-center justify-center">
-            {validationStatus.items.every(item => item.status === 'valid' || (!item.isRequired && item.status === 'warning'))
-              ? <Check className="h-5 w-5 text-green-500" />
-              : <AlertTriangle className="h-5 w-5 text-yellow-500" />
-            }
+            <Check className="h-5 w-5 text-green-500" />
           </div>
           <div>
-            <h3 className="font-medium">Export Readiness</h3>
+            <h3 className="font-medium">Ready to Export</h3>
             <p className="text-sm text-muted-foreground">
-              {validationStatus.items.every(item => item.status === 'valid' || (!item.isRequired && item.status === 'warning'))
-                ? 'Your data is ready to be exported for customs processing.'
-                : 'Some issues need to be addressed before exporting.'}
+              Your data is ready to be exported.
             </p>
           </div>
         </div>
         
-        <ExportTemplates 
-          data={mockData}
-          onExport={handleExport}
-        />
+        <div className="grid gap-4">
+          <div className="space-y-2">
+            <label className="text-sm font-medium">Export Format</label>
+            <Select
+              value={exportFormat}
+              onValueChange={setExportFormat}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select format" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="json">JSON</SelectItem>
+                <SelectItem value="csv">CSV</SelectItem>
+                <SelectItem value="xml">XML</SelectItem>
+                <SelectItem value="pdf">PDF</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          
+          <Button 
+            onClick={() => handleExport(exportFormat)}
+            className="mt-4 w-full flex items-center justify-center gap-2"
+            size="lg"
+          >
+            <Download className="h-5 w-5" />
+            Export Data
+          </Button>
+        </div>
       </CardContent>
     </Card>
   );

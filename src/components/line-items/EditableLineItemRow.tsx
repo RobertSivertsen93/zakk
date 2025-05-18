@@ -4,7 +4,6 @@ import { Check, X } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ValidatedFormField } from "../form/ValidatedFormField";
 import { LineItem } from './types';
 
 interface EditableLineItemRowProps {
@@ -22,126 +21,101 @@ const EditableLineItemRow: React.FC<EditableLineItemRowProps> = ({
   onSave,
   onCancel
 }) => {
-  // Function to determine confidence class
-  const getConfidenceClass = (percentage: number) => {
-    if (percentage >= 85) return "text-green-700 bg-green-100";
-    if (percentage >= 60) return "text-yellow-700 bg-yellow-100";
-    return "text-red-700 bg-red-100";
-  };
-
   return (
     <tr className="border-b bg-muted/10">
       <td className="p-2 text-sm" colSpan={2}>
         <div className="space-y-3 p-1">
-          <ValidatedFormField
-            id="productNumber"
-            label="HS Code"
-            value={editFormData?.productNumber || ''}
-            onChange={(value) => onFieldChange('productNumber', value)}
-            type="hscode"
-            required={true}
-            alternativeCodes={item.alternativeProductNumbers}
-            helpText={{
-              tooltip: "Harmonized System (HS) code for product classification",
-              regulations: "Required for customs clearance. Must match international HS nomenclature.",
-              examples: ["6117.80.80 - Textile accessories", "8471.30.00 - Laptops"]
-            }}
-          />
+          <div className="space-y-1">
+            <Label htmlFor="productNumber" className="text-xs font-medium">HS Code</Label>
+            <Input
+              id="productNumber"
+              value={editFormData?.productNumber || ''}
+              onChange={(e) => onFieldChange('productNumber', e.target.value)}
+              placeholder="e.g. 6117.80.80"
+              className="h-9"
+            />
+          </div>
           
-          <ValidatedFormField
-            id="countryOfOrigin"
-            label="Country of Origin"
-            value={editFormData?.countryOfOrigin || ''}
-            onChange={(value) => onFieldChange('countryOfOrigin', value)}
-            type="country"
-            required={true}
-            helpText={{
-              tooltip: "Country where the product was manufactured or produced",
-              regulations: "Required for determining applicable tariffs and restrictions",
-              examples: ["CN - China", "DE - Germany", "US - United States"]
-            }}
-          />
+          <div className="space-y-1">
+            <Label htmlFor="countryOfOrigin" className="text-xs font-medium">Country of Origin</Label>
+            <Input
+              id="countryOfOrigin"
+              value={editFormData?.countryOfOrigin || ''}
+              onChange={(e) => onFieldChange('countryOfOrigin', e.target.value)}
+              placeholder="e.g. China"
+              className="h-9"
+            />
+          </div>
         </div>
       </td>
       <td className="p-2 text-sm" colSpan={2}>
-        <div className="space-y-3 p-1">
-          <ValidatedFormField
+        <div className="space-y-1 p-1">
+          <Label htmlFor="description" className="text-xs font-medium">Description</Label>
+          <Input
             id="description"
-            label="Description"
             value={editFormData?.description || ''}
-            onChange={(value) => onFieldChange('description', value)}
-            type="textarea"
-            required={true}
-            helpText="Detailed description of the product for customs clearance"
+            onChange={(e) => onFieldChange('description', e.target.value)}
+            placeholder="Product description"
+            className="h-auto py-2"
           />
         </div>
       </td>
       <td className="p-2 text-sm" colSpan={2}>
         <div className="space-y-3 p-1">
-          <ValidatedFormField
-            id="quantity"
-            label="Quantity"
-            value={editFormData?.quantity || ''}
-            onChange={(value) => onFieldChange('quantity', value)}
-            type="number"
-            required={true}
-            helpText="Number of items being imported"
-          />
+          <div className="space-y-1">
+            <Label htmlFor="quantity" className="text-xs font-medium">Quantity</Label>
+            <Input
+              id="quantity"
+              value={editFormData?.quantity || ''}
+              onChange={(e) => onFieldChange('quantity', e.target.value)}
+              type="number"
+              className="h-9"
+            />
+          </div>
           
-          <ValidatedFormField
-            id="unitPrice"
-            label="Unit Price"
-            value={editFormData?.unitPrice || ''}
-            onChange={(value) => onFieldChange('unitPrice', value)}
-            type="number"
-            required={true}
-            helpText="Price per unit in the stated currency"
-          />
+          <div className="space-y-1">
+            <Label htmlFor="unitPrice" className="text-xs font-medium">Unit Price</Label>
+            <Input
+              id="unitPrice"
+              value={editFormData?.unitPrice || ''}
+              onChange={(e) => onFieldChange('unitPrice', e.target.value)}
+              type="number"
+              className="h-9"
+            />
+          </div>
           
-          <ValidatedFormField
-            id="amount"
-            label="Total Amount"
-            value={editFormData?.amount || ''}
-            onChange={(value) => onFieldChange('amount', value)}
-            type="number"
-            required={true}
-            helpText="Total value of the line item"
-          />
+          <div className="space-y-1">
+            <Label htmlFor="amount" className="text-xs font-medium">Total Amount</Label>
+            <Input
+              id="amount"
+              value={editFormData?.amount || ''}
+              onChange={(e) => onFieldChange('amount', e.target.value)}
+              type="number"
+              className="h-9"
+            />
+          </div>
         </div>
       </td>
       <td className="p-2 text-right" colSpan={2}>
-        <div className="space-y-3 p-1">
-          <div className="space-y-2">
-            <Label className="text-sm font-medium">Confidence</Label>
-            <div className="h-10 flex items-center">
-              <div className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${getConfidenceClass(editFormData?.confidencePercentage || 50)}`}>
-                <span className={`w-2 h-2 rounded-full mr-1.5 ${getConfidenceClass(editFormData?.confidencePercentage || 50)}`}></span>
-                {editFormData?.confidencePercentage || 50}%
-              </div>
-              <span className="ml-2 text-xs text-muted-foreground">System determined</span>
-            </div>
-          </div>
-
-          <div className="flex justify-end space-x-2 pt-4">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={onCancel}
-              className="gap-1"
-            >
-              <X className="h-4 w-4" />
-              Cancel
-            </Button>
-            <Button
-              variant="default"
-              size="sm"
-              onClick={onSave}
-              className="gap-1"
-            >
-              <Check className="h-4 w-4" />
-              Save
-            </Button>
-          </div>
+        <div className="flex justify-end space-x-2 pt-4">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={onCancel}
+            className="gap-1"
+          >
+            <X className="h-4 w-4" />
+            Cancel
+          </Button>
+          <Button
+            variant="default"
+            size="sm"
+            onClick={onSave}
+            className="gap-1"
+          >
+            <Check className="h-4 w-4" />
+            Save
+          </Button>
         </div>
       </td>
     </tr>

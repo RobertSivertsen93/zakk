@@ -2,9 +2,11 @@
 import React, { useState } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 import { Save, Edit } from "lucide-react";
 import { toast } from "@/lib/toast";
-import { ValidatedFormField } from './form/ValidatedFormField';
 
 interface InvoiceDetailsProps {
   extractedData: Record<string, string>;
@@ -36,7 +38,7 @@ const InvoiceDetails: React.FC<InvoiceDetailsProps> = ({
   };
 
   return (
-    <Card className="glass-panel">
+    <Card>
       <CardContent className="p-6">
         <div className="flex justify-between items-center mb-6">
           <h3 className="text-lg font-medium">Invoice Information</h3>
@@ -61,78 +63,84 @@ const InvoiceDetails: React.FC<InvoiceDetailsProps> = ({
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <ValidatedFormField
-            id="invoiceNumber"
-            label="Fakturanummar"
-            value={formData.invoiceNumber}
-            onChange={(value) => handleFieldChange('invoiceNumber', value)}
-            required={true}
-            helpText={{
-              tooltip: "The unique identifier for this invoice",
-              examples: ["INV-2023-0042", "FB-12345"]
-            }}
-          />
+          <div className="space-y-2">
+            <Label htmlFor="invoiceNumber" className="text-sm font-medium">Invoice Number</Label>
+            <Input
+              id="invoiceNumber"
+              value={formData.invoiceNumber}
+              onChange={(e) => handleFieldChange('invoiceNumber', e.target.value)}
+              readOnly={!isEditing}
+              className={!isEditing ? "bg-muted" : ""}
+            />
+          </div>
           
-          <ValidatedFormField
-            id="invoiceDate"
-            label="Fakturadagur"
-            value={formData.invoiceDate}
-            onChange={(value) => handleFieldChange('invoiceDate', value)}
-            type="date"
-            required={true}
-            helpText={{
-              tooltip: "Date when the invoice was issued",
-              regulations: "Format: YYYY-MM-DD"
-            }}
-          />
+          <div className="space-y-2">
+            <Label htmlFor="invoiceDate" className="text-sm font-medium">Invoice Date</Label>
+            <Input
+              id="invoiceDate"
+              type="date"
+              value={formData.invoiceDate}
+              onChange={(e) => handleFieldChange('invoiceDate', e.target.value)}
+              readOnly={!isEditing}
+              className={!isEditing ? "bg-muted" : ""}
+            />
+          </div>
           
-          <ValidatedFormField
-            id="dueDate"
-            label="Útrokningardagur"
-            value={formData.dueDate}
-            onChange={(value) => handleFieldChange('dueDate', value)}
-            type="date"
-            required={true}
-            helpText="Date when payment is due"
-          />
+          <div className="space-y-2">
+            <Label htmlFor="dueDate" className="text-sm font-medium">Due Date</Label>
+            <Input
+              id="dueDate"
+              type="date"
+              value={formData.dueDate}
+              onChange={(e) => handleFieldChange('dueDate', e.target.value)}
+              readOnly={!isEditing}
+              className={!isEditing ? "bg-muted" : ""}
+            />
+          </div>
           
-          <ValidatedFormField
-            id="sender"
-            label="Avsendari"
-            value={formData.sender}
-            onChange={(value) => handleFieldChange('sender', value)}
-            required={true}
-            helpText="The entity that issued the invoice"
-          />
+          <div className="space-y-2">
+            <Label htmlFor="sender" className="text-sm font-medium">Sender</Label>
+            <Input
+              id="sender"
+              value={formData.sender}
+              onChange={(e) => handleFieldChange('sender', e.target.value)}
+              readOnly={!isEditing}
+              className={!isEditing ? "bg-muted" : ""}
+            />
+          </div>
           
-          <ValidatedFormField
-            id="documentNumber"
-            label="Skjalanummar"
-            value={formData.documentNumber}
-            onChange={(value) => handleFieldChange('documentNumber', value)}
-            helpText="Reference document number"
-          />
+          <div className="space-y-2">
+            <Label htmlFor="documentNumber" className="text-sm font-medium">Document Number</Label>
+            <Input
+              id="documentNumber"
+              value={formData.documentNumber}
+              onChange={(e) => handleFieldChange('documentNumber', e.target.value)}
+              readOnly={!isEditing}
+              className={!isEditing ? "bg-muted" : ""}
+            />
+          </div>
           
-          <ValidatedFormField
-            id="paymentMethod"
-            label="Gjaldoyra"
-            value={formData.paymentMethod}
-            onChange={(value) => handleFieldChange('paymentMethod', value)}
-            helpText={{
-              tooltip: "Currency for this invoice",
-              examples: ["EUR", "USD", "DKK"]
-            }}
-          />
+          <div className="space-y-2">
+            <Label htmlFor="paymentMethod" className="text-sm font-medium">Currency</Label>
+            <Input
+              id="paymentMethod"
+              value={formData.paymentMethod}
+              onChange={(e) => handleFieldChange('paymentMethod', e.target.value)}
+              readOnly={!isEditing}
+              className={!isEditing ? "bg-muted" : ""}
+            />
+          </div>
           
-          <ValidatedFormField
-            id="notes"
-            label="Viðmerking"
-            value={formData.notes}
-            onChange={(value) => handleFieldChange('notes', value)}
-            type="textarea"
-            className="md:col-span-2"
-            helpText="Additional notes or comments about this invoice"
-          />
+          <div className="space-y-2 md:col-span-2">
+            <Label htmlFor="notes" className="text-sm font-medium">Notes</Label>
+            <Textarea
+              id="notes"
+              value={formData.notes}
+              onChange={(e) => handleFieldChange('notes', e.target.value)}
+              readOnly={!isEditing}
+              className={!isEditing ? "bg-muted" : ""}
+            />
+          </div>
         </div>
       </CardContent>
     </Card>
