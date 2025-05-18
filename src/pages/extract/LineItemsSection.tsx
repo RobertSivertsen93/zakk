@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import { LineItem } from '@/components/line-items/types';
 import LineItemsTable from '@/components/LineItemsTable';
 import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { PlusCircle } from "lucide-react";
 import { toast } from "@/lib/toast";
 
 const LineItemsSection: React.FC = () => {
@@ -61,15 +63,39 @@ const LineItemsSection: React.FC = () => {
     toast.success('Line item removed');
   };
 
+  const handleAddItem = () => {
+    const newItem: LineItem = {
+      id: `new-${Date.now()}`,
+      productNumber: '',
+      countryOfOrigin: '',
+      description: '',
+      confidencePercentage: 50,
+      quantity: '',
+      unitPrice: '',
+      amount: ''
+    };
+    
+    setItems([...items, newItem]);
+    toast.success('New line item added');
+  };
+
   return (
     <div className="space-y-6">
       <Card className="glass-panel">
         <CardContent className="p-6">
-          <h2 className="text-xl font-semibold mb-4">Line Items</h2>
-          <p className="text-sm text-muted-foreground mb-6">
-            Review and edit the line items extracted from the invoice. 
-            Pay attention to the confidence score which indicates the reliability of the HS code extraction.
-          </p>
+          <div className="flex justify-between items-center mb-4">
+            <div>
+              <h2 className="text-xl font-semibold">Line Items</h2>
+              <p className="text-sm text-muted-foreground mb-6">
+                Review and edit the line items extracted from the invoice. 
+                Pay attention to the confidence score which indicates the reliability of the HS code extraction.
+              </p>
+            </div>
+            <Button onClick={handleAddItem} className="gap-1">
+              <PlusCircle className="h-4 w-4" />
+              Add Item
+            </Button>
+          </div>
           
           <LineItemsTable 
             items={items} 

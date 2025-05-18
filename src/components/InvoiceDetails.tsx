@@ -1,10 +1,10 @@
 
 import React, { useState } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
-import InvoiceFormFields from '@/components/InvoiceFormFields';
 import { Button } from "@/components/ui/button";
 import { Save, Edit } from "lucide-react";
 import { toast } from "@/lib/toast";
+import { ValidatedFormField } from './form/ValidatedFormField';
 
 interface InvoiceDetailsProps {
   extractedData: Record<string, string>;
@@ -38,7 +38,7 @@ const InvoiceDetails: React.FC<InvoiceDetailsProps> = ({
   return (
     <Card className="glass-panel">
       <CardContent className="p-6">
-        <div className="flex justify-between items-center mb-4">
+        <div className="flex justify-between items-center mb-6">
           <h3 className="text-lg font-medium">Invoice Information</h3>
           <Button
             variant="ghost"
@@ -60,12 +60,80 @@ const InvoiceDetails: React.FC<InvoiceDetailsProps> = ({
           </Button>
         </div>
         
-        <InvoiceFormFields 
-          initialData={formData} 
-          showLineItems={false} 
-          isReadOnly={!isEditing}
-          onFieldChange={handleFieldChange}
-        />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <ValidatedFormField
+            id="invoiceNumber"
+            label="Fakturanummar"
+            value={formData.invoiceNumber}
+            onChange={(value) => handleFieldChange('invoiceNumber', value)}
+            required={true}
+            helpText={{
+              tooltip: "The unique identifier for this invoice",
+              examples: ["INV-2023-0042", "FB-12345"]
+            }}
+          />
+          
+          <ValidatedFormField
+            id="invoiceDate"
+            label="Fakturadagur"
+            value={formData.invoiceDate}
+            onChange={(value) => handleFieldChange('invoiceDate', value)}
+            type="date"
+            required={true}
+            helpText={{
+              tooltip: "Date when the invoice was issued",
+              regulations: "Format: YYYY-MM-DD"
+            }}
+          />
+          
+          <ValidatedFormField
+            id="dueDate"
+            label="Útrokningardagur"
+            value={formData.dueDate}
+            onChange={(value) => handleFieldChange('dueDate', value)}
+            type="date"
+            required={true}
+            helpText="Date when payment is due"
+          />
+          
+          <ValidatedFormField
+            id="sender"
+            label="Avsendari"
+            value={formData.sender}
+            onChange={(value) => handleFieldChange('sender', value)}
+            required={true}
+            helpText="The entity that issued the invoice"
+          />
+          
+          <ValidatedFormField
+            id="documentNumber"
+            label="Skjalanummar"
+            value={formData.documentNumber}
+            onChange={(value) => handleFieldChange('documentNumber', value)}
+            helpText="Reference document number"
+          />
+          
+          <ValidatedFormField
+            id="paymentMethod"
+            label="Gjaldoyra"
+            value={formData.paymentMethod}
+            onChange={(value) => handleFieldChange('paymentMethod', value)}
+            helpText={{
+              tooltip: "Currency for this invoice",
+              examples: ["EUR", "USD", "DKK"]
+            }}
+          />
+          
+          <ValidatedFormField
+            id="notes"
+            label="Viðmerking"
+            value={formData.notes}
+            onChange={(value) => handleFieldChange('notes', value)}
+            type="textarea"
+            className="md:col-span-2"
+            helpText="Additional notes or comments about this invoice"
+          />
+        </div>
       </CardContent>
     </Card>
   );
