@@ -1,59 +1,69 @@
+import React from "react";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+} from "react-router-dom";
 
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Upload from "./pages/Upload";
-import Extract from "./pages/Extract";
 import NotFound from "./pages/NotFound";
+import Extract from "./pages/extract/index";
+import { Toaster } from "@/components/ui/toaster"
+import { useToast } from "@/components/ui/use-toast"
 
-// Create a client
-const queryClient = new QueryClient();
+function App() {
+  const { toast } = useToast()
 
-// Authentication guard component
-const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
-  const isAuthenticated = localStorage.getItem('pdf-extractor-auth');
-  
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
-  }
-  
-  return children;
-};
+  React.useEffect(() => {
+    // Persist toast messages to localStorage
+    const storedToasts = localStorage.getItem('toasts');
+    if (storedToasts) {
+      const parsedToasts = JSON.parse(storedToasts);
+      parsedToasts.forEach((toastData: any) => {
+        toast({
+          title: toastData.title,
+          description: toastData.description,
+          duration: toastData.duration,
+        });
+      });
+    }
+  }, [toast]);
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
+  const routes = [
+    {
+      path: "/",
+      element: <Index />
+    },
+    {
+      path: "/login",
+      element: <Login />
+    },
+    {
+      path: "/upload",
+      element: <Upload />
+    },
+    {
+      path: "/extract",
+      element: <Extract />
+    },
+    {
+      path: "*",
+      element: <NotFound />
+    }
+  ];
+
+  return (
+    <BrowserRouter>
+      <Routes>
+        {routes.map((route, index) => (
+          <Route key={index} path={route.path} element={route.element} />
+        ))}
+      </Routes>
       <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          {/* Public routes */}
-          <Route path="/" element={<Index />} />
-          <Route path="/login" element={<Login />} />
-          
-          {/* Protected routes */}
-          <Route path="/upload" element={
-            <ProtectedRoute>
-              <Upload />
-            </ProtectedRoute>
-          } />
-          <Route path="/extract" element={
-            <ProtectedRoute>
-              <Extract />
-            </ProtectedRoute>
-          } />
-          
-          {/* 404 route */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+    </BrowserRouter>
+  );
+}
 
 export default App;
-
