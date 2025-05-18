@@ -1,13 +1,15 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger
-} from "@/components/ui/popover";
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle
+} from "@/components/ui/dialog";
+import { Command, CommandInput, CommandList, CommandGroup, CommandItem } from "@/components/ui/command";
 import { toast } from "@/lib/toast";
 
 // Mock HS code database for validation
@@ -37,67 +39,83 @@ const HSCodeSearch: React.FC<HSCodeSearchProps> = ({ onSelectHSCode }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<typeof commonHSCodes>([]);
 
+  useEffect(() => {
+    if (isSearchOpen) {
+      setSearchResults(commonHSCodes);
+    }
+  }, [isSearchOpen]);
+
   // Search for HS codes based on code or description
-  const handleSearch = () => {
-    if (!searchQuery.trim()) {
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+    
+    if (!query.trim()) {
       setSearchResults(commonHSCodes);
       return;
     }
     
     // In a real app, this would call an API
-    const query = searchQuery.toLowerCase();
+    const q = query.toLowerCase();
     const results = hsCodeDatabase.filter(
-      item => item.code.includes(query) || 
-      item.description.toLowerCase().includes(query)
+      item => item.code.includes(q) || 
+      item.description.toLowerCase().includes(q)
     );
     
     setSearchResults(results);
   };
 
-  const handleSelectHSCode = (code: string) => {
+  const handleSelectHSCode = (code: string, description: string) => {
     onSelectHSCode(code);
     setIsSearchOpen(false);
     toast.success(`HS code ${code} selected`);
   };
 
   return (
-    <Popover open={isSearchOpen} onOpenChange={setIsSearchOpen}>
-      <PopoverTrigger className="hidden">Search</PopoverTrigger>
-      <PopoverContent className="w-80" align="start">
-        <div className="space-y-4">
-          <div className="font-medium">HS Code Search</div>
-          <div className="flex space-x-2">
-            <Input 
+    <>
+      <Button 
+        variant="ghost"
+        size="icon"
+        onClick={() => setIsSearchOpen(true)}
+        className="ml-1"
+        title="Search HS codes"
+      >
+        <Search className="h-4 w-4" />
+      </Button>
+
+      <Dialog open={isSearchOpen} onOpenChange={setIsSearchOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>HS Code Search</DialogTitle>
+          </DialogHeader>
+          
+          <Command className="rounded-lg border shadow-md">
+            <CommandInput 
               placeholder="Search by code or description" 
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="flex-grow"
+              onValueChange={handleSearch}
             />
-            <Button onClick={handleSearch} size="sm">
-              <Search className="h-4 w-4" />
-            </Button>
-          </div>
-
-          <div className="border-t pt-2">
-            <div className="text-sm font-medium mb-2">
-              {searchQuery ? 'Search results' : 'Common HS codes'}
-            </div>
-            <div className="max-h-48 overflow-y-auto space-y-1">
-              {(searchResults.length > 0 ? searchResults : commonHSCodes).map(item => (
-                <div 
-                  key={item.code}
-                  className="flex justify-between p-2 hover:bg-muted rounded-sm cursor-pointer"
-                  onClick={() => handleSelectHSCode(item.code)}
-                >
-                  <span className="font-mono">{item.code}</span>
-                  <span className="text-sm text-muted-foreground">{item.description}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </PopoverContent>
-    </Popover>
+            <CommandList>
+              <CommandGroup heading={searchQuery ? "Search results" : "Common HS codes"}>
+                {searchResults.length > 0 ? (
+                  searchResults.map((item) => (
+                    <CommandItem
+                      key={item.code}
+                      onSelect={() => handleSelectHSCode(item.code, item.description)}
+                      className="flex justify-between"
+                    >
+                      <span className="font-mono">{item.code}</span>
+                      <span className="text-sm text-muted-foreground">{item.description}</span>
+                    </CommandItem>
+                  ))
+                ) : (
+                  <CommandItem disabled>No results found</CommandItem>
+                )}
+              </CommandGroup>
+            </CommandList>
+          </Command>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };
 

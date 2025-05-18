@@ -24,11 +24,13 @@ const EditableLineItemRow: React.FC<EditableLineItemRowProps> = ({
   return (
     <tr className="border-b hover:bg-muted/30">
       <td className="py-2 px-4">
-        <HSCodeValidation
-          value={editFormData.productNumber}
-          onChange={(value) => onFieldChange('productNumber', value)}
-          alternativeCodes={item.alternativeProductNumbers}
-        />
+        <div className="max-w-[200px]">
+          <HSCodeValidation
+            value={editFormData.productNumber}
+            onChange={(value) => onFieldChange('productNumber', value)}
+            alternativeCodes={item.alternativeProductNumbers}
+          />
+        </div>
       </td>
       <td className="py-2 px-4">
         <Input 

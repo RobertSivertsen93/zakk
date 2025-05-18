@@ -14,17 +14,17 @@ const AlternativeHSCodes: React.FC<AlternativeHSCodesProps> = ({
   if (!alternativeCodes || alternativeCodes.length === 0) return null;
   
   return (
-    <div className="flex flex-wrap gap-1 mt-1">
+    <div className="flex flex-wrap gap-1.5">
       <span className="text-xs text-muted-foreground py-1">Alternatives:</span>
       {alternativeCodes.map(code => (
         <Button
           key={code}
           variant="outline"
           size="sm"
-          className="text-xs h-6 bg-muted/40"
+          className="text-xs h-6 px-2 bg-muted/20 hover:bg-muted/40"
           onClick={() => onSelectCode(code)}
         >
-          {code}
+          <span className="font-mono">{code}</span>
         </Button>
       ))}
     </div>

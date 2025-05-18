@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -24,55 +24,43 @@ const HSCodeValidation: React.FC<HSCodeValidationProps> = ({
   onChange,
   alternativeCodes = []
 }) => {
-  const [isSearchOpen, setIsSearchOpen] = React.useState(false);
-
-  const handleOpenSearch = () => {
-    setIsSearchOpen(true);
-  };
-
   const handleSelectHSCode = (code: string) => {
     onChange(code);
   };
 
   return (
-    <div className="flex flex-col space-y-1">
-      <div className="flex items-center">
-        <Input
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          placeholder="Enter HS code"
-          className="flex-grow"
-        />
+    <div className="space-y-2">
+      <div className="flex items-center gap-1">
+        <div className="relative flex-1">
+          <Input
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            placeholder="Enter HS code"
+            className="pr-8" // Make space for the validator icon
+          />
+          <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center">
+            {value && <HSCodeValidator value={value} />}
+          </div>
+        </div>
         
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                className="ml-1"
-                onClick={handleOpenSearch}
-              >
-                <Search className="h-4 w-4" />
-              </Button>
+              <HSCodeSearch onSelectHSCode={handleSelectHSCode} />
             </TooltipTrigger>
             <TooltipContent side="top">
               <p>Search HS codes</p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
-
-        {value && <HSCodeValidator value={value} />}
-        
-        <HSCodeSearch 
-          onSelectHSCode={handleSelectHSCode} 
-        />
       </div>
 
-      <AlternativeHSCodes 
-        alternativeCodes={alternativeCodes} 
-        onSelectCode={handleSelectHSCode}
-      />
+      {alternativeCodes && alternativeCodes.length > 0 && (
+        <AlternativeHSCodes 
+          alternativeCodes={alternativeCodes} 
+          onSelectCode={handleSelectHSCode}
+        />
+      )}
     </div>
   );
 };

@@ -50,7 +50,7 @@ const HSCodeValidator: React.FC<HSCodeValidatorProps> = ({ value }) => {
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
-          <div className="ml-2 flex items-center">
+          <div className="flex items-center cursor-help">
             {validation.valid ? (
               <Check className="h-4 w-4 text-green-500" />
             ) : (
