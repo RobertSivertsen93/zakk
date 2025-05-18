@@ -2,6 +2,8 @@
 import React, { useState } from 'react';
 import PdfUploadSection from './PdfUploadSection';
 import ExtractDataSection from './ExtractDataSection';
+import LineItemsSection from './LineItemsSection';
+import ExportSection from './ExportSection';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { FileText, List, Upload, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
