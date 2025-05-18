@@ -4,7 +4,7 @@ import { LineItem } from '@/components/line-items/types';
 import LineItemsTable from '@/components/LineItemsTable';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { PlusCircle, CheckCircle, History } from "lucide-react";
+import { PlusCircle, CheckCircle } from "lucide-react";
 import { toast } from "@/lib/toast";
 import HSCodeHistory from '@/components/line-items/HSCodeHistory';
 
@@ -13,12 +13,12 @@ interface LineItemsSectionProps {
 }
 
 const LineItemsSection: React.FC<LineItemsSectionProps> = ({ onComplete }) => {
-  // Mock data for line items
+  // Mock data for line items with country codes instead of full names
   const [items, setItems] = useState<LineItem[]>([
     {
       id: '1',
       productNumber: '6117.80.80',
-      countryOfOrigin: 'China',
+      countryOfOrigin: 'CN',
       description: 'Buff, 230 gsm - size 25*...',
       confidencePercentage: 95,
       quantity: '1000',
@@ -29,7 +29,7 @@ const LineItemsSection: React.FC<LineItemsSectionProps> = ({ onComplete }) => {
     {
       id: '2',
       productNumber: '9999.99.99',
-      countryOfOrigin: 'Denmark',
+      countryOfOrigin: 'DK',
       description: 'Opstart',
       confidencePercentage: 50,
       quantity: '1',
@@ -39,7 +39,7 @@ const LineItemsSection: React.FC<LineItemsSectionProps> = ({ onComplete }) => {
     {
       id: '3',
       productNumber: '4908.90.00',
-      countryOfOrigin: 'Sweden',
+      countryOfOrigin: 'SE',
       description: 'Prøvetryk (voksen + barn)',
       confidencePercentage: 70,
       quantity: '5',
@@ -49,7 +49,7 @@ const LineItemsSection: React.FC<LineItemsSectionProps> = ({ onComplete }) => {
     {
       id: '4',
       productNumber: '4901.99.00',
-      countryOfOrigin: 'Germany',
+      countryOfOrigin: 'DE',
       description: 'Eksportdokumenter 3 cli-...',
       confidencePercentage: 80,
       quantity: '10',
@@ -59,7 +59,7 @@ const LineItemsSection: React.FC<LineItemsSectionProps> = ({ onComplete }) => {
     {
       id: '5',
       productNumber: '8471.30.00',
-      countryOfOrigin: 'United States',
+      countryOfOrigin: 'US',
       description: 'Laptop computers, 15-inch',
       confidencePercentage: 90,
       quantity: '5',
@@ -69,7 +69,7 @@ const LineItemsSection: React.FC<LineItemsSectionProps> = ({ onComplete }) => {
     {
       id: '6',
       productNumber: '8523.49.25',
-      countryOfOrigin: 'Japan',
+      countryOfOrigin: 'JP',
       description: 'Optical media for data storage',
       confidencePercentage: 85,
       quantity: '100',
@@ -79,7 +79,7 @@ const LineItemsSection: React.FC<LineItemsSectionProps> = ({ onComplete }) => {
     {
       id: '7',
       productNumber: '9403.20.80',
-      countryOfOrigin: 'Italy',
+      countryOfOrigin: 'IT',
       description: 'Metal furniture components',
       confidencePercentage: 65,
       quantity: '50',
@@ -125,7 +125,7 @@ const LineItemsSection: React.FC<LineItemsSectionProps> = ({ onComplete }) => {
     const newItem: LineItem = {
       id: `hs-${Date.now()}`,
       productNumber: code,
-      countryOfOrigin: '',
+      countryOfOrigin: '', // Empty country code by default
       description: description,
       confidencePercentage: 85, // Default confidence for historical items
       quantity: '1',
