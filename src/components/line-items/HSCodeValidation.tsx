@@ -1,38 +1,17 @@
 
-import React, { useState } from 'react';
-import { Search, X, AlertTriangle, Check, Info } from "lucide-react";
+import React from 'react';
+import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { 
+import {
   Tooltip,
   TooltipTrigger,
   TooltipContent,
   TooltipProvider
 } from "@/components/ui/tooltip";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger
-} from "@/components/ui/popover";
-import { toast } from "@/lib/toast";
-
-// Mock HS code database for validation
-const hsCodeDatabase = [
-  { code: '6117.80.80', description: 'Textile accessories', valid: true },
-  { code: '6117.80.90', description: 'Other made up textile articles', valid: true },
-  { code: '4908.90.00', description: 'Transfers (decalcomanias)', valid: true },
-  { code: '4901.99.00', description: 'Printed books, brochures and similar', valid: true },
-  { code: '9999.99.99', description: 'Not classified', valid: false },
-];
-
-// Common HS codes for quick selection
-const commonHSCodes = [
-  { code: '6117.80.80', description: 'Textile accessories' },
-  { code: '4901.99.00', description: 'Printed books' },
-  { code: '8471.30.00', description: 'Laptops/computers' },
-  { code: '8517.12.00', description: 'Mobile phones' },
-  { code: '9403.30.00', description: 'Wooden office furniture' },
-];
+import HSCodeSearch from './HSCodeSearch';
+import HSCodeValidator from './HSCodeValidator';
+import AlternativeHSCodes from './AlternativeHSCodes';
 
 interface HSCodeValidationProps {
   value: string;
@@ -45,48 +24,14 @@ const HSCodeValidation: React.FC<HSCodeValidationProps> = ({
   onChange,
   alternativeCodes = []
 }) => {
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState<typeof commonHSCodes>([]);
+  const [isSearchOpen, setIsSearchOpen] = React.useState(false);
 
-  // Validate the HS code against our mock database
-  const validateHSCode = (code: string) => {
-    const result = hsCodeDatabase.find(item => item.code === code);
-    
-    if (!result) {
-      return { valid: false, message: 'Unknown HS code' };
-    }
-    
-    return { 
-      valid: result.valid, 
-      message: result.valid ? 'Valid HS code' : 'This code may be incorrect',
-      description: result.description
-    };
-  };
-
-  const validation = validateHSCode(value);
-  
-  // Search for HS codes based on code or description
-  const handleSearch = () => {
-    if (!searchQuery.trim()) {
-      setSearchResults(commonHSCodes);
-      return;
-    }
-    
-    // In a real app, this would call an API
-    const query = searchQuery.toLowerCase();
-    const results = hsCodeDatabase.filter(
-      item => item.code.includes(query) || 
-      item.description.toLowerCase().includes(query)
-    );
-    
-    setSearchResults(results);
+  const handleOpenSearch = () => {
+    setIsSearchOpen(true);
   };
 
   const handleSelectHSCode = (code: string) => {
     onChange(code);
-    setIsSearchOpen(false);
-    toast.success(`HS code ${code} selected`);
   };
 
   return (
@@ -106,7 +51,7 @@ const HSCodeValidation: React.FC<HSCodeValidationProps> = ({
                 variant="ghost" 
                 size="icon" 
                 className="ml-1"
-                onClick={() => setIsSearchOpen(true)}
+                onClick={handleOpenSearch}
               >
                 <Search className="h-4 w-4" />
               </Button>
@@ -117,82 +62,17 @@ const HSCodeValidation: React.FC<HSCodeValidationProps> = ({
           </Tooltip>
         </TooltipProvider>
 
-        {value && (
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <div className="ml-2 flex items-center">
-                  {validation.valid ? (
-                    <Check className="h-4 w-4 text-green-500" />
-                  ) : (
-                    <AlertTriangle className="h-4 w-4 text-amber-500" />
-                  )}
-                </div>
-              </TooltipTrigger>
-              <TooltipContent side="top">
-                <p>{validation.message}</p>
-                {validation.description && <p className="text-xs text-muted-foreground">{validation.description}</p>}
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        )}
+        {value && <HSCodeValidator value={value} />}
+        
+        <HSCodeSearch 
+          onSelectHSCode={handleSelectHSCode} 
+        />
       </div>
 
-      {/* Show alternative HS codes if available */}
-      {alternativeCodes && alternativeCodes.length > 0 && (
-        <div className="flex flex-wrap gap-1 mt-1">
-          <span className="text-xs text-muted-foreground py-1">Alternatives:</span>
-          {alternativeCodes.map(code => (
-            <Button
-              key={code}
-              variant="outline"
-              size="sm"
-              className="text-xs h-6 bg-muted/40"
-              onClick={() => onChange(code)}
-            >
-              {code}
-            </Button>
-          ))}
-        </div>
-      )}
-
-      <Popover open={isSearchOpen} onOpenChange={setIsSearchOpen}>
-        <PopoverTrigger className="hidden">Search</PopoverTrigger>
-        <PopoverContent className="w-80" align="start">
-          <div className="space-y-4">
-            <div className="font-medium">HS Code Search</div>
-            <div className="flex space-x-2">
-              <Input 
-                placeholder="Search by code or description" 
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="flex-grow"
-              />
-              <Button onClick={handleSearch} size="sm">
-                <Search className="h-4 w-4" />
-              </Button>
-            </div>
-
-            <div className="border-t pt-2">
-              <div className="text-sm font-medium mb-2">
-                {searchQuery ? 'Search results' : 'Common HS codes'}
-              </div>
-              <div className="max-h-48 overflow-y-auto space-y-1">
-                {(searchResults.length > 0 ? searchResults : commonHSCodes).map(item => (
-                  <div 
-                    key={item.code}
-                    className="flex justify-between p-2 hover:bg-muted rounded-sm cursor-pointer"
-                    onClick={() => handleSelectHSCode(item.code)}
-                  >
-                    <span className="font-mono">{item.code}</span>
-                    <span className="text-sm text-muted-foreground">{item.description}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </PopoverContent>
-      </Popover>
+      <AlternativeHSCodes 
+        alternativeCodes={alternativeCodes} 
+        onSelectCode={handleSelectHSCode}
+      />
     </div>
   );
 };
