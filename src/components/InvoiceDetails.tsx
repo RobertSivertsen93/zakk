@@ -9,13 +9,15 @@ import { toast } from "@/lib/toast";
 interface InvoiceDetailsProps {
   extractedData: Record<string, string>;
   onSaveChanges?: (updatedData: Record<string, string>) => void;
+  defaultReadOnly?: boolean;
 }
 
 const InvoiceDetails: React.FC<InvoiceDetailsProps> = ({ 
   extractedData,
-  onSaveChanges
+  onSaveChanges,
+  defaultReadOnly = false
 }) => {
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, setIsEditing] = useState(!defaultReadOnly);
   const [formData, setFormData] = useState<Record<string, string>>(extractedData);
 
   const handleFieldChange = (id: string, value: string) => {

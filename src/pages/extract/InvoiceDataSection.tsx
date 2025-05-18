@@ -40,6 +40,7 @@ const InvoiceDataSection: React.FC<InvoiceDataSectionProps> = ({ pdfUrl, fileNam
         <InvoiceDetails 
           extractedData={extractedData} 
           onSaveChanges={handleSaveInvoiceDetails}
+          defaultReadOnly={true}
         />
       </div>
       
