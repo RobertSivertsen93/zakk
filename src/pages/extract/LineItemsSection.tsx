@@ -4,6 +4,7 @@ import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import LineItemsTable, { LineItem } from '@/components/LineItemsTable';
 import { toast } from "@/lib/toast";
+import ConfirmNavigationDialog from "@/components/ConfirmNavigationDialog";
 
 const LineItemsSection: React.FC = () => {
   const [lineItems, setLineItems] = useState<LineItem[]>([
@@ -53,6 +54,10 @@ const LineItemsSection: React.FC = () => {
     }
   ]);
   
+  // State for the delete confirmation dialog
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [itemToDeleteId, setItemToDeleteId] = useState<string | null>(null);
+  
   const handleEditItem = (id: string, updatedItem: LineItem) => {
     setLineItems(lineItems.map(item => 
       item.id === id ? updatedItem : item
@@ -60,8 +65,18 @@ const LineItemsSection: React.FC = () => {
     toast.success('Line item updated');
   };
 
-  const handleDeleteItem = (id: string) => {
-    setLineItems(lineItems.filter(item => item.id !== id));
+  const initiateDelete = (id: string) => {
+    setItemToDeleteId(id);
+    setDeleteDialogOpen(true);
+  };
+
+  const confirmDelete = () => {
+    if (itemToDeleteId) {
+      setLineItems(lineItems.filter(item => item.id !== itemToDeleteId));
+      toast.success('Line item deleted');
+      setItemToDeleteId(null);
+    }
+    setDeleteDialogOpen(false);
   };
   
   const handleAddItem = () => {
@@ -99,7 +114,17 @@ const LineItemsSection: React.FC = () => {
       <LineItemsTable 
         items={lineItems} 
         onEditItem={handleEditItem} 
-        onDeleteItem={handleDeleteItem} 
+        onDeleteItem={initiateDelete} 
+      />
+      
+      {/* Confirmation Dialog */}
+      <ConfirmNavigationDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        onConfirm={confirmDelete}
+        title="Delete Line Item"
+        description="Are you sure you want to delete this line item? This action cannot be undone."
+        confirmLabel="Delete"
       />
     </section>
   );
