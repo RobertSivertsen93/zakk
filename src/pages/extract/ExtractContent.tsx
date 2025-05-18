@@ -1,11 +1,11 @@
+
 import React, { useState, useEffect } from 'react';
 import PdfUploadSection from './PdfUploadSection';
 import ExtractDataSection from './ExtractDataSection';
 import LineItemsSection from './LineItemsSection';
 import ExportSection from './ExportSection';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { FileText, List, Upload, Download } from "lucide-react";
-import StepIndicator from "@/components/StepIndicator";
+import { FileText, List, Upload, Download, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const ExtractContent = () => {
@@ -31,7 +31,7 @@ const ExtractContent = () => {
     setActiveTab("upload");
   };
   
-  // Track tab changes to update step indicator
+  // Track tab changes to update step and track completed sections
   useEffect(() => {
     if (activeTab === "invoice") {
       setCurrentStep(2);
@@ -57,6 +57,13 @@ const ExtractContent = () => {
     }
   };
 
+  const isTabCompleted = (tabId: string) => {
+    if (tabId === 'invoice') return completedSections.includes('invoice-details');
+    if (tabId === 'lineitems') return completedSections.includes('line-items');
+    if (tabId === 'export') return completedSections.includes('export-options');
+    return false;
+  };
+
   return (
     <div className="space-y-6">
       {currentStep === 1 ? (
@@ -73,24 +80,34 @@ const ExtractContent = () => {
             Back to Upload
           </Button>
           
-          <StepIndicator 
-            currentStep={currentStep} 
-            completedSections={completedSections}
-          />
-          
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid grid-cols-3 mb-8 w-full md:w-auto">
-              <TabsTrigger value="invoice" className="flex items-center gap-2">
+            <TabsList className="grid grid-cols-3 mb-8 w-full">
+              <TabsTrigger value="invoice" className="flex items-center gap-2 relative py-3">
                 <FileText className="h-4 w-4" />
                 <span>Invoice</span>
+                {isTabCompleted('invoice') && (
+                  <span className="absolute right-2 top-1/2 transform -translate-y-1/2">
+                    <Check className="h-3 w-3 text-green-500" />
+                  </span>
+                )}
               </TabsTrigger>
-              <TabsTrigger value="lineitems" className="flex items-center gap-2">
+              <TabsTrigger value="lineitems" className="flex items-center gap-2 relative py-3">
                 <List className="h-4 w-4" />
                 <span>Line Items</span>
+                {isTabCompleted('lineitems') && (
+                  <span className="absolute right-2 top-1/2 transform -translate-y-1/2">
+                    <Check className="h-3 w-3 text-green-500" />
+                  </span>
+                )}
               </TabsTrigger>
-              <TabsTrigger value="export" className="flex items-center gap-2">
+              <TabsTrigger value="export" className="flex items-center gap-2 relative py-3">
                 <Download className="h-4 w-4" />
                 <span>Export</span>
+                {isTabCompleted('export') && (
+                  <span className="absolute right-2 top-1/2 transform -translate-y-1/2">
+                    <Check className="h-3 w-3 text-green-500" />
+                  </span>
+                )}
               </TabsTrigger>
             </TabsList>
 
