@@ -3,6 +3,7 @@ import React from 'react';
 import ExportOptions from '@/components/ExportOptions';
 import ExtractActionButtons from '@/components/ExtractActionButtons';
 import { toast } from "@/lib/toast";
+import { Card, CardContent } from "@/components/ui/card";
 
 const ExportSection: React.FC = () => {
   const mockData = {
@@ -36,20 +37,26 @@ const ExportSection: React.FC = () => {
   };
   
   return (
-    <>
-      <section className="space-y-4">
-        <h2 className="text-xl font-semibold border-b pb-2">Export Options</h2>
+    <Card className="glass-panel">
+      <CardContent className="p-6 space-y-6">
+        <h2 className="text-xl font-semibold">Export Options</h2>
+        <p className="text-sm text-muted-foreground">
+          Export the validated invoice data to the customs system or download it in your preferred format.
+        </p>
+        
         <ExportOptions 
           data={mockData}
           onExport={handleExport}
         />
-      </section>
-      
-      <ExtractActionButtons 
-        onSaveChanges={handleSaveChanges}
-        showContinue={false}
-      />
-    </>
+        
+        <div className="pt-4">
+          <ExtractActionButtons 
+            onSaveChanges={handleSaveChanges}
+            showContinue={false}
+          />
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 

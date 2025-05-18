@@ -6,8 +6,8 @@ import ExtractContent from './ExtractContent';
 const Extract = () => {
   return (
     <Dashboard 
-      title="Extract Data"
-      description="Upload a PDF and review the extracted information"
+      title="Extract Invoice Data"
+      description="Review, validate and export the extracted information from your invoice"
     >
       <ExtractContent />
     </Dashboard>

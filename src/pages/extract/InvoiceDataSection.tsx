@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import PdfPreview from '@/components/PdfPreview';
 import InvoiceDetails from '@/components/InvoiceDetails';
 import { toast } from "@/lib/toast";
+import { Card, CardContent } from "@/components/ui/card";
 
 interface InvoiceDataSectionProps {
   pdfUrl: string;
@@ -34,28 +35,37 @@ const InvoiceDataSection: React.FC<InvoiceDataSectionProps> = ({ pdfUrl, fileNam
   };
   
   return (
-    <section className="grid grid-cols-1 md:grid-cols-2 gap-8">
-      <div className="space-y-4">
-        <h2 className="text-xl font-semibold border-b pb-2">Invoice Information</h2>
-        <InvoiceDetails 
-          extractedData={extractedData} 
-          onSaveChanges={handleSaveInvoiceDetails}
-        />
-      </div>
-      
-      <div className="space-y-4">
-        <h2 className="text-xl font-semibold border-b pb-2">PDF Preview {fileName && `: ${fileName}`}</h2>
-        <div className="h-[400px]">
-          {pdfUrl ? (
-            <PdfPreview pdfUrl={pdfUrl} />
-          ) : (
-            <div className="h-full flex items-center justify-center border border-dashed rounded-lg bg-muted/20">
-              <p className="text-muted-foreground">No PDF preview available</p>
+    <Card className="glass-panel">
+      <CardContent className="p-6 space-y-6">
+        <h2 className="text-xl font-semibold">Invoice Information</h2>
+        <p className="text-sm text-muted-foreground">
+          Verify the extracted invoice information and make corrections if necessary.
+          The system has automatically detected and filled in these fields from the PDF.
+        </p>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div>
+            <InvoiceDetails 
+              extractedData={extractedData} 
+              onSaveChanges={handleSaveInvoiceDetails}
+            />
+          </div>
+          
+          <div className="space-y-4">
+            <h3 className="text-lg font-medium">{fileName ? `Document: ${fileName}` : 'PDF Preview'}</h3>
+            <div className="h-[600px]">
+              {pdfUrl ? (
+                <PdfPreview pdfUrl={pdfUrl} />
+              ) : (
+                <div className="h-full flex items-center justify-center border border-dashed rounded-lg bg-muted/20">
+                  <p className="text-muted-foreground">No PDF preview available</p>
+                </div>
+              )}
             </div>
-          )}
+          </div>
         </div>
-      </div>
-    </section>
+      </CardContent>
+    </Card>
   );
 };
 

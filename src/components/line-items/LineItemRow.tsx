@@ -1,14 +1,9 @@
 
 import React from 'react';
-import { Edit, Trash } from 'lucide-react';
-import { Button } from "@/components/ui/button";
-import { 
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import { LineItem } from './types';
+import { Button } from "@/components/ui/button";
+import { Pen, Trash2 } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface LineItemRowProps {
   item: LineItem;
@@ -16,62 +11,80 @@ interface LineItemRowProps {
   onDelete: (id: string) => void;
 }
 
-const LineItemRow: React.FC<LineItemRowProps> = ({
-  item,
-  onEdit,
-  onDelete
-}) => {
-  // Example alternative suggestions
-  const alternatives = item.alternativeProductNumbers || [];
-  const hasAlternatives = alternatives.length > 0;
-  
-  // Determine confidence color based on percentage
+const LineItemRow: React.FC<LineItemRowProps> = ({ item, onEdit, onDelete }) => {
+  // Function to determine confidence indicator color
   const getConfidenceColor = (percentage: number) => {
-    if (percentage >= 80) return "bg-green-500";
-    if (percentage >= 70) return "bg-yellow-500";
-    if (percentage >= 50) return "bg-red-500";
-    return "bg-gray-500";
+    if (percentage >= 85) return "bg-green-500";
+    if (percentage >= 60) return "bg-yellow-500";
+    return "bg-red-500";
+  };
+  
+  // Function to determine confidence class
+  const getConfidenceClass = (percentage: number) => {
+    if (percentage >= 85) return "text-green-700 bg-green-100";
+    if (percentage >= 60) return "text-yellow-700 bg-yellow-100";
+    return "text-red-700 bg-red-100";
   };
   
   return (
-    <tr className="border-b hover:bg-muted/20">
-      <td className="p-2 text-sm">
-        <div className="flex items-center gap-2">
-          {item.productNumber}
-          {/* Removed the copy and info buttons to match the design */}
-        </div>
-      </td>
-      <td className="p-2 text-sm">{item.description}</td>
-      <td className="p-2 text-right">
-        <span className={`px-3 py-1 rounded-md text-white ${getConfidenceColor(item.confidencePercentage)}`}>
-          {item.confidencePercentage}%
-        </span>
-      </td>
-      <td className="p-2 text-right">
-        <div className="flex justify-end space-x-1">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={(e) => {
-              e.stopPropagation();
-              onEdit(item);
-            }}
-          >
-            <Edit className="h-4 w-4" />
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={(e) => {
-              e.stopPropagation();
-              onDelete(item.id);
-            }}
-          >
-            <Trash className="h-4 w-4" />
-          </Button>
-        </div>
-      </td>
-    </tr>
+    <TooltipProvider>
+      <tr className="border-b hover:bg-muted/30">
+        <td className="py-3 px-4 text-sm">
+          <div className="flex items-center">
+            <div className="relative">
+              <span className="font-medium">{item.productNumber}</span>
+              {item.alternativeProductNumbers && item.alternativeProductNumbers.length > 0 && (
+                <div className="mt-1 text-xs text-muted-foreground">
+                  Alternatives: {item.alternativeProductNumbers.join(', ')}
+                </div>
+              )}
+            </div>
+          </div>
+        </td>
+        <td className="py-3 px-4 text-sm">{item.countryOfOrigin}</td>
+        <td className="py-3 px-4 text-sm">{item.description}</td>
+        <td className="py-3 px-4 text-sm text-right">{item.quantity}</td>
+        <td className="py-3 px-4 text-sm text-right">{item.unitPrice}</td>
+        <td className="py-3 px-4 text-sm text-right">{item.amount}</td>
+        <td className="py-3 px-4 text-right">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getConfidenceClass(item.confidencePercentage)}`}>
+                <span className={`w-2 h-2 rounded-full mr-1.5 ${getConfidenceColor(item.confidencePercentage)}`}></span>
+                {item.confidencePercentage}%
+              </div>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p className="text-sm">
+                {item.confidencePercentage >= 85 ? 'High confidence' : 
+                item.confidencePercentage >= 60 ? 'Medium confidence' : 'Low confidence'} 
+                in HS code recognition
+              </p>
+            </TooltipContent>
+          </Tooltip>
+        </td>
+        <td className="py-2 px-4 text-right">
+          <div className="flex justify-end gap-2">
+            <Button 
+              variant="ghost" 
+              size="sm"
+              className="h-7 w-7 p-0"
+              onClick={() => onEdit(item)}
+            >
+              <Pen className="h-4 w-4" />
+            </Button>
+            <Button 
+              variant="ghost" 
+              size="sm"
+              className="h-7 w-7 p-0 hover:text-destructive"
+              onClick={() => onDelete(item.id)}
+            >
+              <Trash2 className="h-4 w-4" />
+            </Button>
+          </div>
+        </td>
+      </tr>
+    </TooltipProvider>
   );
 };
 
