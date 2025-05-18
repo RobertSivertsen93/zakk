@@ -14,7 +14,7 @@ const AlternativeHSCodes: React.FC<AlternativeHSCodesProps> = ({
   if (!alternativeCodes || alternativeCodes.length === 0) return null;
   
   return (
-    <div className="flex flex-wrap gap-1.5">
+    <div className="flex flex-wrap gap-1.5 mt-2">
       <span className="text-xs text-muted-foreground py-1">Alternatives:</span>
       {alternativeCodes.map(code => (
         <Button

@@ -120,17 +120,20 @@ const LineItemsSection: React.FC<LineItemsSectionProps> = ({ onComplete }) => {
     }
   };
 
-  // Handle selecting a HS code from history
+  // Handle selecting a HS code from history - modified to add a new item
   const handleSelectHSCode = (code: string, description: string) => {
-    if (items.length > 0) {
-      const firstItemId = items[0].id;
-      const updatedItem = {
-        ...items[0],
-        productNumber: code,
-        description: description || items[0].description
-      };
-      handleEditItem(firstItemId, updatedItem);
-    }
+    const newItem: LineItem = {
+      id: `hs-${Date.now()}`,
+      productNumber: code,
+      countryOfOrigin: '',
+      description: description,
+      confidencePercentage: 85, // Default confidence for historical items
+      quantity: '1',
+      unitPrice: '0',
+      amount: '0'
+    };
+    
+    setItems([...items, newItem]);
   };
 
   return (

@@ -87,7 +87,7 @@ const HSCodeHistory: React.FC<HSCodeHistoryProps> = ({ onSelectCode }) => {
   const handleSelectCode = (item: HistoricalHSCode) => {
     onSelectCode(item.code, item.description);
     setIsOpen(false);
-    toast.success(`Applied historical HS code: ${item.code}`);
+    toast.success(`Added new line item with HS code: ${item.code}`);
   };
   
   return (
@@ -157,7 +157,7 @@ const HSCodeHistory: React.FC<HSCodeHistoryProps> = ({ onSelectCode }) => {
                           variant="outline"
                           onClick={() => handleSelectCode(item)}
                         >
-                          Use
+                          Add
                         </Button>
                       </TableCell>
                     </TableRow>
