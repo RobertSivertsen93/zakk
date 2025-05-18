@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { LineItem } from '@/components/LineItemsTable';
+import { LineItem } from '@/components/line-items/types';
 import LineItemsTable from '@/components/LineItemsTable';
 import { Card, CardContent } from "@/components/ui/card";
 import { toast } from "@/lib/toast";
@@ -10,39 +10,44 @@ const LineItemsSection: React.FC = () => {
   const [items, setItems] = useState<LineItem[]>([
     {
       id: '1',
-      hsCode: '6117.80.80',
+      productNumber: '6117.80.80',
+      countryOfOrigin: 'China',
       description: 'Buff, 230 gsm - size 25*...',
-      confidence: 95,
-      quantity: 1000,
-      unitPrice: 2.50,
-      totalPrice: 2500
+      confidencePercentage: 95,
+      quantity: '1000',
+      unitPrice: '2.50',
+      amount: '2500',
+      alternativeProductNumbers: ['6117.80.90', '6117.80.85']
     },
     {
       id: '2',
-      hsCode: '9999.99.99',
+      productNumber: '9999.99.99',
+      countryOfOrigin: 'Denmark',
       description: 'Opstart',
-      confidence: 50,
-      quantity: 1,
-      unitPrice: 150,
-      totalPrice: 150
+      confidencePercentage: 50,
+      quantity: '1',
+      unitPrice: '150',
+      amount: '150'
     },
     {
       id: '3',
-      hsCode: '4908.90.00',
+      productNumber: '4908.90.00',
+      countryOfOrigin: 'Sweden',
       description: 'Prøvetryk (voksen + barn)',
-      confidence: 70,
-      quantity: 5,
-      unitPrice: 75,
-      totalPrice: 375
+      confidencePercentage: 70,
+      quantity: '5',
+      unitPrice: '75',
+      amount: '375'
     },
     {
       id: '4',
-      hsCode: '4901.99.00',
+      productNumber: '4901.99.00',
+      countryOfOrigin: 'Germany',
       description: 'Eksportdokumenter 3 cli-...',
-      confidence: 80,
-      quantity: 10,
-      unitPrice: 45,
-      totalPrice: 450
+      confidencePercentage: 80,
+      quantity: '10',
+      unitPrice: '45',
+      amount: '450'
     }
   ]);
 
