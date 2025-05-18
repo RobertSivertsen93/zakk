@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PdfUploadSection from './PdfUploadSection';
 import ExtractDataSection from './ExtractDataSection';
 import LineItemsSection from './LineItemsSection';
@@ -7,6 +7,7 @@ import ExportSection from './ExportSection';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { FileText, List, Upload, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import StepIndicator from "@/components/StepIndicator";
 
 const ExtractContent = () => {
   const [fileName, setFileName] = useState(sessionStorage.getItem('pdf-file-name') || '');
@@ -14,6 +15,7 @@ const ExtractContent = () => {
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [currentStep, setCurrentStep] = useState(pdfUrl ? 2 : 1);
   const [activeTab, setActiveTab] = useState<string>(pdfUrl ? "invoice" : "upload");
+  const [completedSections, setCompletedSections] = useState<string[]>([]);
 
   const handlePdfSelected = (file: File) => {
     const url = URL.createObjectURL(file);
@@ -29,6 +31,32 @@ const ExtractContent = () => {
   const handleBackToUpload = () => {
     setCurrentStep(1);
     setActiveTab("upload");
+  };
+  
+  // Track tab changes to update step indicator
+  useEffect(() => {
+    if (activeTab === "invoice") {
+      setCurrentStep(2);
+    } else if (activeTab === "lineitems") {
+      setCurrentStep(2);
+      // Mark invoice section as completed if coming from invoice tab
+      if (!completedSections.includes('invoice-details')) {
+        setCompletedSections(prev => [...prev, 'invoice-details']);
+      }
+    } else if (activeTab === "export") {
+      setCurrentStep(2);
+      // Mark line items as completed if coming from line items tab
+      if (!completedSections.includes('line-items')) {
+        setCompletedSections(prev => [...prev, 'line-items']);
+      }
+    }
+  }, [activeTab, completedSections]);
+  
+  // Mark current section as complete when moving to the next section
+  const handleCompleteSection = (sectionId: string) => {
+    if (!completedSections.includes(sectionId)) {
+      setCompletedSections(prev => [...prev, sectionId]);
+    }
   };
 
   return (
@@ -48,6 +76,11 @@ const ExtractContent = () => {
               Back to Upload
             </Button>
           </div>
+          
+          <StepIndicator 
+            currentStep={currentStep} 
+            completedSections={completedSections}
+          />
           
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabsList className="grid grid-cols-3 mb-8 w-full md:w-auto">
@@ -69,12 +102,21 @@ const ExtractContent = () => {
               <ExtractDataSection 
                 pdfUrl={pdfUrl} 
                 fileName={fileName} 
-                onBackToUpload={handleBackToUpload} 
+                onBackToUpload={handleBackToUpload}
+                onComplete={() => {
+                  handleCompleteSection('invoice-details');
+                  setActiveTab('lineitems');
+                }}
               />
             </TabsContent>
 
             <TabsContent value="lineitems">
-              <LineItemsSection />
+              <LineItemsSection 
+                onComplete={() => {
+                  handleCompleteSection('line-items');
+                  setActiveTab('export');
+                }} 
+              />
             </TabsContent>
 
             <TabsContent value="export">

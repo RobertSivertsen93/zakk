@@ -7,8 +7,14 @@ import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";
 import { toast } from "@/lib/toast";
 import ExtractActionButtons from '@/components/ExtractActionButtons';
+import HSCodeHistory from '@/components/line-items/HSCodeHistory';
+import SectionValidator, { ValidationSection } from '@/components/validation/SectionValidator';
 
-const LineItemsSection: React.FC = () => {
+interface LineItemsSectionProps {
+  onComplete?: () => void;
+}
+
+const LineItemsSection: React.FC<LineItemsSectionProps> = ({ onComplete }) => {
   // Mock data for line items
   const [items, setItems] = useState<LineItem[]>([
     {
@@ -83,6 +89,41 @@ const LineItemsSection: React.FC = () => {
       amount: '600'
     }
   ]);
+  
+  const [validationStatus, setValidationStatus] = useState<ValidationSection>({
+    id: 'line-items',
+    title: 'Line Items Validation',
+    items: [
+      {
+        id: 'hs-codes',
+        label: 'Valid HS codes',
+        description: 'All items must have correctly formatted HS codes',
+        isRequired: true,
+        status: 'pending'
+      },
+      {
+        id: 'country-origins',
+        label: 'Country of origin specified',
+        description: 'Each item must have a valid country of origin',
+        isRequired: true,
+        status: 'pending'
+      },
+      {
+        id: 'quantities',
+        label: 'Quantities and prices',
+        description: 'All items must have valid quantities and unit prices',
+        isRequired: true,
+        status: 'pending'
+      },
+      {
+        id: 'high-confidence',
+        label: 'High confidence items',
+        description: 'Items with confidence levels below 70% may need review',
+        isRequired: false,
+        status: 'pending'
+      }
+    ]
+  });
 
   const handleEditItem = (id: string, updatedItem: LineItem) => {
     setItems(items.map(item => item.id === id ? updatedItem : item));
@@ -115,7 +156,60 @@ const LineItemsSection: React.FC = () => {
   };
 
   const handleContinue = () => {
-    toast.success('Proceeding to export');
+    if (onComplete) {
+      onComplete();
+    }
+  };
+  
+  const handleSelectHistoricalCode = (code: string, description: string) => {
+    toast.success(`Selected HS code from history: ${code}`);
+    // In a real app, this would populate a new line item or update a selected one
+  };
+  
+  const handleValidate = () => {
+    // Simulate validation process
+    toast.info('Validating line items...');
+    
+    // Simulate validation process completing after a short delay
+    setTimeout(() => {
+      // Update validation statuses
+      const updatedSection = { ...validationStatus };
+      
+      // Check for valid HS codes
+      const hasValidHSCodes = items.every(
+        item => item.productNumber && /^\d{4}\.\d{2}\.\d{2}$/.test(item.productNumber)
+      );
+      updatedSection.items[0].status = hasValidHSCodes ? 'valid' : 'invalid';
+      
+      // Check for country of origin
+      const hasCountryOrigin = items.every(
+        item => item.countryOfOrigin && item.countryOfOrigin.trim() !== ''
+      );
+      updatedSection.items[1].status = hasCountryOrigin ? 'valid' : 'invalid';
+      
+      // Check for quantities and prices
+      const hasQuantities = items.every(
+        item => item.quantity && item.unitPrice
+      );
+      updatedSection.items[2].status = hasQuantities ? 'valid' : 'warning';
+      
+      // Check confidence levels
+      const lowConfidenceItems = items.filter(item => item.confidencePercentage < 70);
+      updatedSection.items[3].status = lowConfidenceItems.length === 0 ? 'valid' : 'warning';
+      
+      setValidationStatus(updatedSection);
+      toast.success('Validation complete');
+    }, 1500);
+  };
+  
+  const handleUpdateStatus = (itemId: string, status: 'valid' | 'invalid' | 'warning' | 'pending') => {
+    const updatedSection = { ...validationStatus };
+    const itemIndex = updatedSection.items.findIndex(item => item.id === itemId);
+    
+    if (itemIndex !== -1) {
+      updatedSection.items[itemIndex].status = status;
+      setValidationStatus(updatedSection);
+    }
   };
 
   return (
@@ -130,11 +224,22 @@ const LineItemsSection: React.FC = () => {
                 Use the search and filters to quickly find specific items.
               </p>
             </div>
-            <Button onClick={handleAddItem} className="gap-1">
-              <PlusCircle className="h-4 w-4" />
-              Add Item
-            </Button>
+            <div className="flex items-center gap-2">
+              <HSCodeHistory 
+                onSelectCode={handleSelectHistoricalCode}
+              />
+              <Button onClick={handleAddItem} className="gap-1">
+                <PlusCircle className="h-4 w-4" />
+                Add Item
+              </Button>
+            </div>
           </div>
+          
+          <SectionValidator
+            section={validationStatus}
+            onValidate={handleValidate}
+            onUpdateStatus={handleUpdateStatus}
+          />
           
           <LineItemsTable 
             items={items} 
