@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Edit, Trash, Info, Copy } from 'lucide-react';
+import { Edit, Trash } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { 
   Tooltip,
@@ -38,44 +38,37 @@ const LineItemRow: React.FC<LineItemRowProps> = ({
       <td className="p-2 text-sm">
         <div className="flex items-center gap-2">
           {item.productNumber}
-          <div className="flex gap-1">
-            <Button variant="ghost" size="icon" className="h-6 w-6">
-              <Copy className="h-4 w-4 text-blue-500" />
-            </Button>
-            <Button variant="ghost" size="icon" className="h-6 w-6">
-              <Info className="h-4 w-4 text-blue-500" />
-            </Button>
-          </div>
+          {/* Removed the copy and info buttons to match the design */}
         </div>
       </td>
       <td className="p-2 text-sm">{item.description}</td>
       <td className="p-2 text-right">
-        <div className="flex items-center justify-end gap-4">
-          <span className={`px-3 py-1 rounded-md text-white ${getConfidenceColor(item.confidencePercentage)}`}>
-            {item.confidencePercentage}%
-          </span>
-          <div className="flex justify-end space-x-1">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={(e) => {
-                e.stopPropagation();
-                onEdit(item);
-              }}
-            >
-              <Edit className="h-4 w-4" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={(e) => {
-                e.stopPropagation();
-                onDelete(item.id);
-              }}
-            >
-              <Trash className="h-4 w-4" />
-            </Button>
-          </div>
+        <span className={`px-3 py-1 rounded-md text-white ${getConfidenceColor(item.confidencePercentage)}`}>
+          {item.confidencePercentage}%
+        </span>
+      </td>
+      <td className="p-2 text-right">
+        <div className="flex justify-end space-x-1">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={(e) => {
+              e.stopPropagation();
+              onEdit(item);
+            }}
+          >
+            <Edit className="h-4 w-4" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={(e) => {
+              e.stopPropagation();
+              onDelete(item.id);
+            }}
+          >
+            <Trash className="h-4 w-4" />
+          </Button>
         </div>
       </td>
     </tr>

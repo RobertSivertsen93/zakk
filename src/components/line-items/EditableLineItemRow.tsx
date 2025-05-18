@@ -88,33 +88,32 @@ const EditableLineItemRow: React.FC<EditableLineItemRowProps> = ({
         />
       </td>
       <td className="p-2 text-right">
-        <div className="flex items-center justify-end gap-2">
-          <select 
-            value={editFormData?.confidencePercentage || 50}
-            onChange={(e) => onFieldChange('confidencePercentage', parseInt(e.target.value))}
-            className="h-8 text-sm rounded border px-2"
+        <select 
+          value={editFormData?.confidencePercentage || 50}
+          onChange={(e) => onFieldChange('confidencePercentage', parseInt(e.target.value))}
+          className="h-8 text-sm rounded border px-2"
+        >
+          {percentageOptions.map(percent => (
+            <option key={percent} value={percent}>{percent}%</option>
+          ))}
+        </select>
+      </td>
+      <td className="p-2 text-right">
+        <div className="flex justify-end space-x-1">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={onSave}
           >
-            {percentageOptions.map(percent => (
-              <option key={percent} value={percent}>{percent}%</option>
-            ))}
-          </select>
-          
-          <div className="flex justify-end space-x-1">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={onSave}
-            >
-              <Check className="h-4 w-4 text-green-500" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={onCancel}
-            >
-              <X className="h-4 w-4 text-red-500" />
-            </Button>
-          </div>
+            <Check className="h-4 w-4 text-green-500" />
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={onCancel}
+          >
+            <X className="h-4 w-4 text-red-500" />
+          </Button>
         </div>
       </td>
     </tr>

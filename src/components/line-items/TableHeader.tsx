@@ -8,6 +8,7 @@ const TableHeader: React.FC = () => {
         <th className="text-left p-2 text-sm font-medium">HS Kota</th>
         <th className="text-left p-2 text-sm font-medium">Vørulýsing</th>
         <th className="text-right p-2 text-sm font-medium">Sannlíkindi</th>
+        <th className="text-right p-2 text-sm font-medium">Broyt</th>
       </tr>
     </thead>
   );
