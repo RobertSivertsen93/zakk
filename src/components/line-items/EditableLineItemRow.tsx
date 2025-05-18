@@ -22,8 +22,12 @@ const EditableLineItemRow: React.FC<EditableLineItemRowProps> = ({
   onSave,
   onCancel
 }) => {
-  // Confidence percentage options
-  const percentageOptions = [50, 70, 80, 95];
+  // Function to determine confidence class
+  const getConfidenceClass = (percentage: number) => {
+    if (percentage >= 85) return "text-green-700 bg-green-100";
+    if (percentage >= 60) return "text-yellow-700 bg-yellow-100";
+    return "text-red-700 bg-red-100";
+  };
 
   return (
     <tr className="border-b bg-muted/10">
@@ -109,15 +113,13 @@ const EditableLineItemRow: React.FC<EditableLineItemRowProps> = ({
         <div className="space-y-3 p-1">
           <div className="space-y-2">
             <Label className="text-sm font-medium">Confidence</Label>
-            <select 
-              value={editFormData?.confidencePercentage || 50}
-              onChange={(e) => onFieldChange('confidencePercentage', parseInt(e.target.value))}
-              className="h-10 w-full text-sm rounded border px-2"
-            >
-              {percentageOptions.map(percent => (
-                <option key={percent} value={percent}>{percent}%</option>
-              ))}
-            </select>
+            <div className="h-10 flex items-center">
+              <div className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${getConfidenceClass(editFormData?.confidencePercentage || 50)}`}>
+                <span className={`w-2 h-2 rounded-full mr-1.5 ${getConfidenceClass(editFormData?.confidencePercentage || 50)}`}></span>
+                {editFormData?.confidencePercentage || 50}%
+              </div>
+              <span className="ml-2 text-xs text-muted-foreground">System determined</span>
+            </div>
           </div>
 
           <div className="flex justify-end space-x-2 pt-4">
