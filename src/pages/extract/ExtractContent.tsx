@@ -1,13 +1,13 @@
+
 import React, { useState, useEffect } from 'react';
 import PdfUploadSection from './PdfUploadSection';
 import ExtractDataSection from './ExtractDataSection';
 import LineItemsSection from './LineItemsSection';
 import ExportSection from './ExportSection';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { FileText, List, Upload, Download, CheckCircle2 } from "lucide-react";
+import { Upload, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from '@/contexts/LanguageContext';
-import StepIndicator from '@/components/StepIndicator';
 
 const ExtractContent = () => {
   const [fileName, setFileName] = useState(sessionStorage.getItem('pdf-file-name') || '');
@@ -81,11 +81,6 @@ const ExtractContent = () => {
             <Upload className="mr-1 h-4 w-4" />
             {t('backToUpload')}
           </Button>
-          
-          <StepIndicator 
-            currentStep={currentStep} 
-            completedSections={completedSections}
-          />
           
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabsList className="relative mb-6 w-full overflow-hidden rounded-lg border shadow-sm">
