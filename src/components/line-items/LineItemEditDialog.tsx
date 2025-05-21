@@ -4,10 +4,17 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { LineItem } from './types';
-import { Save, X } from "lucide-react";
+import { Save, X, Info } from "lucide-react";
 import HSCodeValidation from './HSCodeValidation';
 import { Label } from "@/components/ui/label";
 import AlternativeHSCodes from './AlternativeHSCodes';
+import { Progress } from "@/components/ui/progress";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface LineItemEditDialogProps {
   open: boolean;
@@ -138,10 +145,32 @@ const LineItemEditDialog: React.FC<LineItemEditDialogProps> = ({
 
           {editFormData.confidencePercentage !== undefined && (
             <div className="space-y-2">
-              <Label htmlFor="confidence" className="font-medium">Confidence</Label>
-              <div className="flex items-center h-10 px-3 rounded-md border text-sm">
-                {editFormData.confidencePercentage}%
+              <div className="flex items-center justify-between">
+                <Label htmlFor="confidence" className="font-medium flex items-center">
+                  Confidence
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <div className="ml-1 cursor-help">
+                          <Info className="h-4 w-4 text-muted-foreground" />
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p className="text-xs">System-calculated confidence score for the HS code classification</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </Label>
+                <span className="text-sm font-medium">{editFormData.confidencePercentage}%</span>
               </div>
+              <Progress 
+                value={editFormData.confidencePercentage} 
+                className="h-2.5"
+                indicatorClassName={`${
+                  editFormData.confidencePercentage >= 80 ? 'bg-green-500' : 
+                  editFormData.confidencePercentage >= 60 ? 'bg-amber-500' : 'bg-red-500'
+                }`}
+              />
             </div>
           )}
         </div>
