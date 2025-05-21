@@ -1,12 +1,10 @@
-
 import React, { useState } from 'react';
 import { LineItem } from '@/components/line-items/types';
 import LineItemsTable from '@/components/LineItemsTable';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { PlusCircle, CheckCircle } from "lucide-react";
+import { CheckCircle } from "lucide-react";
 import { toast } from "@/lib/toast";
-import HSCodeHistory from '@/components/line-items/HSCodeHistory';
 
 interface LineItemsSectionProps {
   onComplete?: () => void;
@@ -98,42 +96,10 @@ const LineItemsSection: React.FC<LineItemsSectionProps> = ({ onComplete }) => {
     toast.success('Line item removed');
   };
 
-  const handleAddItem = () => {
-    const newItem: LineItem = {
-      id: `new-${Date.now()}`,
-      productNumber: '',
-      countryOfOrigin: '',
-      description: '',
-      confidencePercentage: 50,
-      quantity: '',
-      unitPrice: '',
-      amount: ''
-    };
-    
-    setItems([...items, newItem]);
-    toast.success('New line item added');
-  };
-
   const handleContinue = () => {
     if (onComplete) {
       onComplete();
     }
-  };
-
-  // Handle selecting a HS code from history - modified to add a new item
-  const handleSelectHSCode = (code: string, description: string) => {
-    const newItem: LineItem = {
-      id: `hs-${Date.now()}`,
-      productNumber: code,
-      countryOfOrigin: '', // Empty country code by default
-      description: description,
-      confidencePercentage: 85, // Default confidence for historical items
-      quantity: '1',
-      unitPrice: '0',
-      amount: '0'
-    };
-    
-    setItems([...items, newItem]);
   };
 
   return (
@@ -146,13 +112,6 @@ const LineItemsSection: React.FC<LineItemsSectionProps> = ({ onComplete }) => {
               <p className="text-sm text-muted-foreground mt-1">
                 Review and edit the line items extracted from the invoice.
               </p>
-            </div>
-            <div className="flex gap-2">
-              <HSCodeHistory onSelectCode={handleSelectHSCode} />
-              <Button onClick={handleAddItem} className="gap-1 bg-primary hover:bg-primary/90 transition-all duration-300 shadow-sm hover:shadow-md">
-                <PlusCircle className="h-4 w-4" />
-                Add Item
-              </Button>
             </div>
           </div>
           
