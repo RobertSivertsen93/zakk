@@ -15,12 +15,11 @@ const StepIndicator: React.FC<StepIndicatorProps> = ({
     { id: 'upload', label: 'Upload', icon: Upload },
     { id: 'invoice', label: 'Invoice', icon: FileText },
     { id: 'export', label: 'Export', icon: Download },
-    { id: 'complete', label: 'Complete', icon: Download },
   ];
 
   return (
     <div className="mb-6">
-      <div className="grid grid-cols-4 w-full gap-2">
+      <div className="grid grid-cols-3 w-full gap-2">
         {steps.map((step, index) => {
           const StepIcon = step.icon;
           const isActive = currentStep === index + 1;
