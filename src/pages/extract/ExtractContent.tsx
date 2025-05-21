@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import PdfUploadSection from './PdfUploadSection';
 import ExtractDataSection from './ExtractDataSection';
@@ -96,7 +95,7 @@ const ExtractContent = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pb-20">
       {currentStep === 1 ? (
         <PdfUploadSection onPdfSelected={handlePdfSelected} />
       ) : (

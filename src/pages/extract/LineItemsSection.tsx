@@ -3,8 +3,6 @@ import React, { useState } from 'react';
 import { LineItem } from '@/components/line-items/types';
 import LineItemsTable from '@/components/LineItemsTable';
 import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { CheckCircle } from "lucide-react";
 import { toast } from "@/lib/toast";
 
 interface LineItemsSectionProps {
@@ -97,12 +95,6 @@ const LineItemsSection: React.FC<LineItemsSectionProps> = ({ onComplete }) => {
     toast.success('Line item removed');
   };
 
-  const handleContinue = () => {
-    if (onComplete) {
-      onComplete();
-    }
-  };
-
   return (
     <div className="space-y-6">
       <Card className="glass-panel shadow-lg border border-gray-100 bg-gradient-to-br from-white to-gray-50">
@@ -121,16 +113,6 @@ const LineItemsSection: React.FC<LineItemsSectionProps> = ({ onComplete }) => {
             onEditItem={handleEditItem} 
             onDeleteItem={handleDeleteItem} 
           />
-
-          <div className="mt-8 flex justify-end">
-            <Button 
-              onClick={handleContinue}
-              className="gap-2 py-2 px-6 text-white bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary transition-all duration-300 shadow-md hover:shadow-lg transform hover:translate-y-[-1px]"
-            >
-              <CheckCircle className="h-4 w-4" />
-              Approve Line Items
-            </Button>
-          </div>
         </CardContent>
       </Card>
     </div>
