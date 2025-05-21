@@ -5,9 +5,10 @@ import ExtractDataSection from './ExtractDataSection';
 import LineItemsSection from './LineItemsSection';
 import ExportSection from './ExportSection';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { FileText, List, Upload, Download, Check } from "lucide-react";
+import { FileText, List, Upload, Download, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from '@/contexts/LanguageContext';
+import StepIndicator from '@/components/StepIndicator';
 
 const ExtractContent = () => {
   const [fileName, setFileName] = useState(sessionStorage.getItem('pdf-file-name') || '');
@@ -82,43 +83,50 @@ const ExtractContent = () => {
             {t('backToUpload')}
           </Button>
           
+          <StepIndicator 
+            currentStep={currentStep} 
+            completedSections={completedSections}
+          />
+          
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid grid-cols-3 mb-8 w-full bg-secondary/50 backdrop-blur-sm border shadow-sm">
+            <TabsList className="relative mb-6 w-full overflow-hidden rounded-lg border shadow-sm">
               <TabsTrigger 
                 value="invoice" 
-                className="flex items-center gap-2 relative py-3 transition-all duration-300 data-[state=active]:bg-white data-[state=active]:shadow-md"
+                className="flex-1 gap-2"
               >
-                <FileText className="h-4 w-4" />
-                <span>{t('invoice')}</span>
-                {isTabCompleted('invoice') && (
-                  <span className="absolute right-2 top-1/2 transform -translate-y-1/2">
-                    <Check className="h-3 w-3 text-green-500" />
-                  </span>
-                )}
+                <div className="flex items-center justify-center gap-2 relative">
+                  <FileText className="h-4 w-4" />
+                  <span>{t('invoice')}</span>
+                  {isTabCompleted('invoice') && (
+                    <CheckCircle2 className="ml-1 h-3.5 w-3.5 text-green-500" />
+                  )}
+                </div>
               </TabsTrigger>
+              
               <TabsTrigger 
                 value="lineitems" 
-                className="flex items-center gap-2 relative py-3 transition-all duration-300 data-[state=active]:bg-white data-[state=active]:shadow-md"
+                className="flex-1 gap-2"
               >
-                <List className="h-4 w-4" />
-                <span>{t('lineItems')}</span>
-                {isTabCompleted('lineitems') && (
-                  <span className="absolute right-2 top-1/2 transform -translate-y-1/2">
-                    <Check className="h-3 w-3 text-green-500" />
-                  </span>
-                )}
+                <div className="flex items-center justify-center gap-2 relative">
+                  <List className="h-4 w-4" />
+                  <span>{t('lineItems')}</span>
+                  {isTabCompleted('lineitems') && (
+                    <CheckCircle2 className="ml-1 h-3.5 w-3.5 text-green-500" />
+                  )}
+                </div>
               </TabsTrigger>
+              
               <TabsTrigger 
                 value="export" 
-                className="flex items-center gap-2 relative py-3 transition-all duration-300 data-[state=active]:bg-white data-[state=active]:shadow-md"
+                className="flex-1 gap-2"
               >
-                <Download className="h-4 w-4" />
-                <span>{t('export')}</span>
-                {isTabCompleted('export') && (
-                  <span className="absolute right-2 top-1/2 transform -translate-y-1/2">
-                    <Check className="h-3 w-3 text-green-500" />
-                  </span>
-                )}
+                <div className="flex items-center justify-center gap-2 relative">
+                  <Download className="h-4 w-4" />
+                  <span>{t('export')}</span>
+                  {isTabCompleted('export') && (
+                    <CheckCircle2 className="ml-1 h-3.5 w-3.5 text-green-500" />
+                  )}
+                </div>
               </TabsTrigger>
             </TabsList>
 
