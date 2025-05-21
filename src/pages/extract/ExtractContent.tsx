@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import PdfUploadSection from './PdfUploadSection';
 import ExtractDataSection from './ExtractDataSection';
@@ -45,7 +44,7 @@ const ExtractContent = () => {
         setCompletedSections(prev => [...prev, 'invoice-details']);
       }
     } else if (activeTab === "export") {
-      setCurrentStep(2);
+      setCurrentStep(3);
       // Mark line items as completed if coming from line items tab
       if (!completedSections.includes('line-items')) {
         setCompletedSections(prev => [...prev, 'line-items']);
@@ -95,7 +94,6 @@ const ExtractContent = () => {
                 className="flex-1 gap-2"
               >
                 <div className="flex items-center justify-center gap-2 relative">
-                  <FileText className="h-4 w-4" />
                   <span>{t('invoice')}</span>
                   {isTabCompleted('invoice') && (
                     <CheckCircle2 className="ml-1 h-3.5 w-3.5 text-green-500" />
@@ -108,7 +106,6 @@ const ExtractContent = () => {
                 className="flex-1 gap-2"
               >
                 <div className="flex items-center justify-center gap-2 relative">
-                  <List className="h-4 w-4" />
                   <span>{t('lineItems')}</span>
                   {isTabCompleted('lineitems') && (
                     <CheckCircle2 className="ml-1 h-3.5 w-3.5 text-green-500" />
@@ -121,7 +118,6 @@ const ExtractContent = () => {
                 className="flex-1 gap-2"
               >
                 <div className="flex items-center justify-center gap-2 relative">
-                  <Download className="h-4 w-4" />
                   <span>{t('export')}</span>
                   {isTabCompleted('export') && (
                     <CheckCircle2 className="ml-1 h-3.5 w-3.5 text-green-500" />

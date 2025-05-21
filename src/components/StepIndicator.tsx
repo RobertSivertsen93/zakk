@@ -1,6 +1,5 @@
 
 import React from 'react';
-import { Check, FileText, Download, Upload } from 'lucide-react';
 
 interface StepIndicatorProps {
   currentStep: number;
@@ -12,16 +11,15 @@ const StepIndicator: React.FC<StepIndicatorProps> = ({
   completedSections = []
 }) => {
   const steps = [
-    { id: 'upload', label: 'Upload', icon: Upload },
-    { id: 'invoice', label: 'Invoice', icon: FileText },
-    { id: 'export', label: 'Export', icon: Download },
+    { id: 'upload', label: 'Upload' },
+    { id: 'invoice', label: 'Invoice' },
+    { id: 'export', label: 'Export' },
   ];
 
   return (
     <div className="mb-6">
       <div className="grid grid-cols-3 w-full gap-2">
         {steps.map((step, index) => {
-          const StepIcon = step.icon;
           const isActive = currentStep === index + 1;
           const isCompleted = currentStep > index + 1 || 
                              (step.id === 'invoice' && completedSections.includes('invoice-details')) ||
@@ -30,7 +28,7 @@ const StepIndicator: React.FC<StepIndicatorProps> = ({
           return (
             <div key={step.id} className="flex flex-col items-center">
               <div className={`
-                flex items-center justify-center w-8 h-8 rounded-full 
+                flex items-center justify-center w-full py-2 rounded-md
                 ${isActive 
                   ? 'bg-primary text-primary-foreground' 
                   : isCompleted
@@ -38,17 +36,10 @@ const StepIndicator: React.FC<StepIndicatorProps> = ({
                     : 'bg-muted text-muted-foreground'
                 }
               `}>
-                {isCompleted ? <Check className="h-4 w-4" /> : <StepIcon className="h-4 w-4" />}
+                <span className="font-medium">
+                  {step.label}
+                </span>
               </div>
-              <span className={`mt-1 text-xs font-medium ${
-                isActive 
-                  ? 'text-primary' 
-                  : isCompleted
-                    ? 'text-green-500' 
-                    : 'text-muted-foreground'
-              }`}>
-                {step.label}
-              </span>
             </div>
           );
         })}
