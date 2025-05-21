@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { LineItem } from '@/components/line-items/types';
 import LineItemsTable from '@/components/LineItemsTable';
@@ -127,7 +128,7 @@ const LineItemsSection: React.FC<LineItemsSectionProps> = ({ onComplete }) => {
               className="gap-2 py-2 px-6 text-white bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary transition-all duration-300 shadow-md hover:shadow-lg transform hover:translate-y-[-1px]"
             >
               <CheckCircle className="h-4 w-4" />
-              Continue
+              Approve Line Items
             </Button>
           </div>
         </CardContent>
