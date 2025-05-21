@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Check, FileText, List, Download, Upload } from 'lucide-react';
+import { Check, FileText, Download, Upload } from 'lucide-react';
 
 interface StepIndicatorProps {
   currentStep: number;
@@ -14,8 +14,8 @@ const StepIndicator: React.FC<StepIndicatorProps> = ({
   const steps = [
     { id: 'upload', label: 'Upload', icon: Upload },
     { id: 'invoice', label: 'Invoice', icon: FileText },
-    { id: 'lineitems', label: 'Items', icon: List },
     { id: 'export', label: 'Export', icon: Download },
+    { id: 'complete', label: 'Complete', icon: Download },
   ];
 
   return (
@@ -26,7 +26,7 @@ const StepIndicator: React.FC<StepIndicatorProps> = ({
           const isActive = currentStep === index + 1;
           const isCompleted = currentStep > index + 1 || 
                              (step.id === 'invoice' && completedSections.includes('invoice-details')) ||
-                             (step.id === 'lineitems' && completedSections.includes('line-items'));
+                             (step.id === 'export' && completedSections.includes('line-items'));
           
           return (
             <div key={step.id} className="flex flex-col items-center">
