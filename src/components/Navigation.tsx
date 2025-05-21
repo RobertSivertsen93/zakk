@@ -20,7 +20,7 @@ const Navigation = () => {
       setIsLoggedIn(!!token);
       
       // Redirect to login if not logged in and not on login page
-      if (!token && location.pathname !== '/login' && location.pathname !== '/') {
+      if (!token && location.pathname !== '/login') {
         navigate('/login');
       }
     };
@@ -29,7 +29,7 @@ const Navigation = () => {
   }, [location.pathname, navigate]);
   
   // If user is on login page, don't show navigation
-  if (location.pathname === '/login' || location.pathname === '/') {
+  if (location.pathname === '/login') {
     return null;
   }
   

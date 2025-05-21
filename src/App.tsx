@@ -4,9 +4,9 @@ import {
   BrowserRouter,
   Routes,
   Route,
+  Navigate,
 } from "react-router-dom";
 
-import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Upload from "./pages/Upload";
 import NotFound from "./pages/NotFound";
@@ -36,7 +36,7 @@ function App() {
   const routes = [
     {
       path: "/",
-      element: <Index />
+      element: <Navigate to="/login" replace />
     },
     {
       path: "/login",
