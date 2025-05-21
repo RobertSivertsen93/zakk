@@ -7,6 +7,7 @@ import { LineItem } from './types';
 import { Save, X } from "lucide-react";
 import HSCodeValidation from './HSCodeValidation';
 import { Label } from "@/components/ui/label";
+import AlternativeHSCodes from './AlternativeHSCodes';
 
 interface LineItemEditDialogProps {
   open: boolean;
@@ -37,6 +38,18 @@ const LineItemEditDialog: React.FC<LineItemEditDialogProps> = ({
     onOpenChange(false);
   };
 
+  // Process alternative codes with confidence data if available
+  const processedAlternatives = item.alternativeProductNumbers ? 
+    item.alternativeProductNumbers.map((code, index) => {
+      // Add mock confidence levels for demonstration
+      // In a real app, these would come from the backend
+      const confidenceLevels = [75, 65];
+      return {
+        code,
+        confidence: confidenceLevels[index] || 60
+      };
+    }) : [];
+
   return (
     <Dialog open={open} onOpenChange={(isOpen) => {
       if (!isOpen) handleClose();
@@ -48,13 +61,25 @@ const LineItemEditDialog: React.FC<LineItemEditDialogProps> = ({
         </DialogHeader>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5 py-4">
-          <div className="space-y-2">
+          <div className="space-y-2 md:col-span-2">
             <Label htmlFor="productNumber" className="font-medium">HS/Commodity Code</Label>
-            <HSCodeValidation
-              value={editFormData.productNumber}
-              onChange={(value) => onFieldChange('productNumber', value)}
-              alternativeCodes={item.alternativeProductNumbers}
-            />
+            <div className="space-y-1">
+              <Input 
+                id="productNumber"
+                value={editFormData.productNumber}
+                onChange={(e) => onFieldChange('productNumber', e.target.value)}
+                className="w-full"
+                placeholder="e.g. 6117.80.80"
+              />
+              
+              {/* Show alternatives with confidence indicators */}
+              {processedAlternatives.length > 0 && (
+                <AlternativeHSCodes 
+                  alternativeCodes={processedAlternatives}
+                  onSelectCode={(code) => onFieldChange('productNumber', code)}
+                />
+              )}
+            </div>
           </div>
           
           <div className="space-y-2">
@@ -68,7 +93,7 @@ const LineItemEditDialog: React.FC<LineItemEditDialogProps> = ({
             />
           </div>
           
-          <div className="space-y-2 md:col-span-2">
+          <div className="space-y-2">
             <Label htmlFor="description" className="font-medium">Description</Label>
             <Input 
               id="description"

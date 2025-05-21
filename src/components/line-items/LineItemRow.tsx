@@ -41,11 +41,6 @@ const LineItemRow: React.FC<LineItemRowProps> = ({
           <div className="flex items-center">
             <div className="relative">
               <span className="font-medium">{item.productNumber}</span>
-              {item.alternativeProductNumbers && item.alternativeProductNumbers.length > 0 && (
-                <div className="mt-1 text-xs text-muted-foreground">
-                  Alternatives: {item.alternativeProductNumbers.join(', ')}
-                </div>
-              )}
             </div>
           </div>
         </td>
