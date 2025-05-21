@@ -4,12 +4,16 @@ import { LineItem } from '@/components/line-items/types';
 import LineItemsTable from '@/components/LineItemsTable';
 import { Card, CardContent } from "@/components/ui/card";
 import { toast } from "@/lib/toast";
+import { Button } from "@/components/ui/button";
+import { CheckCircle } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface LineItemsSectionProps {
   onComplete?: () => void;
 }
 
 const LineItemsSection: React.FC<LineItemsSectionProps> = ({ onComplete }) => {
+  const { language } = useLanguage();
   // Mock data for line items with country codes instead of full names
   const [items, setItems] = useState<LineItem[]>([
     {
@@ -95,15 +99,38 @@ const LineItemsSection: React.FC<LineItemsSectionProps> = ({ onComplete }) => {
     toast.success('Line item removed');
   };
 
+  const handleApprove = () => {
+    if (onComplete) {
+      onComplete();
+      toast.success('Line items approved successfully');
+    }
+  };
+
+  // Translation content
+  const translations = {
+    en: {
+      title: 'Line Items',
+      description: 'Review and edit the line items extracted from the invoice.',
+      approve: 'Approve Line Items',
+    },
+    fo: {
+      title: 'Linjuvørur',
+      description: 'Endurskoða og rætta linjuvørurnar, sum eru útdrignar úr fakturanum.',
+      approve: 'Góðkenn Linjuvørur',
+    }
+  };
+
+  const t = translations[language as keyof typeof translations] || translations.en;
+
   return (
     <div className="space-y-6">
       <Card className="glass-panel shadow-lg border border-gray-100 bg-gradient-to-br from-white to-gray-50">
         <CardContent className="p-6">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
             <div>
-              <h2 className="text-xl font-semibold text-gray-800">Line Items</h2>
+              <h2 className="text-xl font-semibold text-gray-800">{t.title}</h2>
               <p className="text-sm text-muted-foreground mt-1">
-                Review and edit the line items extracted from the invoice.
+                {t.description}
               </p>
             </div>
           </div>
@@ -113,6 +140,19 @@ const LineItemsSection: React.FC<LineItemsSectionProps> = ({ onComplete }) => {
             onEditItem={handleEditItem} 
             onDeleteItem={handleDeleteItem} 
           />
+
+          {onComplete && (
+            <div className="mt-6 flex justify-end">
+              <Button 
+                onClick={handleApprove}
+                className="gap-2"
+                aria-label={t.approve}
+              >
+                <CheckCircle className="h-4 w-4" />
+                {t.approve}
+              </Button>
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>
