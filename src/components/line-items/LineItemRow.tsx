@@ -2,8 +2,9 @@
 import React from 'react';
 import { LineItem } from './types';
 import { Button } from "@/components/ui/button";
-import { Pen, Trash2 } from 'lucide-react';
+import { Pen, Trash2, Info } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { hsCodeDatabase } from './HSCodeValidator';
 
 interface LineItemRowProps {
   item: LineItem;
@@ -34,14 +35,30 @@ const LineItemRow: React.FC<LineItemRowProps> = ({
     return "text-red-700 bg-red-100";
   };
   
+  // Get HS code description from database
+  const getHSCodeDescription = (code: string): string => {
+    const hsCodeEntry = hsCodeDatabase.find(entry => entry.code === code);
+    return hsCodeEntry?.description || 'No description available';
+  };
+  
   return (
     <TooltipProvider>
       <tr className={`border-b hover:bg-muted/30 ${isSelected ? 'bg-muted/40' : ''}`}>
         <td className="py-3 px-4 text-sm">
-          <div className="flex items-center">
+          <div className="flex items-center gap-1">
             <div className="relative">
               <span className="font-medium">{item.productNumber}</span>
             </div>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div className="cursor-help">
+                  <Info className="h-3.5 w-3.5 text-muted-foreground" />
+                </div>
+              </TooltipTrigger>
+              <TooltipContent side="top" className="text-sm">
+                <p>{getHSCodeDescription(item.productNumber)}</p>
+              </TooltipContent>
+            </Tooltip>
           </div>
         </td>
         <td className="py-3 px-4 text-sm">{item.countryOfOrigin}</td>

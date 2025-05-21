@@ -7,6 +7,8 @@ import {
   TooltipProvider, 
   TooltipTrigger
 } from "@/components/ui/tooltip";
+import { Info } from 'lucide-react';
+import { hsCodeDatabase } from './HSCodeValidator';
 
 interface AlternativeCode {
   code: string;
@@ -40,6 +42,12 @@ const AlternativeHSCodes: React.FC<AlternativeHSCodesProps> = ({
     return "bg-red-500";
   };
 
+  // Get HS code description from database
+  const getHSCodeDescription = (code: string): string => {
+    const hsCodeEntry = hsCodeDatabase.find(entry => entry.code === code);
+    return hsCodeEntry?.description || 'No description available';
+  };
+
   return (
     <div className="mt-3 p-3 border rounded-md bg-muted/20">
       <h4 className="text-sm font-medium mb-2 text-muted-foreground">Alternative HS Codes</h4>
@@ -48,17 +56,33 @@ const AlternativeHSCodes: React.FC<AlternativeHSCodesProps> = ({
           {processedCodes.map(item => (
             <Tooltip key={item.code}>
               <TooltipTrigger asChild>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="text-xs h-7 bg-background hover:bg-muted/40 flex items-center gap-1.5"
-                  onClick={() => onSelectCode(item.code)}
-                >
-                  {item.confidence !== undefined && (
-                    <span className={`w-2 h-2 rounded-full ${getConfidenceColor(item.confidence)}`}></span>
-                  )}
-                  <span className="font-mono">{item.code}</span>
-                </Button>
+                <div className="relative group">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="text-xs h-7 bg-background hover:bg-muted/40 flex items-center gap-1.5 pr-8"
+                    onClick={() => onSelectCode(item.code)}
+                  >
+                    {item.confidence !== undefined && (
+                      <span className={`w-2 h-2 rounded-full ${getConfidenceColor(item.confidence)}`}></span>
+                    )}
+                    <span className="font-mono">{item.code}</span>
+                  </Button>
+                  <div className="absolute right-1.5 top-1/2 -translate-y-1/2">
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <div className="cursor-help">
+                            <Info className="h-3.5 w-3.5 text-muted-foreground" />
+                          </div>
+                        </TooltipTrigger>
+                        <TooltipContent side="top" align="end" className="text-sm">
+                          <p>{getHSCodeDescription(item.code)}</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </div>
+                </div>
               </TooltipTrigger>
               <TooltipContent side="top">
                 <p>

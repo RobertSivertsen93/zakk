@@ -9,12 +9,18 @@ import {
 } from "@/components/ui/tooltip";
 
 // Mock HS code database for validation
-const hsCodeDatabase = [
+export const hsCodeDatabase = [
   { code: '6117.80.80', description: 'Textile accessories', valid: true },
   { code: '6117.80.90', description: 'Other made up textile articles', valid: true },
   { code: '4908.90.00', description: 'Transfers (decalcomanias)', valid: true },
   { code: '4901.99.00', description: 'Printed books, brochures and similar', valid: true },
+  { code: '8471.30.00', description: 'Laptop computers', valid: true },
+  { code: '8523.49.25', description: 'Optical media for data storage', valid: true },
+  { code: '9403.20.80', description: 'Metal furniture components', valid: true },
   { code: '9999.99.99', description: 'Not classified', valid: false },
+  { code: '6117.80.85', description: 'Textile accessories - special type', valid: true },
+  { code: '70071980', description: 'Safety glass', valid: true },
+  { code: '84439990', description: 'Parts of printing machinery', valid: true },
 ];
 
 export interface ValidationResult {
