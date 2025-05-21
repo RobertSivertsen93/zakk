@@ -1,10 +1,9 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { LineItem } from './types';
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Check, X } from "lucide-react";
-import HSCodeValidation from './HSCodeValidation';
+import LineItemEditDialog from './LineItemEditDialog';
 
 interface EditableLineItemRowProps {
   item: LineItem;
@@ -21,77 +20,46 @@ const EditableLineItemRow: React.FC<EditableLineItemRowProps> = ({
   onSave,
   onCancel
 }) => {
+  const [dialogOpen, setDialogOpen] = useState(true);
+
   return (
-    <tr className="border-b hover:bg-muted/30">
-      <td className="py-2 px-4">
-        <div className="max-w-[200px]">
-          <HSCodeValidation
-            value={editFormData.productNumber}
-            onChange={(value) => onFieldChange('productNumber', value)}
-            alternativeCodes={item.alternativeProductNumbers}
-          />
-        </div>
-      </td>
-      <td className="py-2 px-4">
-        <Input 
-          value={editFormData.countryOfOrigin}
-          onChange={(e) => onFieldChange('countryOfOrigin', e.target.value)}
-          className="w-full"
-        />
-      </td>
-      <td className="py-2 px-4">
-        <Input 
-          value={editFormData.description}
-          onChange={(e) => onFieldChange('description', e.target.value)}
-          className="w-full"
-        />
-      </td>
-      <td className="py-2 px-4 text-right">
-        <Input 
-          value={editFormData.quantity}
-          onChange={(e) => onFieldChange('quantity', e.target.value)}
-          className="w-full text-right"
-          type="text"
-        />
-      </td>
-      <td className="py-2 px-4 text-right">
-        <Input 
-          value={editFormData.unitPrice}
-          onChange={(e) => onFieldChange('unitPrice', e.target.value)}
-          className="w-full text-right"
-          type="text"
-        />
-      </td>
-      <td className="py-2 px-4 text-right">
-        <Input 
-          value={editFormData.amount}
-          onChange={(e) => onFieldChange('amount', e.target.value)}
-          className="w-full text-right"
-          type="text"
-        />
-      </td>
-      <td className="py-2 px-4 text-right">-</td>
-      <td className="py-2 px-4 whitespace-nowrap">
-        <div className="flex justify-end gap-1">
-          <Button
-            onClick={onSave}
-            variant="ghost"
-            size="sm"
-            className="h-8 w-8 p-0"
-          >
-            <Check className="h-4 w-4" />
-          </Button>
-          <Button
-            onClick={onCancel}
-            variant="ghost"
-            size="sm"
-            className="h-8 w-8 p-0 text-destructive"
-          >
-            <X className="h-4 w-4" />
-          </Button>
-        </div>
-      </td>
-    </tr>
+    <>
+      <tr className="border-b bg-primary/5">
+        <td colSpan={8} className="py-4 px-6 text-center">
+          <div className="flex justify-center items-center gap-2 text-muted-foreground">
+            <span>Editing item...</span>
+            <div className="flex gap-1">
+              <Button
+                onClick={onSave}
+                variant="ghost"
+                size="sm"
+                className="h-8 w-8 p-0"
+              >
+                <Check className="h-4 w-4" />
+              </Button>
+              <Button
+                onClick={onCancel}
+                variant="ghost"
+                size="sm"
+                className="h-8 w-8 p-0 text-destructive"
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+        </td>
+      </tr>
+
+      <LineItemEditDialog
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+        item={item}
+        editFormData={editFormData}
+        onFieldChange={onFieldChange}
+        onSave={onSave}
+        onCancel={onCancel}
+      />
+    </>
   );
 };
 
