@@ -5,21 +5,9 @@ import InvoiceDetails from '@/components/InvoiceDetails';
 import { toast } from "@/lib/toast";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { CheckCircle, ZoomIn, ZoomOut, Settings } from "lucide-react";
+import { CheckCircle } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useLanguage } from "@/contexts/LanguageContext";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
 interface InvoiceDataSectionProps {
   pdfUrl: string;
@@ -38,9 +26,7 @@ const InvoiceDataSection: React.FC<InvoiceDataSectionProps> = ({ pdfUrl, fileNam
     notes: 'Payment due within 15 days',
   });
   
-  const [fontSize, setFontSize] = useState('medium');
-  const [highContrast, setHighContrast] = useState(false);
-  const { language, setLanguage } = useLanguage();
+  const { language } = useLanguage();
   const isMobile = useIsMobile();
   
   // Keyboard shortcut handling for accessibility
@@ -83,124 +69,31 @@ const InvoiceDataSection: React.FC<InvoiceDataSectionProps> = ({ pdfUrl, fileNam
       title: 'Invoice Information',
       preview: 'PDF Preview',
       complete: 'Continue',
-      settings: 'Settings',
-      accessibility: 'Accessibility Settings',
-      adjustAppearance: 'Adjust the appearance to your preferences.',
-      fontSize: 'Font Size',
-      contrast: 'Contrast',
-      language: 'Language',
-      highContrastOn: 'High Contrast On',
-      highContrastOff: 'High Contrast Off',
       noPreview: 'No PDF preview available',
-      small: 'Small',
-      medium: 'Medium',
-      large: 'Large',
-      xlarge: 'X-Large',
     },
     fo: {
       title: 'Fakturuupplýsingar',
       preview: 'PDF Forskoðan',
       complete: 'Hald fram',
-      settings: 'Stillingar',
-      accessibility: 'Atgongd Stillingar',
-      adjustAppearance: 'Broyt útsjóndina til tínar tørvar.',
-      fontSize: 'Font Stødd',
-      contrast: 'Kontrast',
-      language: 'Mál',
-      highContrastOn: 'Høgur Kontrast Á',
-      highContrastOff: 'Høgur Kontrast Frá',
       noPreview: 'Eingin PDF forskoðan tøk',
-      small: 'Lítil',
-      medium: 'Miðal',
-      large: 'Stór',
-      xlarge: 'X-Stór',
     }
   };
   
   const t = translations[language as keyof typeof translations];
   
-  // Font size classes
-  const fontSizeClasses = {
-    small: 'text-sm',
-    medium: 'text-base',
-    large: 'text-lg',
-    'x-large': 'text-xl'
-  };
-  
-  // High contrast classes
-  const contrastClass = highContrast ? 'high-contrast' : '';
-  
   return (
-    <Card className={`glass-panel ${contrastClass}`}>
+    <Card className="glass-panel">
       <CardContent className="p-4 md:p-6 space-y-4 md:space-y-6">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
-            <h2 className={`font-semibold ${fontSizeClasses[fontSize as keyof typeof fontSizeClasses]}`}>
+            <h2 className="font-semibold text-base">
               {t.title}
             </h2>
           </div>
-          
-          {/* Accessibility settings in a popover */}
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button variant="outline" size="sm" className="gap-2">
-                <Settings className="h-4 w-4" />
-                {t.settings}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-80">
-              <div className="grid gap-4">
-                <div className="space-y-2">
-                  <h4 className="font-medium leading-none">{t.accessibility}</h4>
-                  <p className="text-sm text-muted-foreground">
-                    {t.adjustAppearance}
-                  </p>
-                </div>
-                <div className="grid gap-2">
-                  <div className="grid grid-cols-3 items-center gap-4">
-                    <label>{t.fontSize}</label>
-                    <Select value={fontSize} onValueChange={setFontSize} aria-label="Change font size">
-                      <SelectTrigger className="col-span-2">
-                        <SelectValue placeholder={t.fontSize} />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="small">{t.small}</SelectItem>
-                        <SelectItem value="medium">{t.medium}</SelectItem>
-                        <SelectItem value="large">{t.large}</SelectItem>
-                        <SelectItem value="x-large">{t.xlarge}</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="grid grid-cols-3 items-center gap-4">
-                    <label>{t.contrast}</label>
-                    <Button
-                      className="col-span-2"
-                      variant={highContrast ? "default" : "outline"}
-                      onClick={() => setHighContrast(!highContrast)}
-                    >
-                      {highContrast ? t.highContrastOn : t.highContrastOff}
-                    </Button>
-                  </div>
-                  <div className="grid grid-cols-3 items-center gap-4">
-                    <label>{t.language}</label>
-                    <Select value={language} onValueChange={setLanguage} aria-label="Change language">
-                      <SelectTrigger className="col-span-2">
-                        <SelectValue placeholder={t.language} />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="en">English</SelectItem>
-                        <SelectItem value="fo">Føroyskt</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-              </div>
-            </PopoverContent>
-          </Popover>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
-          <div className={`${fontSizeClasses[fontSize as keyof typeof fontSizeClasses]}`}>
+          <div>
             <InvoiceDetails 
               extractedData={extractedData} 
               onSaveChanges={handleSaveInvoiceDetails}
@@ -221,7 +114,7 @@ const InvoiceDataSection: React.FC<InvoiceDataSectionProps> = ({ pdfUrl, fileNam
           </div>
           
           <div className="space-y-3">
-            <h3 className={`font-medium ${fontSizeClasses[fontSize as keyof typeof fontSizeClasses]}`}>
+            <h3 className="font-medium text-base">
               {fileName ? `${t.preview}: ${fileName}` : t.preview}
             </h3>
             <div className="h-[300px] md:h-[600px]">
