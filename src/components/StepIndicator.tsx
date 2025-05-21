@@ -1,7 +1,6 @@
 
 import React from 'react';
 import { Check, FileText, List, Download, Upload } from 'lucide-react';
-import { Progress } from "@/components/ui/progress";
 
 interface StepIndicatorProps {
   currentStep: number;
@@ -19,24 +18,8 @@ const StepIndicator: React.FC<StepIndicatorProps> = ({
     { id: 'export', label: 'Export', icon: Download },
   ];
 
-  const currentStepIndex = currentStep - 1;
-  const progressPercentage = ((currentStepIndex) / (steps.length - 1)) * 100;
-  
-  // Calculate overall completion percentage based on completed sections
-  const calculateOverallProgress = () => {
-    if (completedSections.length === 0) return progressPercentage;
-    
-    // Each section contributes to overall completion
-    const totalSections = ['invoice-details', 'line-items', 'export-options'];
-    const completionPercentage = (completedSections.length / totalSections.length) * 100;
-    
-    return Math.max(progressPercentage, completionPercentage);
-  };
-
   return (
     <div className="mb-6">
-      <Progress value={calculateOverallProgress()} className="h-1.5 mb-4" />
-      
       <div className="grid grid-cols-4 w-full gap-2">
         {steps.map((step, index) => {
           const StepIcon = step.icon;
