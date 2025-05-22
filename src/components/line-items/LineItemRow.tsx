@@ -2,8 +2,9 @@
 import React from 'react';
 import { LineItem } from './types';
 import { Button } from "@/components/ui/button";
-import { Pen, Trash2, Info } from 'lucide-react';
+import { Pen, Trash2, Info, ChevronRight } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { hsCodeDatabase } from './HSCodeValidator';
 
 interface LineItemRowProps {
@@ -40,6 +41,12 @@ const LineItemRow: React.FC<LineItemRowProps> = ({
     const hsCodeEntry = hsCodeDatabase.find(entry => entry.code === code);
     return hsCodeEntry?.description || 'No description available';
   };
+
+  // Check if description is too long
+  const isDescriptionLong = item.description.length > 25;
+  const truncatedDescription = isDescriptionLong 
+    ? `${item.description.substring(0, 25)}...` 
+    : item.description;
   
   return (
     <TooltipProvider>
@@ -62,7 +69,25 @@ const LineItemRow: React.FC<LineItemRowProps> = ({
           </div>
         </td>
         <td className="py-3 px-4 text-sm">{item.countryOfOrigin}</td>
-        <td className="py-3 px-4 text-sm">{item.description}</td>
+        <td className="py-3 px-4 text-sm">
+          <HoverCard>
+            <HoverCardTrigger asChild>
+              <div className="cursor-pointer flex items-center">
+                <span className="overflow-hidden text-ellipsis whitespace-nowrap max-w-[200px] inline-block">
+                  {truncatedDescription}
+                </span>
+                {isDescriptionLong && (
+                  <ChevronRight className="ml-1 h-3.5 w-3.5 text-muted-foreground" />
+                )}
+              </div>
+            </HoverCardTrigger>
+            {isDescriptionLong && (
+              <HoverCardContent className="w-80 p-4 text-sm">
+                <p>{item.description}</p>
+              </HoverCardContent>
+            )}
+          </HoverCard>
+        </td>
         <td className="py-3 px-4 text-sm text-right">{item.weight || '-'}</td>
         <td className="py-3 px-4 text-sm text-right">{item.quantity}</td>
         <td className="py-3 px-4 text-sm text-right">{item.unitPrice}</td>
