@@ -119,6 +119,7 @@ const LineItemsSection: React.FC<LineItemsSectionProps> = ({ onComplete, pdfUrl 
       approve: 'Approve Line Items',
       showPdf: 'Show PDF',
       hidePdf: 'Hide PDF',
+      pdfPreview: 'PDF Preview',
     },
     fo: {
       title: 'Linjuvørur',
@@ -126,38 +127,43 @@ const LineItemsSection: React.FC<LineItemsSectionProps> = ({ onComplete, pdfUrl 
       approve: 'Góðkenn Linjuvørur',
       showPdf: 'Vís PDF',
       hidePdf: 'Fjal PDF',
+      pdfPreview: 'PDF Forskoðan',
     }
   };
 
   const t = translations[language as keyof typeof translations] || translations.en;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {pdfUrl && (
-        <Collapsible
-          open={isPdfVisible}
-          onOpenChange={setIsPdfVisible}
-          className="w-full"
-        >
-          <div className="flex justify-between items-center mb-2">
-            <h2 className="text-lg font-medium">PDF Preview</h2>
-            <CollapsibleTrigger asChild>
-              <Button variant="outline" size="sm" className="gap-1">
-                {isPdfVisible ? (
-                  <><Minimize2 className="h-4 w-4" /> {t.hidePdf}</>
-                ) : (
-                  <><Maximize2 className="h-4 w-4" /> {t.showPdf}</>
-                )}
-              </Button>
-            </CollapsibleTrigger>
-          </div>
-          
-          <CollapsibleContent className="overflow-hidden transition-all">
-            <div className="h-[300px] mb-4">
-              <PdfPreview pdfUrl={pdfUrl} />
-            </div>
-          </CollapsibleContent>
-        </Collapsible>
+        <Card className="border border-gray-200 shadow-sm bg-white">
+          <CardContent className="p-6">
+            <Collapsible
+              open={isPdfVisible}
+              onOpenChange={setIsPdfVisible}
+              className="w-full"
+            >
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-lg font-medium text-gray-800">{t.pdfPreview}</h2>
+                <CollapsibleTrigger asChild>
+                  <Button variant="outline" size="sm" className="gap-1 border-gray-200 hover:bg-gray-50">
+                    {isPdfVisible ? (
+                      <><Minimize2 className="h-4 w-4" /> {t.hidePdf}</>
+                    ) : (
+                      <><Maximize2 className="h-4 w-4" /> {t.showPdf}</>
+                    )}
+                  </Button>
+                </CollapsibleTrigger>
+              </div>
+              
+              <CollapsibleContent className="overflow-hidden transition-all rounded-md">
+                <div className="h-[400px] border border-gray-100 rounded-lg overflow-hidden shadow-inner bg-gray-50">
+                  <PdfPreview pdfUrl={pdfUrl} />
+                </div>
+              </CollapsibleContent>
+            </Collapsible>
+          </CardContent>
+        </Card>
       )}
 
       <Card className="glass-panel shadow-lg border border-gray-100 bg-gradient-to-br from-white to-gray-50">
