@@ -2,6 +2,7 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 import { LineItem } from "@/components/line-items/types";
+import { InvoiceData } from "@/types/export";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -12,7 +13,7 @@ export function cn(...inputs: ClassValue[]) {
  * - Removes dots from HS codes
  * - Replaces decimal points with commas in numerical values
  */
-export function convertToTaksFormat(data: Record<string, any>): Record<string, any> {
+export function convertToTaksFormat(data: InvoiceData): InvoiceData {
   // Create a deep copy to avoid modifying original data
   const result = JSON.parse(JSON.stringify(data));
   

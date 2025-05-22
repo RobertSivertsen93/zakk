@@ -12,10 +12,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { convertToTaksFormat } from "@/lib/utils";
+import { InvoiceData } from "@/types/export";
 
 const ExportSection: React.FC = () => {
   // Mock data that would come from actual application state
-  const mockData = {
+  const mockData: InvoiceData = {
     invoiceNumber: 'INV-2023-0042',
     invoiceDate: '2023-12-03',
     dueDate: '2023-12-15',
@@ -54,7 +55,7 @@ const ExportSection: React.FC = () => {
   const handleExport = (format: string) => {
     toast.success(`Exporting in ${format.toUpperCase()} format`);
     
-    let dataToExport = mockData;
+    let dataToExport: InvoiceData = mockData;
     let mimeType = 'application/json';
     let fileExtension = 'json';
     let dataString = '';

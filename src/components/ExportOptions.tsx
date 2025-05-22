@@ -11,14 +11,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { convertToTaksFormat } from "@/lib/utils";
+import { InvoiceData } from "@/types/export";
 
 type ExportOptionsProps = {
-  data: Record<string, any>;
+  data: InvoiceData;
   onExport: (format: string) => void;
 };
 
 const ExportOptions = ({ data, onExport }: ExportOptionsProps) => {
-  const [exportFormat, setExportFormat] = useState('json');
   const [fileFormat, setFileFormat] = useState('json');
   
   const handleExport = () => {
@@ -26,7 +26,7 @@ const ExportOptions = ({ data, onExport }: ExportOptionsProps) => {
     onExport(fileFormat);
     
     // Create the appropriate data
-    let dataToExport = data;
+    let dataToExport: InvoiceData = data;
     let mimeType = 'application/json';
     let fileExtension = 'json';
     let dataString = '';

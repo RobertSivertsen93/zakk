@@ -2,9 +2,10 @@
 import { useState } from 'react';
 import { toast } from "@/lib/toast";
 import { convertToTaksFormat } from "@/lib/utils";
+import { InvoiceData } from "@/types/export";
 
 // Mock data for export
-const mockData = {
+const mockData: InvoiceData = {
   invoiceNumber: 'INV-2023-0042',
   invoiceDate: '2023-12-03',
   dueDate: '2023-12-15',
@@ -20,7 +21,7 @@ export const useExport = () => {
   const [exportFormat, setExportFormat] = useState('json');
 
   const handleExport = () => {
-    let dataToExport = mockData;
+    let dataToExport: InvoiceData = mockData;
     let mimeType = 'application/json';
     let fileExtension = 'json';
     let dataString = '';
