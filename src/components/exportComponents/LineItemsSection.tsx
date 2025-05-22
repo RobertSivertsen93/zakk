@@ -153,7 +153,7 @@ const LineItemsSection: React.FC<LineItemsSectionProps> = ({ onComplete, pdfUrl 
           </div>
           
           <CollapsibleContent className="overflow-hidden transition-all">
-            <div className="h-[300px] mb-4">
+            <div className="h-[500px] mb-4">
               <PdfPreview pdfUrl={pdfUrl} />
             </div>
           </CollapsibleContent>
