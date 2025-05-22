@@ -1,6 +1,7 @@
 
 import { useState } from 'react';
 import { toast } from "@/lib/toast";
+import { convertToTaksFormat } from "@/lib/utils";
 
 // Mock data for export
 const mockData = {
@@ -16,15 +17,36 @@ const mockData = {
 
 export const useExport = () => {
   const [exportDialogOpen, setExportDialogOpen] = useState(false);
+  const [exportFormat, setExportFormat] = useState('json');
 
   const handleExport = () => {
-    // Simple JSON export
-    const dataString = JSON.stringify(mockData, null, 2);
-    const blob = new Blob([dataString], { type: 'application/json' });
+    let dataToExport = mockData;
+    let mimeType = 'application/json';
+    let fileExtension = 'json';
+    let dataString = '';
+    
+    // Apply TAKS formatting if needed
+    if (exportFormat === 'taks') {
+      dataToExport = convertToTaksFormat(mockData);
+      mimeType = 'text/plain';
+      fileExtension = 'txt';
+      
+      // Generate TAKS format as text
+      // This is a simplified example - actual TAKS formatting would need more specific implementation
+      dataString = Object.entries(dataToExport)
+        .map(([key, value]) => `${key};${value}`)
+        .join('\n');
+    } else {
+      // Standard JSON export
+      dataString = JSON.stringify(dataToExport, null, 2);
+    }
+    
+    // Create blob and download
+    const blob = new Blob([dataString], { type: mimeType });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `invoice-data.json`;
+    a.download = `invoice-data.${fileExtension}`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -32,12 +54,14 @@ export const useExport = () => {
     
     // Close dialog and show success toast
     setExportDialogOpen(false);
-    toast.success('Data exported successfully');
+    toast.success(`Data exported successfully as ${exportFormat.toUpperCase()}`);
   };
 
   return {
     exportDialogOpen,
     setExportDialogOpen,
+    exportFormat,
+    setExportFormat,
     handleExport
   };
 };

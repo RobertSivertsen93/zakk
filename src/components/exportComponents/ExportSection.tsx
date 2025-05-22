@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { toast } from "@/lib/toast";
 import { Card, CardContent } from "@/components/ui/card";
 import { Check, Download } from "lucide-react";
@@ -11,6 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { convertToTaksFormat } from "@/lib/utils";
 
 const ExportSection: React.FC = () => {
   // Mock data that would come from actual application state
@@ -32,6 +33,7 @@ const ExportSection: React.FC = () => {
         unitPrice: '2.50',
         amount: '2500',
         confidencePercentage: 95,
+        weight: '1.020',
       },
       {
         id: '2',
@@ -42,32 +44,53 @@ const ExportSection: React.FC = () => {
         unitPrice: '150',
         amount: '150',
         confidencePercentage: 50,
+        weight: '0.600',
       }
     ]
   };
   
+  const [fileFormat, setFileFormat] = useState('json');
+  
   const handleExport = (format: string) => {
     toast.success(`Exporting in ${format.toUpperCase()} format`);
     
-    // Create data string for JSON format
-    if (format === 'json') {
-      const dataString = JSON.stringify(mockData, null, 2);
-      const blob = new Blob([dataString], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `invoice-data.json`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
+    let dataToExport = mockData;
+    let mimeType = 'application/json';
+    let fileExtension = 'json';
+    let dataString = '';
+    
+    // Apply TAKS formatting if needed
+    if (format === 'taks') {
+      dataToExport = convertToTaksFormat(mockData);
+      mimeType = 'text/plain';
+      fileExtension = 'txt';
+      
+      // Generate TAKS format as text
+      // This is a simplified example - actual TAKS formatting would need more specific implementation
+      const sampleTaksOutput = [
+        "1;TOLL;00;2025-02-20-20.33.15.486;314188",
+        "1;TOLL;10;2025-02-20-20.33.15.486;1;314188;FAS;524;0,0000;17,000",
+        "1;TOLL;50;2025-02-20-20.33.15.486;1;;61178080;1,020;20;720;2438,74;N",
+        "2;TOLL;50;2025-02-20-20.33.15.486;1;;99999999;0,600;1;732;150,00;N",
+      ].join('\n');
+      
+      dataString = sampleTaksOutput; // In a real implementation, we would generate this from the data
     } else {
-      // Handle other formats (CSV, XML, etc.)
-      toast.info(`${format.toUpperCase()} export would be implemented here`);
+      // Standard JSON export
+      dataString = JSON.stringify(dataToExport, null, 2);
     }
+    
+    // Create blob and download
+    const blob = new Blob([dataString], { type: mimeType });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `invoice-data.${fileExtension}`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
   };
-  
-  const [exportFormat, setExportFormat] = React.useState('json');
   
   return (
     <Card className="glass-panel shadow-lg border border-gray-100 bg-gradient-to-br from-white to-gray-50">
@@ -95,23 +118,31 @@ const ExportSection: React.FC = () => {
           <div className="space-y-2">
             <label className="text-sm font-medium">Export Format</label>
             <Select
-              value={exportFormat}
-              onValueChange={setExportFormat}
+              value={fileFormat}
+              onValueChange={setFileFormat}
             >
               <SelectTrigger className="border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary/30 transition-all">
                 <SelectValue placeholder="Select format" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="json">JSON</SelectItem>
-                <SelectItem value="csv">CSV</SelectItem>
-                <SelectItem value="xml">XML</SelectItem>
-                <SelectItem value="pdf">PDF</SelectItem>
+                <SelectItem value="json">JSON (Standard)</SelectItem>
+                <SelectItem value="taks">TAKS Format</SelectItem>
               </SelectContent>
             </Select>
+            
+            {fileFormat === 'taks' && (
+              <div className="mt-2 p-2 rounded bg-blue-50 border border-blue-100 text-sm text-blue-800">
+                <p className="font-medium">TAKS Format Conversion</p>
+                <ul className="list-disc pl-4 mt-1 text-xs">
+                  <li>HS codes will be exported without dots (e.g., "61178080")</li>
+                  <li>Decimal values will use commas instead of periods (e.g., "1,020")</li>
+                </ul>
+              </div>
+            )}
           </div>
           
           <Button 
-            onClick={() => handleExport(exportFormat)}
+            onClick={() => handleExport(fileFormat)}
             className="mt-8 w-full flex items-center justify-center gap-2 py-6 text-white bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary transition-all duration-300 shadow-md hover:shadow-lg transform hover:translate-y-[-1px]"
             size="lg"
           >
