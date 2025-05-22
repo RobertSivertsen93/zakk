@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { ChevronDown, ChevronUp, Search, Filter } from 'lucide-react';
+import { Search, Filter } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -20,7 +20,6 @@ const LineItemsTable: React.FC<LineItemsTableProps> = ({
   onEditItem,
   onDeleteItem
 }) => {
-  const [expanded, setExpanded] = useState(true);
   const [editingItemId, setEditingItemId] = useState<string | null>(null);
   const [editFormData, setEditFormData] = useState<LineItem | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -69,84 +68,70 @@ const LineItemsTable: React.FC<LineItemsTableProps> = ({
   
   return (
     <Card className="w-full border border-gray-200 shadow-lg rounded-lg overflow-hidden bg-white">
-      <div 
-        className="flex justify-between items-center p-4 cursor-pointer border-b bg-secondary/30 hover:bg-secondary/50 transition-colors duration-200"
-        onClick={() => setExpanded(!expanded)}
-      >
-        <h3 className="text-lg font-medium">
-          Line Items
-        </h3>
-        <Button variant="ghost" size="icon" className="hover:bg-secondary/80 transition-all duration-200">
-          {expanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-        </Button>
-      </div>
-      
-      {expanded && (
-        <div className="p-4 w-full">
-          {items.length === 0 ? (
-            <div className="text-center py-8 text-muted-foreground bg-secondary/10 rounded-md">
-              No line items yet
+      <div className="p-4 w-full">
+        {items.length === 0 ? (
+          <div className="text-center py-8 text-muted-foreground bg-secondary/10 rounded-md">
+            No line items yet
+          </div>
+        ) : (
+          <>
+            {/* Search and filter */}
+            <div className="mb-4 flex gap-2">
+              <div className="relative flex-1">
+                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="Search items..." 
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="pl-9 border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary/30 transition-all"
+                />
+              </div>
+              <Button 
+                variant="outline" 
+                size="icon" 
+                className="border border-gray-200 hover:bg-secondary/50 transition-all duration-200"
+              >
+                <Filter className="h-4 w-4" />
+              </Button>
             </div>
-          ) : (
-            <>
-              {/* Search and filter */}
-              <div className="mb-4 flex gap-2">
-                <div className="relative flex-1">
-                  <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    placeholder="Search items..." 
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-9 border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary/30 transition-all"
-                  />
-                </div>
-                <Button 
-                  variant="outline" 
-                  size="icon" 
-                  className="border border-gray-200 hover:bg-secondary/50 transition-all duration-200"
-                >
-                  <Filter className="h-4 w-4" />
-                </Button>
+            
+            <div className="overflow-x-auto w-full rounded-md border border-gray-100 shadow-sm">
+              <table className="w-full border-collapse">
+                <TableHeader hasSelection={false} />
+                <tbody className="divide-y divide-gray-100">
+                  {filteredItems.map((item) => (
+                    editingItemId === item.id ? (
+                      <EditableLineItemRow
+                        key={item.id}
+                        item={item}
+                        editFormData={editFormData!}
+                        onFieldChange={handleFieldChange}
+                        onSave={saveEdit}
+                        onCancel={cancelEdit}
+                      />
+                    ) : (
+                      <LineItemRow
+                        key={item.id}
+                        item={item}
+                        onEdit={startEdit}
+                        onDelete={handleDelete}
+                        isSelected={false}
+                        onToggleSelect={() => {}}
+                      />
+                    )
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            
+            {filteredItems.length === 0 && searchQuery && (
+              <div className="text-center py-6 text-muted-foreground bg-secondary/10 rounded-md mt-4">
+                No items match your search
               </div>
-              
-              <div className="overflow-x-auto w-full rounded-md border border-gray-100 shadow-sm">
-                <table className="w-full border-collapse">
-                  <TableHeader hasSelection={false} />
-                  <tbody className="divide-y divide-gray-100">
-                    {filteredItems.map((item) => (
-                      editingItemId === item.id ? (
-                        <EditableLineItemRow
-                          key={item.id}
-                          item={item}
-                          editFormData={editFormData!}
-                          onFieldChange={handleFieldChange}
-                          onSave={saveEdit}
-                          onCancel={cancelEdit}
-                        />
-                      ) : (
-                        <LineItemRow
-                          key={item.id}
-                          item={item}
-                          onEdit={startEdit}
-                          onDelete={handleDelete}
-                          isSelected={false}
-                          onToggleSelect={() => {}}
-                        />
-                      )
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-              
-              {filteredItems.length === 0 && searchQuery && (
-                <div className="text-center py-6 text-muted-foreground bg-secondary/10 rounded-md mt-4">
-                  No items match your search
-                </div>
-              )}
-            </>
-          )}
-        </div>
-      )}
+            )}
+          </>
+        )}
+      </div>
     </Card>
   );
 };

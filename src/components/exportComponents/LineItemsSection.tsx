@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { LineItem } from '@/components/line-items/types';
 import LineItemsTable from '@/components/LineItemsTable';
