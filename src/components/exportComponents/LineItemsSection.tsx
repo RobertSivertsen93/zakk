@@ -5,15 +5,20 @@ import LineItemsTable from '@/components/LineItemsTable';
 import { Card, CardContent } from "@/components/ui/card";
 import { toast } from "@/lib/toast";
 import { Button } from "@/components/ui/button";
-import { CheckCircle } from "lucide-react";
+import { CheckCircle, Maximize2, Minimize2 } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import PdfPreview from "@/components/PdfPreview";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
 interface LineItemsSectionProps {
   onComplete?: () => void;
+  pdfUrl?: string;
 }
 
-const LineItemsSection: React.FC<LineItemsSectionProps> = ({ onComplete }) => {
+const LineItemsSection: React.FC<LineItemsSectionProps> = ({ onComplete, pdfUrl }) => {
   const { language } = useLanguage();
+  const [isPdfVisible, setIsPdfVisible] = useState(false);
+  
   // Mock data for line items with country codes instead of full names
   const [items, setItems] = useState<LineItem[]>([
     {
@@ -112,11 +117,15 @@ const LineItemsSection: React.FC<LineItemsSectionProps> = ({ onComplete }) => {
       title: 'Line Items',
       description: 'Review and edit the line items extracted from the invoice.',
       approve: 'Approve Line Items',
+      showPdf: 'Show PDF',
+      hidePdf: 'Hide PDF',
     },
     fo: {
       title: 'Linjuvørur',
       description: 'Endurskoða og rætta linjuvørurnar, sum eru útdrignar úr fakturanum.',
       approve: 'Góðkenn Linjuvørur',
+      showPdf: 'Vís PDF',
+      hidePdf: 'Fjal PDF',
     }
   };
 
@@ -124,6 +133,33 @@ const LineItemsSection: React.FC<LineItemsSectionProps> = ({ onComplete }) => {
 
   return (
     <div className="space-y-6">
+      {pdfUrl && (
+        <Collapsible
+          open={isPdfVisible}
+          onOpenChange={setIsPdfVisible}
+          className="w-full"
+        >
+          <div className="flex justify-between items-center mb-2">
+            <h2 className="text-lg font-medium">PDF Preview</h2>
+            <CollapsibleTrigger asChild>
+              <Button variant="outline" size="sm" className="gap-1">
+                {isPdfVisible ? (
+                  <><Minimize2 className="h-4 w-4" /> {t.hidePdf}</>
+                ) : (
+                  <><Maximize2 className="h-4 w-4" /> {t.showPdf}</>
+                )}
+              </Button>
+            </CollapsibleTrigger>
+          </div>
+          
+          <CollapsibleContent className="overflow-hidden transition-all">
+            <div className="h-[300px] mb-4">
+              <PdfPreview pdfUrl={pdfUrl} />
+            </div>
+          </CollapsibleContent>
+        </Collapsible>
+      )}
+
       <Card className="glass-panel shadow-lg border border-gray-100 bg-gradient-to-br from-white to-gray-50">
         <CardContent className="p-6">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">

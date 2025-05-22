@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { CheckCircle2 } from "lucide-react";
@@ -70,6 +71,7 @@ const ExtractTabs: React.FC<ExtractTabsProps> = ({
 
       <TabsContent value="lineitems" className="animate-fade-in">
         <LineItemsSection
+          pdfUrl={pdfUrl}
           onComplete={() => {
             onCompleteSection("line-items");
           }}
