@@ -10,7 +10,7 @@ type DashboardLayoutProps = {
 const Dashboard = ({ children, title, description }: DashboardLayoutProps) => {
   return (
     <div className="min-h-screen flex flex-col">
-      <Navigation />
+      {/* <Navigation /> */}
 
       <main className="flex-1 page-container">
         <header className="mb-8">

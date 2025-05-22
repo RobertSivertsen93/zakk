@@ -1,6 +1,6 @@
-
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useMutation } from '@tanstack/react-query';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,21 +13,51 @@ import {
   CardTitle 
 } from "@/components/ui/card";
 import { FileText, Lock, Mail, Eye, EyeOff } from "lucide-react";
-import { toast } from "@/lib/toast";
+import { toast } from "sonner";
 import AnimatedTransition from '@/components/AnimatedTransition';
+import { loginUser, signupUser } from '@/lib/apiFunctions';
 
 const Login = () => {
   const navigate = useNavigate();
   const [isLoginView, setIsLoginView] = React.useState(true);
   const [isPasswordVisible, setIsPasswordVisible] = React.useState(false);
-  const [isLoading, setIsLoading] = React.useState(false);
   const [formData, setFormData] = React.useState({
     email: '',
-    password: ''
+    password: '',
+    confirmPassword: ''
+  });
+
+  const loginMutation = useMutation({
+    mutationFn: loginUser,
+    onSuccess: (data) => {
+      // console.log('data', data)
+      toast.success('Logged in successfully');
+      navigate('/upload');
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || 'Login failed');
+    }
+  });
+
+  const signupMutation = useMutation({
+    mutationFn: signupUser,
+    onSuccess: (data) => {
+      toast.success('Account created successfully');
+      navigate('/upload');
+    },
+    onError: (error: any) => {
+      toast.error(error.response?.data?.message || 'Signup failed');
+    }
   });
   
   const toggleView = () => {
     setIsLoginView(!isLoginView);
+    // Reset form data when switching views
+    setFormData({
+      email: '',
+      password: '',
+      confirmPassword: ''
+    });
   };
   
   const togglePasswordVisibility = () => {
@@ -44,27 +74,27 @@ const Login = () => {
   
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
     
-    // Simulate authentication
-    setTimeout(() => {
-      // For demo purposes, accept any non-empty email/password
-      if (formData.email && formData.password) {
-        // Store token in localStorage
-        localStorage.setItem('pdf-extractor-auth', 'demo-token');
-        
-        // Success message
-        toast.success(isLoginView ? 'Logged in successfully' : 'Account created successfully');
-        
-        // Redirect to upload page
-        navigate('/upload');
-      } else {
-        toast.error('Please enter both email and password');
+    if (!formData.email || !formData.password) {
+      toast.error('Please enter both email and password');
+      return;
+    }
+
+    if (!isLoginView) {
+      if (formData.password !== formData.confirmPassword) {
+        toast.error('Passwords do not match');
+        return;
       }
-      
-      setIsLoading(false);
-    }, 1500);
+      signupMutation.mutate(formData);
+    } else {
+      loginMutation.mutate({
+        email: formData.email,
+        password: formData.password
+      });
+    }
   };
+  
+  const isLoading = loginMutation.isPending || signupMutation.isPending;
   
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-secondary/30 p-4">
@@ -101,6 +131,7 @@ const Login = () => {
                     value={formData.email}
                     onChange={handleInputChange}
                     required
+                    autoComplete="email"
                   />
                 </div>
               </div>
@@ -117,6 +148,7 @@ const Login = () => {
                     value={formData.password}
                     onChange={handleInputChange}
                     required
+                    autoComplete="password"
                   />
                   <Button
                     type="button"
@@ -133,6 +165,25 @@ const Login = () => {
                   </Button>
                 </div>
               </div>
+              {!isLoginView && (
+                <div className="space-y-2">
+                  <Label htmlFor="confirmPassword">Confirm Password</Label>
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Input 
+                      id="confirmPassword"
+                      name="confirmPassword"
+                      type={isPasswordVisible ? 'text' : 'password'}
+                      placeholder="Confirm your password"
+                      className="pl-10"
+                      value={formData.confirmPassword}
+                      onChange={handleInputChange}
+                      required
+                      autoComplete="new-password"
+                    />
+                  </div>
+                </div>
+              )}
             </CardContent>
             <CardFooter className="flex flex-col space-y-4">
               <Button 
