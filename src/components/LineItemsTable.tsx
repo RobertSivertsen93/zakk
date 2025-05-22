@@ -24,14 +24,15 @@ const LineItemsTable: React.FC<LineItemsTableProps> = ({
   const [editFormData, setEditFormData] = useState<LineItem | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   
-  // Filter items based on search query
+  // Filter items based on search query, now including weight
   const filteredItems = items.filter(item => {
     if (!searchQuery) return true;
     const query = searchQuery.toLowerCase();
     return (
       item.productNumber.toLowerCase().includes(query) ||
       item.description.toLowerCase().includes(query) || 
-      item.countryOfOrigin.toLowerCase().includes(query)
+      item.countryOfOrigin.toLowerCase().includes(query) ||
+      (item.weight && item.weight.toLowerCase().includes(query))
     );
   });
 

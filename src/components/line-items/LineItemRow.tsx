@@ -63,6 +63,7 @@ const LineItemRow: React.FC<LineItemRowProps> = ({
         </td>
         <td className="py-3 px-4 text-sm">{item.countryOfOrigin}</td>
         <td className="py-3 px-4 text-sm">{item.description}</td>
+        <td className="py-3 px-4 text-sm text-right">{item.weight || '-'}</td>
         <td className="py-3 px-4 text-sm text-right">{item.quantity}</td>
         <td className="py-3 px-4 text-sm text-right">{item.unitPrice}</td>
         <td className="py-3 px-4 text-sm text-right">{item.amount}</td>

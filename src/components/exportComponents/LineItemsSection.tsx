@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { LineItem } from '@/components/line-items/types';
 import LineItemsTable from '@/components/LineItemsTable';
@@ -31,6 +32,7 @@ const LineItemsSection: React.FC<LineItemsSectionProps> = ({
     quantity: '1000',
     unitPrice: '2.50',
     amount: '2500',
+    weight: '1.020',
     alternativeProductNumbers: ['6117.80.90', '6117.80.85']
   }, {
     id: '2',
@@ -40,7 +42,8 @@ const LineItemsSection: React.FC<LineItemsSectionProps> = ({
     confidencePercentage: 50,
     quantity: '1',
     unitPrice: '150',
-    amount: '150'
+    amount: '150',
+    weight: '0.600'
   }, {
     id: '3',
     productNumber: '4908.90.00',
@@ -49,7 +52,8 @@ const LineItemsSection: React.FC<LineItemsSectionProps> = ({
     confidencePercentage: 70,
     quantity: '5',
     unitPrice: '75',
-    amount: '375'
+    amount: '375',
+    weight: '1.500'
   }, {
     id: '4',
     productNumber: '4901.99.00',
@@ -58,7 +62,8 @@ const LineItemsSection: React.FC<LineItemsSectionProps> = ({
     confidencePercentage: 80,
     quantity: '10',
     unitPrice: '45',
-    amount: '450'
+    amount: '450',
+    weight: '0.510'
   }, {
     id: '5',
     productNumber: '8471.30.00',
@@ -67,7 +72,8 @@ const LineItemsSection: React.FC<LineItemsSectionProps> = ({
     confidencePercentage: 90,
     quantity: '5',
     unitPrice: '800',
-    amount: '4000'
+    amount: '4000',
+    weight: '2.250'
   }, {
     id: '6',
     productNumber: '8523.49.25',
@@ -76,7 +82,8 @@ const LineItemsSection: React.FC<LineItemsSectionProps> = ({
     confidencePercentage: 85,
     quantity: '100',
     unitPrice: '3',
-    amount: '300'
+    amount: '300',
+    weight: '0.700'
   }, {
     id: '7',
     productNumber: '9403.20.80',
@@ -85,7 +92,8 @@ const LineItemsSection: React.FC<LineItemsSectionProps> = ({
     confidencePercentage: 65,
     quantity: '50',
     unitPrice: '12',
-    amount: '600'
+    amount: '600',
+    weight: '2.160'
   }]);
   const handleEditItem = (id: string, updatedItem: LineItem) => {
     setItems(items.map(item => item.id === id ? updatedItem : item));

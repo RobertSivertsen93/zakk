@@ -111,6 +111,18 @@ const LineItemEditDialog: React.FC<LineItemEditDialogProps> = ({
           </div>
           
           <div className="space-y-2">
+            <Label htmlFor="weight" className="font-medium">Weight</Label>
+            <Input 
+              id="weight"
+              value={editFormData.weight || ''}
+              onChange={(e) => onFieldChange('weight', e.target.value)}
+              className="w-full"
+              type="text"
+              placeholder="e.g. 1.5"
+            />
+          </div>
+          
+          <div className="space-y-2">
             <Label htmlFor="quantity" className="font-medium">Quantity</Label>
             <Input 
               id="quantity"
@@ -133,7 +145,7 @@ const LineItemEditDialog: React.FC<LineItemEditDialogProps> = ({
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="amount" className="font-medium">Total Amount</Label>
+            <Label htmlFor="amount" className="font-medium">Amount</Label>
             <Input 
               id="amount"
               value={editFormData.amount}
