@@ -1,19 +1,22 @@
-
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Upload } from "lucide-react";
-import { useLanguage } from '@/contexts/LanguageContext';
-import PdfUploadSection from './PdfUploadSection';
-import BottomActionBar from './components/BottomActionBar';
-import ExportDialog from './components/ExportDialog';
-import ExtractTabs from './components/ExtractTabs';
-import { useExport } from './hooks/useExport';
+import { useLanguage } from "@/contexts/LanguageContext";
+import PdfUploadSection from "./PdfUploadSection";
+import { useExport } from "@/hooks/useExport";
+import ExtractTabs from "./ExtractTabs";
+import BottomActionBar from "./BottomActionBar";
+import ExportDialog from "./ExportDialog";
 
 const ExtractContent = () => {
-  const [fileName, setFileName] = useState(sessionStorage.getItem('pdf-file-name') || '');
-  const [pdfUrl, setPdfUrl] = useState(sessionStorage.getItem('pdf-url') || '');
+  const [fileName, setFileName] = useState(
+    sessionStorage.getItem("pdf-file-name") || ""
+  );
+  const [pdfUrl, setPdfUrl] = useState(sessionStorage.getItem("pdf-url") || "");
   const [currentStep, setCurrentStep] = useState(pdfUrl ? 2 : 1);
-  const [activeTab, setActiveTab] = useState<string>(pdfUrl ? "invoice" : "upload");
+  const [activeTab, setActiveTab] = useState<string>(
+    pdfUrl ? "invoice" : "upload"
+  );
   const [completedSections, setCompletedSections] = useState<string[]>([]);
   const { exportDialogOpen, setExportDialogOpen, handleExport } = useExport();
   const { t } = useLanguage();
@@ -24,16 +27,16 @@ const ExtractContent = () => {
     setFileName(file.name);
     setCurrentStep(2);
     setActiveTab("invoice");
-    
-    sessionStorage.setItem('pdf-url', url);
-    sessionStorage.setItem('pdf-file-name', file.name);
+
+    sessionStorage.setItem("pdf-url", url);
+    sessionStorage.setItem("pdf-file-name", file.name);
   };
 
   const handleBackToUpload = () => {
     setCurrentStep(1);
     setActiveTab("upload");
   };
-  
+
   // Track tab changes to update step and track completed sections
   useEffect(() => {
     if (activeTab === "invoice") {
@@ -41,38 +44,39 @@ const ExtractContent = () => {
     } else if (activeTab === "lineitems") {
       setCurrentStep(2);
       // Mark invoice section as completed if coming from invoice tab
-      if (!completedSections.includes('invoice-details')) {
-        setCompletedSections(prev => [...prev, 'invoice-details']);
+      if (!completedSections.includes("invoice-details")) {
+        setCompletedSections((prev) => [...prev, "invoice-details"]);
       }
     }
   }, [activeTab, completedSections]);
-  
+
   // Mark current section as complete when moving to the next section
   const handleCompleteSection = (sectionId: string) => {
     if (!completedSections.includes(sectionId)) {
-      setCompletedSections(prev => [...prev, sectionId]);
+      setCompletedSections((prev) => [...prev, sectionId]);
     }
   };
 
-  const canExport = completedSections.includes('invoice-details') && 
-                    completedSections.includes('line-items');
+  const canExport =
+    completedSections.includes("invoice-details") &&
+    completedSections.includes("line-items");
 
   return (
-    <div className="space-y-6 pb-20">
+    <div className="space-y-6 pb-20 h-full">
       {currentStep === 1 ? (
         <PdfUploadSection onPdfSelected={handlePdfSelected} />
       ) : (
         <>
-          <Button 
-            variant="ghost" 
-            size="sm" 
+          <Button
+            variant="ghost"
+            size="sm"
             className="text-muted-foreground hover:text-foreground mb-4 transition-all duration-300"
             onClick={handleBackToUpload}
           >
             <Upload className="mr-1 h-4 w-4" />
-            {t('backToUpload')}
+            {t("backToUpload")}
           </Button>
-          
+
           <ExtractTabs
             activeTab={activeTab}
             setActiveTab={setActiveTab}
@@ -82,14 +86,14 @@ const ExtractContent = () => {
             onBackToUpload={handleBackToUpload}
             onCompleteSection={handleCompleteSection}
           />
-          
+
           {/* Bottom Action Bar */}
           <BottomActionBar
             canExport={canExport}
             onExportClick={() => setExportDialogOpen(true)}
             completedSections={completedSections}
           />
-          
+
           {/* Export Confirmation Dialog */}
           <ExportDialog
             open={exportDialogOpen}
