@@ -9,6 +9,7 @@ import { CheckCircle, Maximize2, Minimize2 } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import PdfPreview from "@/components/PdfPreview";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+
 interface LineItemsSectionProps {
   onComplete?: () => void;
   pdfUrl?: string;
@@ -95,14 +96,33 @@ const LineItemsSection: React.FC<LineItemsSectionProps> = ({
     amount: '600',
     weight: '2.160'
   }]);
+  
   const handleEditItem = (id: string, updatedItem: LineItem) => {
     setItems(items.map(item => item.id === id ? updatedItem : item));
     toast.success('Line item updated successfully');
   };
+  
   const handleDeleteItem = (id: string) => {
     setItems(items.filter(item => item.id !== id));
     toast.success('Line item removed');
   };
+  
+  const handleAddItem = (newItemData: Omit<LineItem, 'id' | 'confidencePercentage'>) => {
+    // Generate unique ID (in a real app, this might come from the server)
+    const newId = `new-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+    
+    // Create the new item with default confidence
+    const newItem: LineItem = {
+      ...newItemData,
+      id: newId,
+      confidencePercentage: 60, // Default confidence for manually added items
+    };
+    
+    // Add to the list
+    setItems([...items, newItem]);
+    toast.success('New line item added');
+  };
+  
   const handleApprove = () => {
     if (onComplete) {
       onComplete();
@@ -151,11 +171,16 @@ const LineItemsSection: React.FC<LineItemsSectionProps> = ({
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
             <div>
               <h2 className="text-xl font-semibold text-gray-800">{t.title}</h2>
-              
+              <p className="text-muted-foreground mt-1">{t.description}</p>
             </div>
           </div>
           
-          <LineItemsTable items={items} onEditItem={handleEditItem} onDeleteItem={handleDeleteItem} />
+          <LineItemsTable 
+            items={items} 
+            onEditItem={handleEditItem} 
+            onDeleteItem={handleDeleteItem}
+            onAddItem={handleAddItem}
+          />
 
           {onComplete && <div className="mt-6 flex justify-end">
               <Button onClick={handleApprove} className="gap-2" aria-label={t.approve}>
