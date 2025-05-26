@@ -1,0 +1,156 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 210 40% 98%;
+    --foreground: 222 47% 11%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+
+    --primary: 210 100% 50%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222 47% 11%;
+
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%;
+
+    --accent: 221 100% 96%;
+    --accent-foreground: 222 47% 11%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 221 83% 53%;
+
+    --radius: 1rem;
+  }
+
+  .dark {
+    --background: 222 47% 11%;
+    --foreground: 210 40% 98%;
+
+    --card: 222 47% 11%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222 47% 11%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 217 91% 60%;
+    --primary-foreground: 222 47% 11%;
+
+    --secondary: 217 33% 17%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 20% 65%;
+
+    --accent: 217 33% 17%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217 33% 17%;
+    --input: 217 33% 17%;
+    --ring: 224 76% 48%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html,
+  body {
+    @apply overflow-x-hidden;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased min-h-screen;
+  }
+
+  .glass-panel {
+    @apply bg-white/75 backdrop-blur-lg shadow-sm border border-white/20 rounded-xl;
+  }
+
+  .page-container {
+    @apply container mx-auto px-4 py-8 md:px-6 max-w-7xl transition-all duration-300 h-full;
+  }
+
+  .page-transition-enter {
+    @apply animate-scale-in;
+  }
+
+  .page-transition-exit {
+    @apply animate-scale-out;
+  }
+
+  .form-field {
+    @apply mb-4;
+  }
+
+  .form-field-label {
+    @apply text-sm font-semibold text-gray-700 mb-1 block;
+  }
+
+  .pdf-dropzone {
+    @apply border-2 border-dashed rounded-xl p-8 text-center transition-all duration-200 bg-secondary/50 hover:bg-secondary cursor-pointer flex flex-col items-center justify-center;
+  }
+
+  .pdf-dropzone-active {
+    @apply border-primary bg-primary/5;
+  }
+
+  /* Enhanced timeline styling */
+  .step-indicator {
+    @apply flex items-center justify-center my-8 max-w-2xl mx-auto;
+  }
+
+  .step-item {
+    @apply flex flex-col items-center relative z-10;
+    flex: 1;
+  }
+
+  .step-dot {
+    @apply w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 bg-secondary border-2 border-muted text-muted-foreground;
+  }
+
+  .step-dot-active {
+    @apply bg-primary border-primary text-primary-foreground w-10 h-10 shadow-md shadow-primary/20;
+  }
+
+  .step-line {
+    @apply h-1 bg-muted flex-grow mx-1 relative z-0;
+  }
+
+  .step-line-active {
+    @apply bg-primary;
+  }
+
+  .step-label {
+    @apply mt-3 text-sm font-medium text-muted-foreground transition-all duration-300 whitespace-nowrap;
+  }
+
+  .step-label-active {
+    @apply text-primary font-semibold;
+  }
+
+  .field-row {
+    @apply grid grid-cols-1 md:grid-cols-2 gap-6 mb-6;
+  }
+
+  .glass-card {
+    @apply bg-white/60 backdrop-blur-md border border-white/30 rounded-xl p-6 shadow-sm transition-all duration-300 hover:shadow-md hover:bg-white/70;
+  }
+}
