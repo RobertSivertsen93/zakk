@@ -1,17 +1,14 @@
 
 import React, { useState, useEffect } from 'react';
 import { LineItem } from '@/components/line-items/types';
-import LineItemsTable from '@/components/LineItemsTable';
-import TotalsSummary from '@/components/line-items/TotalsSummary';
-import BulkCalculations from '@/components/line-items/BulkCalculations';
+import LineItemsControls from '@/components/line-items/LineItemsControls';
+import PdfViewer from '@/components/line-items/PdfViewer';
+import CustomsModeToggle from '@/components/line-items/CustomsModeToggle';
 import { Card, CardContent } from "@/components/ui/card";
 import { toast } from "@/lib/toast";
 import { Button } from "@/components/ui/button";
-import { CheckCircle, Maximize2, Minimize2, Users } from "lucide-react";
+import { CheckCircle } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
 
 interface LineItemsSectionProps {
   onComplete?: () => void;
@@ -155,35 +152,13 @@ const LineItemsSection: React.FC<LineItemsSectionProps> = ({
 
   return (
     <div className="space-y-6">
-      {pdfUrl && (
-        <Collapsible 
-          open={isPdfVisible} 
-          onOpenChange={setIsPdfVisible} 
-          className="w-full"
-        >
-          <div className="flex justify-between items-center mb-2">
-            <CollapsibleTrigger asChild>
-              <Button variant="outline" size="sm" className="gap-1">
-                {isPdfVisible ? (
-                  <><Minimize2 className="h-4 w-4" /> {t.hidePdf}</>
-                ) : (
-                  <><Maximize2 className="h-4 w-4" /> {t.showPdf}</>
-                )}
-              </Button>
-            </CollapsibleTrigger>
-          </div>
-          
-          <CollapsibleContent className="overflow-hidden transition-all">
-            <div className="h-[500px] mb-4 border rounded-lg">
-              <iframe 
-                src={pdfUrl} 
-                className="w-full h-full"
-                title="PDF Preview"
-              />
-            </div>
-          </CollapsibleContent>
-        </Collapsible>
-      )}
+      <PdfViewer
+        pdfUrl={pdfUrl}
+        isVisible={isPdfVisible}
+        onToggleVisibility={setIsPdfVisible}
+        showPdfText={t.showPdf}
+        hidePdfText={t.hidePdf}
+      />
 
       <Card className="glass-panel shadow-lg border border-gray-100 bg-gradient-to-br from-white to-gray-50">
         <CardContent className="p-6">
@@ -193,46 +168,23 @@ const LineItemsSection: React.FC<LineItemsSectionProps> = ({
               <p className="text-muted-foreground mt-1">{t.description}</p>
             </div>
             
-            <div className="flex items-center space-x-2">
-              <Users className="h-4 w-4 text-muted-foreground" />
-              <Label htmlFor="customs-mode" className="text-sm">{t.customsMode}</Label>
-              <Switch
-                id="customs-mode"
-                checked={enableCustomsMode}
-                onCheckedChange={setEnableCustomsMode}
-              />
-            </div>
-          </div>
-
-          {enableCustomsMode && (
-            <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-              <p className="text-sm text-blue-800">{t.customsModeDesc}</p>
-            </div>
-          )}
-          
-          {/* Totals Summary */}
-          <TotalsSummary 
-            items={lineItems}
-            selectedItems={selectedItems}
-            showSelectedOnly={enableCustomsMode && selectedItems.length > 0}
-          />
-
-          {/* Bulk Calculations - only show in customs mode with selections */}
-          {enableCustomsMode && selectedItems.length > 0 && (
-            <BulkCalculations
-              selectedItems={selectedItems}
-              onUpdateItems={handleBulkUpdate}
+            <CustomsModeToggle
+              enabled={enableCustomsMode}
+              onToggle={setEnableCustomsMode}
+              customsModeText={t.customsMode}
+              customsModeDescText={t.customsModeDesc}
             />
-          )}
+          </div>
           
-          <LineItemsTable 
-            items={lineItems} 
-            onEditItem={handleEditItem} 
-            onDeleteItem={handleDeleteItem}
-            onAddItem={handleAddItem}
+          <LineItemsControls
+            lineItems={lineItems}
             selectedItems={selectedItems}
             onSelectionChange={setSelectedItems}
-            enableSelection={enableCustomsMode}
+            enableCustomsMode={enableCustomsMode}
+            onEditItem={handleEditItem}
+            onDeleteItem={handleDeleteItem}
+            onAddItem={handleAddItem}
+            onBulkUpdate={handleBulkUpdate}
           />
 
           {onComplete && (
