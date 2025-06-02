@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PersonStanding, LogOut } from "lucide-react";
@@ -23,7 +24,7 @@ const Navigation = () => {
       <div className="container flex h-16 items-center justify-between px-4">
         <div className="flex items-center gap-2">
           <PersonStanding className="h-6 w-6 text-primary" />
-          <span className="font-medium text-lg">Zacchaeus</span>
+          <span className="font-medium text-lg">Zakk</span>
         </div>
         
         <div className="flex items-center gap-2">

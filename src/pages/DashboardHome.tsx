@@ -27,7 +27,7 @@ const DashboardHome: React.FC = () => {
         <div className="max-w-4xl mx-auto">
           <header className="text-center mb-12">
             <h1 className="text-4xl font-bold text-gray-900 mb-4">
-              Welcome to Zacchaeus
+              Welcome to Zakk
             </h1>
             <p className="text-lg text-muted-foreground">
               Choose how you'd like to process your invoices
