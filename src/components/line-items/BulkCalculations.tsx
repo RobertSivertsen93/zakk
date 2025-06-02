@@ -1,15 +1,12 @@
 
 import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Calculator, Percent, AlertTriangle } from 'lucide-react';
+import { Card, CardContent } from "@/components/ui/card";
 import { LineItem } from './types';
 import { toast } from "@/lib/toast";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import BulkCalculationsHeader from './BulkCalculationsHeader';
+import ValueAdjustments from './ValueAdjustments';
 import CurrencyConverter from './CurrencyConverter';
+import BulkOperationConfirmDialog from './BulkOperationConfirmDialog';
 
 interface BulkCalculationsProps {
   selectedItems: LineItem[];
@@ -21,7 +18,7 @@ const BulkCalculations: React.FC<BulkCalculationsProps> = ({ selectedItems, onUp
   const [adjustmentValue, setAdjustmentValue] = useState('');
   const [adjustmentField, setAdjustmentField] = useState<'amount' | 'weight' | 'quantity'>('amount');
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
-  const [pendingOperation, setPendingOperation] = useState<string>('');
+  const [pendingOperation, setPendingOperation] = useState<'adjustment' | 'conversion' | ''>('');
   const [pendingConversionData, setPendingConversionData] = useState<{
     rate: number;
     fromCurrency: string;
@@ -33,17 +30,6 @@ const BulkCalculations: React.FC<BulkCalculationsProps> = ({ selectedItems, onUp
   }
 
   const handleAdjustment = () => {
-    if (!adjustmentValue) {
-      toast.error('Please enter an adjustment value');
-      return;
-    }
-
-    const value = parseFloat(adjustmentValue);
-    if (isNaN(value)) {
-      toast.error('Please enter a valid number');
-      return;
-    }
-
     setPendingOperation('adjustment');
     setShowConfirmDialog(true);
   };
@@ -99,65 +85,17 @@ const BulkCalculations: React.FC<BulkCalculationsProps> = ({ selectedItems, onUp
     <div className="space-y-6 mb-6">
       {/* Value Adjustments */}
       <Card className="border border-gray-200 shadow-sm">
-        <CardHeader className="pb-4">
-          <CardTitle className="flex items-center gap-2 text-lg">
-            <Calculator className="h-5 w-5" />
-            Bulk Calculations ({selectedItems.length} items selected)
-          </CardTitle>
-        </CardHeader>
+        <BulkCalculationsHeader selectedItemsCount={selectedItems.length} />
         <CardContent className="space-y-6">
-          <div className="space-y-4">
-            <h3 className="font-medium flex items-center gap-2">
-              <Percent className="h-4 w-4" />
-              Value Adjustments
-            </h3>
-            
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="space-y-2">
-                <Label>Field to Adjust</Label>
-                <Select value={adjustmentField} onValueChange={(value: any) => setAdjustmentField(value)}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="amount">Amount</SelectItem>
-                    <SelectItem value="weight">Weight</SelectItem>
-                    <SelectItem value="quantity">Quantity</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              <div className="space-y-2">
-                <Label>Adjustment Type</Label>
-                <Select value={adjustmentType} onValueChange={(value: any) => setAdjustmentType(value)}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="percentage">Percentage (%)</SelectItem>
-                    <SelectItem value="fixed">Fixed Value</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              <div className="space-y-2">
-                <Label>
-                  Value {adjustmentType === 'percentage' ? '(%)' : '(Fixed)'}
-                </Label>
-                <Input
-                  type="number"
-                  step="0.01"
-                  value={adjustmentValue}
-                  onChange={(e) => setAdjustmentValue(e.target.value)}
-                  placeholder={adjustmentType === 'percentage' ? "10" : "100"}
-                />
-              </div>
-            </div>
-            
-            <Button onClick={handleAdjustment} className="w-full md:w-auto">
-              Apply Adjustment
-            </Button>
-          </div>
+          <ValueAdjustments
+            adjustmentType={adjustmentType}
+            adjustmentValue={adjustmentValue}
+            adjustmentField={adjustmentField}
+            onAdjustmentTypeChange={setAdjustmentType}
+            onAdjustmentValueChange={setAdjustmentValue}
+            onAdjustmentFieldChange={setAdjustmentField}
+            onApplyAdjustment={handleAdjustment}
+          />
         </CardContent>
       </Card>
 
@@ -168,43 +106,19 @@ const BulkCalculations: React.FC<BulkCalculationsProps> = ({ selectedItems, onUp
       />
 
       {/* Confirmation Dialog */}
-      <Dialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <AlertTriangle className="h-5 w-5 text-orange-500" />
-              Confirm Bulk Operation
-            </DialogTitle>
-          </DialogHeader>
-          
-          <div className="space-y-4">
-            <p>
-              This operation will modify {selectedItems.length} selected items. 
-              {pendingOperation === 'adjustment' && (
-                <span className="block mt-2">
-                  Applying {adjustmentType === 'percentage' ? `${adjustmentValue}%` : adjustmentValue} 
-                  {adjustmentType === 'percentage' ? ' percentage change' : ' fixed adjustment'} to {adjustmentField}.
-                </span>
-              )}
-              {pendingOperation === 'conversion' && pendingConversionData && (
-                <span className="block mt-2">
-                  Converting amounts from {pendingConversionData.fromCurrency} to {pendingConversionData.toCurrency} 
-                  using rate: {pendingConversionData.rate.toFixed(4)}
-                </span>
-              )}
-            </p>
-            
-            <div className="flex gap-2 justify-end">
-              <Button variant="outline" onClick={() => setShowConfirmDialog(false)}>
-                Cancel
-              </Button>
-              <Button onClick={executeOperation}>
-                Confirm
-              </Button>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
+      <BulkOperationConfirmDialog
+        isOpen={showConfirmDialog}
+        onClose={() => setShowConfirmDialog(false)}
+        onConfirm={executeOperation}
+        selectedItemsCount={selectedItems.length}
+        operationType={pendingOperation}
+        adjustmentData={{
+          type: adjustmentType,
+          value: adjustmentValue,
+          field: adjustmentField
+        }}
+        conversionData={pendingConversionData}
+      />
     </div>
   );
 };
