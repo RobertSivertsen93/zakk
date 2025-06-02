@@ -1,6 +1,8 @@
+
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { UploadIcon, FileText } from "lucide-react";
+import { UploadIcon, FileText, ArrowLeft } from "lucide-react";
+import { Button } from '@/components/ui/button';
 import Dashboard from './Dashboard';
 import PdfDropzone from '@/components/PdfDropzone';
 import { toast } from "@/lib/toast";
@@ -76,6 +78,17 @@ const Upload = () => {
       description="Upload a PDF invoice to extract data"
     >
       <div className="space-y-8">
+        <div className="flex justify-start">
+          <Button 
+            variant="outline" 
+            onClick={() => navigate('/dashboard')}
+            className="gap-2"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back to Dashboard
+          </Button>
+        </div>
+        
         <div className="flex justify-center">
           <div className="max-w-lg w-full">
             <PdfDropzone onPdfSelected={handlePdfSelected} />

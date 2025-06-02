@@ -15,6 +15,7 @@ import NotFound from "./pages/NotFound";
 import Extract from "./pages/extract/index";
 import Shipment from "./pages/Shipment";
 import InvoiceApproval from "./pages/InvoiceApproval";
+import DashboardHome from "./pages/DashboardHome";
 import { LanguageProvider } from "./contexts/LanguageContext";
 import Loader from "./components/common/Loader";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -38,6 +39,10 @@ function App() {
     {
       path: "/login",
       element: <Login />
+    },
+    {
+      path: "/dashboard",
+      element: <ProtectedRoute><DashboardHome /></ProtectedRoute>
     },
     {
       path: "/upload",

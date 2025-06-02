@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
@@ -33,7 +34,7 @@ const Login = () => {
       // console.log('data', data)
       if (data.token) {
       toast.success('Logged in successfully');
-      navigate('/upload');
+      navigate('/dashboard');
       }
     },
     onError: (error: any) => {
@@ -45,7 +46,7 @@ const Login = () => {
     mutationFn: signupUser,
     onSuccess: (data) => {
       toast.success('Account created successfully');
-      navigate('/upload');
+      navigate('/dashboard');
     },
     onError: (error: any) => {
       toast.error(error.response?.data?.message || 'Signup failed');
