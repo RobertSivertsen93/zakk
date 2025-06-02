@@ -135,9 +135,16 @@ const generateTaksFormat = (data: InvoiceData): string => {
   const lines = [
     "1;TOLL;00;" + new Date().toISOString() + ";314188",
     ...data.lineItems.map((item, index) => {
-      const productNumber = item.productNumber?.toString().replace(/\./g, '') || '';
-      const weight = typeof item.weight === 'string' ? item.weight.replace(".", ",") : item.weight?.toString().replace(".", ",") || '';
-      const amount = typeof item.amount === 'string' ? item.amount.replace(".", ",") : item.amount?.toString().replace(".", ",") || '';
+      // Safely handle productNumber conversion
+      const productNumber = item.productNumber ? String(item.productNumber).replace(/\./g, '') : '';
+      
+      // Safely handle weight conversion - ensure we have a string before calling replace
+      const weightStr = item.weight ? String(item.weight) : '';
+      const weight = weightStr.replace(".", ",");
+      
+      // Safely handle amount conversion - ensure we have a string before calling replace
+      const amountStr = item.amount ? String(item.amount) : '';
+      const amount = amountStr.replace(".", ",");
       
       return `${index + 1};TOLL;50;${new Date().toISOString()};1;;${productNumber};${weight};${item.quantity};732;${amount};N`;
     })
