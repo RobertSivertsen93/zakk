@@ -1,15 +1,12 @@
 
 import React, { useState } from 'react';
-import { Search, Filter, Plus } from 'lucide-react';
-import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { LineItem } from './line-items/types';
-import LineItemRow from './line-items/LineItemRow';
-import EditableLineItemRow from './line-items/EditableLineItemRow';
-import TableHeader from './line-items/TableHeader';
 import AddLineItemDialog from './line-items/AddLineItemDialog';
 import BatchOperations from './line-items/BatchOperations';
+import SearchAndFilters from './line-items/SearchAndFilters';
+import TableContent from './line-items/TableContent';
+import EmptyStates from './line-items/EmptyStates';
 import { useLanguage } from "@/contexts/LanguageContext";
 
 interface LineItemsTableProps {
@@ -121,11 +118,13 @@ const LineItemsTable: React.FC<LineItemsTableProps> = ({
   return (
     <Card className="w-full border border-gray-200 shadow-lg rounded-lg overflow-hidden bg-white">
       <div className="p-4 w-full">
-        {items.length === 0 ? (
-          <div className="text-center py-8 text-muted-foreground bg-secondary/10 rounded-md">
-            No line items yet
-          </div>
-        ) : (
+        <EmptyStates 
+          hasItems={items.length > 0}
+          hasFilteredItems={filteredItems.length > 0}
+          searchQuery={searchQuery}
+        />
+
+        {items.length > 0 && (
           <>
             {/* Batch Operations - only show when items are selected */}
             {enableSelection && selectedItems.length > 0 && (
@@ -141,73 +140,34 @@ const LineItemsTable: React.FC<LineItemsTableProps> = ({
             )}
 
             {/* Search, filter and add button */}
-            <div className="mb-4 flex gap-2">
-              <div className="relative flex-1">
-                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                <Input
-                  placeholder={t.searchItems}
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-9 border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary/30 transition-all"
-                />
-              </div>
-              <Button 
-                variant="outline" 
-                size="icon" 
-                className="border border-gray-200 hover:bg-secondary/50 transition-all duration-200"
-              >
-                <Filter className="h-4 w-4" />
-              </Button>
-              {onAddItem && (
-                <Button 
-                  onClick={() => setAddDialogOpen(true)}
-                  className="gap-1"
-                >
-                  <Plus className="h-4 w-4" />
-                  {t.addLineItem}
-                </Button>
-              )}
-            </div>
+            <SearchAndFilters
+              searchQuery={searchQuery}
+              onSearchChange={setSearchQuery}
+              onAddItem={onAddItem ? () => setAddDialogOpen(true) : undefined}
+              addLineItemText={t.addLineItem}
+            />
             
-            <div className="overflow-x-auto w-full rounded-md border border-gray-100 shadow-sm">
-              <table className="w-full border-collapse">
-                <TableHeader 
-                  hasSelection={enableSelection}
-                  isAllSelected={isAllSelected}
-                  onSelectAll={handleSelectAll}
-                />
-                <tbody className="divide-y divide-gray-100">
-                  {filteredItems.map((item) => (
-                    editingItemId === item.id ? (
-                      <EditableLineItemRow
-                        key={item.id}
-                        item={item}
-                        editFormData={editFormData!}
-                        onFieldChange={handleFieldChange}
-                        onSave={saveEdit}
-                        onCancel={cancelEdit}
-                      />
-                    ) : (
-                      <LineItemRow
-                        key={item.id}
-                        item={item}
-                        onEdit={startEdit}
-                        onDelete={handleDelete}
-                        isSelected={selectedItems.some(selected => selected.id === item.id)}
-                        onToggleSelect={() => handleToggleSelect(item)}
-                        hasSelection={enableSelection}
-                      />
-                    )
-                  ))}
-                </tbody>
-              </table>
-            </div>
+            <TableContent
+              filteredItems={filteredItems}
+              editingItemId={editingItemId}
+              editFormData={editFormData}
+              selectedItems={selectedItems}
+              enableSelection={enableSelection}
+              isAllSelected={isAllSelected}
+              onEdit={startEdit}
+              onDelete={handleDelete}
+              onToggleSelect={handleToggleSelect}
+              onSelectAll={handleSelectAll}
+              onFieldChange={handleFieldChange}
+              onSave={saveEdit}
+              onCancel={cancelEdit}
+            />
             
-            {filteredItems.length === 0 && searchQuery && (
-              <div className="text-center py-6 text-muted-foreground bg-secondary/10 rounded-md mt-4">
-                No items match your search
-              </div>
-            )}
+            <EmptyStates 
+              hasItems={true}
+              hasFilteredItems={filteredItems.length > 0}
+              searchQuery={searchQuery}
+            />
           </>
         )}
       </div>
