@@ -1,3 +1,4 @@
+
 import React, { createContext, useState, useContext, useEffect, ReactNode } from 'react';
 
 // Define our supported languages
@@ -232,6 +233,19 @@ export const translations: Translations = {
   invoicesExported: {
     en: 'invoices exported',
     fo: 'fakturarar útfluttar',
+  },
+  // Missing dropdown menu translations
+  reviewAndApprove: {
+    en: 'Review & Approve',
+    fo: 'Kanna & Góðken',
+  },
+  quickApprove: {
+    en: 'Quick Approve',
+    fo: 'Skjót góðkenning',
+  },
+  all: {
+    en: 'All',
+    fo: 'Øll',
   },
 };
 

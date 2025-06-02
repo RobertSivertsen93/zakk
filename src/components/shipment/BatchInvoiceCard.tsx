@@ -12,6 +12,7 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
@@ -111,26 +112,44 @@ const BatchInvoiceCard: React.FC<BatchInvoiceCardProps> = ({ invoice }) => {
                         <MoreHorizontal className="h-3 w-3" />
                       </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem onClick={handleReviewClick}>
+                    <DropdownMenuContent 
+                      align="end" 
+                      className="w-48 bg-white border shadow-lg z-50"
+                    >
+                      <DropdownMenuItem onClick={handleReviewClick} className="cursor-pointer">
                         <Eye className="h-4 w-4 mr-2" />
                         {t('reviewAndApprove')}
                       </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => window.open(invoice.pdfUrl, '_blank')}>
-                        <Eye className="h-4 w-4 mr-2" />
+                      <DropdownMenuItem 
+                        onClick={() => window.open(invoice.pdfUrl, '_blank')} 
+                        className="cursor-pointer"
+                      >
+                        <FileText className="h-4 w-4 mr-2" />
                         {t('viewPdf')}
                       </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => handleStatusChange('approved')}>
+                      
+                      <DropdownMenuSeparator />
+                      
+                      <DropdownMenuItem 
+                        onClick={() => handleStatusChange('approved')} 
+                        className="cursor-pointer text-green-600 focus:text-green-600"
+                      >
                         <Check className="h-4 w-4 mr-2" />
                         {t('quickApprove')}
                       </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => handleStatusChange('rejected')}>
+                      <DropdownMenuItem 
+                        onClick={() => handleStatusChange('rejected')} 
+                        className="cursor-pointer text-orange-600 focus:text-orange-600"
+                      >
                         <X className="h-4 w-4 mr-2" />
                         {t('reject')}
                       </DropdownMenuItem>
+                      
+                      <DropdownMenuSeparator />
+                      
                       <DropdownMenuItem 
                         onClick={() => removeInvoice(invoice.id)}
-                        className="text-red-600"
+                        className="cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-50"
                       >
                         <Trash2 className="h-4 w-4 mr-2" />
                         {t('remove')}
