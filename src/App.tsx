@@ -1,3 +1,4 @@
+
 import React from "react";
 import {
   BrowserRouter,
@@ -12,6 +13,7 @@ import Login from "./pages/Login";
 import Upload from "./pages/Upload";
 import NotFound from "./pages/NotFound";
 import Extract from "./pages/extract/index";
+import Shipment from "./pages/Shipment";
 import { LanguageProvider } from "./contexts/LanguageContext";
 import Loader from "./components/common/Loader";
 import ProtectedRoute from "./components/ProtectedRoute";
