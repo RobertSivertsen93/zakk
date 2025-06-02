@@ -7,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Save, Edit } from "lucide-react";
 import { toast } from "@/lib/toast";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface InvoiceDetailsProps {
   extractedData: Record<string, string>;
@@ -19,6 +20,7 @@ const InvoiceDetails: React.FC<InvoiceDetailsProps> = ({
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState<Record<string, string>>(extractedData);
+  const { t } = useLanguage();
 
   const handleFieldChange = (id: string, value: string) => {
     setFormData((prev) => ({
@@ -126,6 +128,28 @@ const InvoiceDetails: React.FC<InvoiceDetailsProps> = ({
               id="paymentMethod"
               value={formData.paymentMethod}
               onChange={(e) => handleFieldChange('paymentMethod', e.target.value)}
+              readOnly={!isEditing}
+              className={!isEditing ? "bg-muted border-gray-200" : "border-gray-300 focus:border-primary focus:ring-1 focus:ring-primary/30 transition-all"}
+            />
+          </div>
+          
+          <div className="space-y-2">
+            <Label htmlFor="vatNumber" className="text-sm font-medium text-gray-700">{t('vatNumber')}</Label>
+            <Input
+              id="vatNumber"
+              value={formData.vatNumber || ''}
+              onChange={(e) => handleFieldChange('vatNumber', e.target.value)}
+              readOnly={!isEditing}
+              className={!isEditing ? "bg-muted border-gray-200" : "border-gray-300 focus:border-primary focus:ring-1 focus:ring-primary/30 transition-all"}
+            />
+          </div>
+          
+          <div className="space-y-2">
+            <Label htmlFor="goodsNumber" className="text-sm font-medium text-gray-700">{t('goodsNumber')}</Label>
+            <Input
+              id="goodsNumber"
+              value={formData.goodsNumber || ''}
+              onChange={(e) => handleFieldChange('goodsNumber', e.target.value)}
               readOnly={!isEditing}
               className={!isEditing ? "bg-muted border-gray-200" : "border-gray-300 focus:border-primary focus:ring-1 focus:ring-primary/30 transition-all"}
             />

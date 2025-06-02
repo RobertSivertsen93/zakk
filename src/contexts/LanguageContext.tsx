@@ -1,4 +1,3 @@
-
 import React, { createContext, useState, useContext, useEffect, ReactNode } from 'react';
 
 // Define our supported languages
@@ -43,6 +42,15 @@ export const translations: Translations = {
   continue: {
     en: 'Continue',
     fo: 'Hald fram',
+  },
+  // New fields for customs
+  vatNumber: {
+    en: 'VAT Number',
+    fo: 'V-tal',
+  },
+  goodsNumber: {
+    en: 'Goods Number',
+    fo: 'Góðsnummar',
   },
 };
 

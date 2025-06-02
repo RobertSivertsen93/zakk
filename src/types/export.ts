@@ -1,3 +1,4 @@
+
 export interface InvoiceData {
   invoiceNumber: string;
   invoiceDate: string;
@@ -11,6 +12,8 @@ export interface InvoiceData {
   customerAddress: string;
   currency: string;
   reference: string;
+  vatNumber: string;
+  goodsNumber: string;
   lineItems: {
     id: string;
     productNumber: string;
