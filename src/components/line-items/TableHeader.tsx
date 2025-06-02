@@ -42,6 +42,8 @@ const TableHeader: React.FC<TableHeaderProps> = ({
           </div>
         </th>
         <th className="py-4 px-4 text-right font-medium text-gray-700">Amount</th>
+        <th className="py-4 px-4 text-right font-medium text-gray-700">VAT No.</th>
+        <th className="py-4 px-4 text-right font-medium text-gray-700">Goods No.</th>
         <th className="py-4 px-4 text-right font-medium text-gray-700">
           <div className="flex items-center justify-end">
             <span>Confidence</span>

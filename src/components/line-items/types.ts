@@ -1,5 +1,4 @@
 
-
 export type LineItem = {
   id: string;
   productNumber: string;
@@ -11,5 +10,6 @@ export type LineItem = {
   confidencePercentage: number;
   weight: string;
   alternativeProductNumbers?: string[];
+  vatNumber?: string;
+  goodsNumber?: string;
 };
-
