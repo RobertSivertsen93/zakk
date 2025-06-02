@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { LineItem } from '@/components/line-items/types';
 import LineItemsTable from '@/components/LineItemsTable';
@@ -32,9 +31,7 @@ const LineItemsSection: React.FC<LineItemsSectionProps> = ({
       unitPrice: item.unitPrice?.toString() || '',        // Unit Price
       amount: item.totalPrice?.toString() || item.amount?.toString() || '', // Amount
       confidencePercentage: item.hsCodeMatches?.[0]?.confidenceScore * 100 || 60, // Confidence
-      weight: item.weight || '',  // Weight
-      vatNumber: item.vatNumber || '',  // VAT Number
-      goodsNumber: item.goodsNumber || '',  // Goods Number
+      weight: item.weight || '',  // Adding the missing weight property
     })) || [];
   };
 
@@ -46,9 +43,6 @@ const LineItemsSection: React.FC<LineItemsSectionProps> = ({
     unitPrice: parseFloat(item.unitPrice) || 0,
     totalPrice: parseFloat(item.amount) || 0,
     countryOfOrigin: item.countryOfOrigin,
-    weight: item.weight,
-    vatNumber: item.vatNumber,
-    goodsNumber: item.goodsNumber,
     hsCodeMatches: [{
       code: item.productNumber,
       confidenceScore: item.confidencePercentage / 100

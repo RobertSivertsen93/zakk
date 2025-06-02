@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Upload } from "lucide-react";
@@ -19,13 +18,7 @@ const ExtractContent = () => {
     "invoice"
   );
   const [completedSections, setCompletedSections] = useState<string[]>([]);
-  const { 
-    exportDialogOpen, 
-    setExportDialogOpen, 
-    handleExport,
-    exportFormat,
-    setExportFormat 
-  } = useExport();
+  const { exportDialogOpen, setExportDialogOpen, handleExport } = useExport();
   const { t } = useLanguage();
 
   const handlePdfSelected = (file: File) => {
@@ -70,41 +63,45 @@ const ExtractContent = () => {
 
   return (
     <div className="space-y-6 pb-20 h-full">
-      <Button
-        variant="ghost"
-        size="sm"
-        className="text-muted-foreground hover:text-foreground mb-4 transition-all duration-300"
-        onClick={handleBackToUpload}
-      >
-        <Upload className="mr-1 h-4 w-4" />
-        {t("backToUpload")}
-      </Button>
+      {/* {currentStep === 1 ? (
+        <PdfUploadSection onPdfSelected={handlePdfSelected} />
+      ) : (
+        <> */}
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-muted-foreground hover:text-foreground mb-4 transition-all duration-300"
+            onClick={handleBackToUpload}
+          >
+            <Upload className="mr-1 h-4 w-4" />
+            {t("backToUpload")}
+          </Button>
 
-      <ExtractTabs
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-        completedSections={completedSections}
-        pdfUrl={pdfUrl}
-        fileName={fileName}
-        onBackToUpload={handleBackToUpload}
-        onCompleteSection={handleCompleteSection}
-      />
+          <ExtractTabs
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+            completedSections={completedSections}
+            pdfUrl={pdfUrl}
+            fileName={fileName}
+            onBackToUpload={handleBackToUpload}
+            onCompleteSection={handleCompleteSection}
+          />
 
-      {/* Bottom Action Bar */}
-      <BottomActionBar
-        canExport={canExport}
-        onExportClick={() => setExportDialogOpen(true)}
-        completedSections={completedSections}
-      />
+          {/* Bottom Action Bar */}
+          <BottomActionBar
+            canExport={canExport}
+            onExportClick={() => setExportDialogOpen(true)}
+            completedSections={completedSections}
+          />
 
-      {/* Export Confirmation Dialog */}
-      <ExportDialog
-        open={exportDialogOpen}
-        onOpenChange={setExportDialogOpen}
-        onExport={handleExport}
-        exportFormat={exportFormat}
-        setExportFormat={setExportFormat}
-      />
+          {/* Export Confirmation Dialog */}
+          <ExportDialog
+            open={exportDialogOpen}
+            onOpenChange={setExportDialogOpen}
+            onExport={handleExport}
+          />
+        {/* </>
+      )} */}
     </div>
   );
 };

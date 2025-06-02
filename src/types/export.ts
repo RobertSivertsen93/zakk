@@ -1,4 +1,3 @@
-
 export interface InvoiceData {
   invoiceNumber: string;
   invoiceDate: string;
@@ -7,11 +6,11 @@ export interface InvoiceData {
   documentNumber: string;
   paymentMethod: string;
   notes: string;
-  customerNumber?: string;
-  customerName?: string;
-  customerAddress?: string;
-  currency?: string;
-  reference?: string;
+  customerNumber: string;
+  customerName: string;
+  customerAddress: string;
+  currency: string;
+  reference: string;
   lineItems: {
     id: string;
     productNumber: string;
@@ -22,13 +21,10 @@ export interface InvoiceData {
     amount: number;
     confidencePercentage: number;
     weight: number;
-    hsCode?: string;
-    netWeight?: number;
-    unitCode?: string;
-    taxable?: boolean;
-    customsCode?: string;
-    tariff?: number;
-    dutyFree?: boolean;
+    hsCode: string;
+    netWeight: number;
+    unitCode: string;
+    taxable: boolean;
     alternativeProductNumbers?: string[];
   }[];
 }

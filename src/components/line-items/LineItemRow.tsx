@@ -2,7 +2,6 @@
 import React from 'react';
 import { LineItem } from './types';
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Pen, Trash2, Info, ChevronRight } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
@@ -14,7 +13,6 @@ interface LineItemRowProps {
   onDelete: (id: string) => void;
   isSelected: boolean;
   onToggleSelect: (id: string) => void;
-  hasSelection?: boolean;
 }
 
 const LineItemRow: React.FC<LineItemRowProps> = ({ 
@@ -22,8 +20,7 @@ const LineItemRow: React.FC<LineItemRowProps> = ({
   onEdit, 
   onDelete, 
   isSelected, 
-  onToggleSelect,
-  hasSelection = false
+  onToggleSelect 
 }) => {
   // Function to determine confidence indicator color
   const getConfidenceColor = (percentage: number) => {
@@ -54,15 +51,6 @@ const LineItemRow: React.FC<LineItemRowProps> = ({
   return (
     <TooltipProvider>
       <tr className={`border-b hover:bg-muted/30 ${isSelected ? 'bg-muted/40' : ''}`}>
-        {hasSelection && (
-          <td className="py-3 px-4">
-            <Checkbox
-              checked={isSelected}
-              onCheckedChange={() => onToggleSelect(item.id)}
-              aria-label={`Select item ${item.productNumber}`}
-            />
-          </td>
-        )}
         <td className="py-3 px-4 text-sm">
           <div className="flex items-center gap-1">
             <div className="relative">
@@ -104,8 +92,6 @@ const LineItemRow: React.FC<LineItemRowProps> = ({
         <td className="py-3 px-4 text-sm text-right">{item.quantity}</td>
         <td className="py-3 px-4 text-sm text-right">{item.unitPrice}</td>
         <td className="py-3 px-4 text-sm text-right">{item.amount}</td>
-        <td className="py-3 px-4 text-sm text-right">{item.vatNumber || '-'}</td>
-        <td className="py-3 px-4 text-sm text-right">{item.goodsNumber || '-'}</td>
         <td className="py-3 px-4 text-right">
           <Tooltip>
             <TooltipTrigger asChild>

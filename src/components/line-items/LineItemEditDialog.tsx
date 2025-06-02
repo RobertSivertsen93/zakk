@@ -49,6 +49,7 @@ const LineItemEditDialog: React.FC<LineItemEditDialogProps> = ({
   const processedAlternatives = item.alternativeProductNumbers ? 
     item.alternativeProductNumbers.map((code, index) => {
       // Add mock confidence levels for demonstration
+      // In a real app, these would come from the backend
       const confidenceLevels = [75, 65];
       return {
         code,
@@ -154,32 +155,8 @@ const LineItemEditDialog: React.FC<LineItemEditDialogProps> = ({
             />
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="vatNumber" className="font-medium">VAT Number</Label>
-            <Input 
-              id="vatNumber"
-              value={editFormData.vatNumber || ''}
-              onChange={(e) => onFieldChange('vatNumber', e.target.value)}
-              className="w-full"
-              type="text"
-              placeholder="e.g. GB123456789"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="goodsNumber" className="font-medium">Goods Number</Label>
-            <Input 
-              id="goodsNumber"
-              value={editFormData.goodsNumber || ''}
-              onChange={(e) => onFieldChange('goodsNumber', e.target.value)}
-              className="w-full"
-              type="text"
-              placeholder="e.g. GDS001"
-            />
-          </div>
-
           {editFormData.confidencePercentage !== undefined && (
-            <div className="space-y-2 md:col-span-2">
+            <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <Label htmlFor="confidence" className="font-medium flex items-center">
                   Confidence
