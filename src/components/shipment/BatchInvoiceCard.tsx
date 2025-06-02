@@ -5,7 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
-import { MoreHorizontal, Eye, FileText, Trash2, Check, X, CheckCircle, Clock } from 'lucide-react';
+import { MoreHorizontal, Eye, FileText, Trash2, CheckCircle, Clock } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useShipmentStore, InvoiceData } from '@/stores/useShipmentStore';
 import {
@@ -26,7 +26,6 @@ const BatchInvoiceCard: React.FC<BatchInvoiceCardProps> = ({ invoice }) => {
   const { 
     selectedInvoices, 
     toggleInvoiceSelection, 
-    updateInvoiceStatus, 
     removeInvoice 
   } = useShipmentStore();
 
@@ -38,10 +37,6 @@ const BatchInvoiceCard: React.FC<BatchInvoiceCardProps> = ({ invoice }) => {
       case 'rejected': return 'bg-red-100 text-red-800 border-red-200';
       default: return 'bg-yellow-100 text-yellow-800 border-yellow-200';
     }
-  };
-
-  const handleStatusChange = (newStatus: InvoiceData['status']) => {
-    updateInvoiceStatus(invoice.id, newStatus);
   };
 
   const handleCardClick = (e: React.MouseEvent) => {
@@ -126,23 +121,6 @@ const BatchInvoiceCard: React.FC<BatchInvoiceCardProps> = ({ invoice }) => {
                       >
                         <FileText className="h-4 w-4 mr-2" />
                         {t('viewPdf')}
-                      </DropdownMenuItem>
-                      
-                      <DropdownMenuSeparator />
-                      
-                      <DropdownMenuItem 
-                        onClick={() => handleStatusChange('approved')} 
-                        className="cursor-pointer text-green-600 focus:text-green-600"
-                      >
-                        <Check className="h-4 w-4 mr-2" />
-                        {t('quickApprove')}
-                      </DropdownMenuItem>
-                      <DropdownMenuItem 
-                        onClick={() => handleStatusChange('rejected')} 
-                        className="cursor-pointer text-orange-600 focus:text-orange-600"
-                      >
-                        <X className="h-4 w-4 mr-2" />
-                        {t('reject')}
                       </DropdownMenuItem>
                       
                       <DropdownMenuSeparator />
