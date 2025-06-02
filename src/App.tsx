@@ -47,6 +47,10 @@ function App() {
       element: <ProtectedRoute><Extract /></ProtectedRoute>
     },
     {
+      path: "/shipment",
+      element: <ProtectedRoute><Shipment /></ProtectedRoute>
+    },
+    {
       path: "*",
       element: <NotFound />
     }
