@@ -23,35 +23,9 @@ const InvoiceApprovalLineItems: React.FC<InvoiceApprovalLineItemsProps> = ({
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <div>
-          <h3 className="text-xl font-semibold text-gray-800">{t('lineItems')}</h3>
-          <p className="text-muted-foreground mt-1">Review and edit the line items from the invoice</p>
-        </div>
-        <Button 
-          onClick={onComplete}
-          disabled={isCompleted}
-          className="gap-2"
-        >
-          {isCompleted ? (
-            <>
-              <CheckCircle className="h-4 w-4" />
-              {t('completed')}
-            </>
-          ) : (
-            <>
-              <CheckCircle className="h-4 w-4" />
-              {t('markAsReviewed')}
-            </>
-          )}
-        </Button>
-      </div>
-
       <LineItemsSection 
         pdfUrl={invoice.pdfUrl}
-        onComplete={() => {
-          // Don't auto-complete here, let the button handle it
-        }}
+        onComplete={onComplete}
       />
     </div>
   );
