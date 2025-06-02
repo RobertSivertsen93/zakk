@@ -9,6 +9,7 @@ import LineItemRow from './line-items/LineItemRow';
 import EditableLineItemRow from './line-items/EditableLineItemRow';
 import TableHeader from './line-items/TableHeader';
 import AddLineItemDialog from './line-items/AddLineItemDialog';
+import BatchOperations from './line-items/BatchOperations';
 import { useLanguage } from "@/contexts/LanguageContext";
 
 interface LineItemsTableProps {
@@ -16,13 +17,19 @@ interface LineItemsTableProps {
   onEditItem: (id: string, updatedItem: LineItem) => void;
   onDeleteItem: (id: string) => void;
   onAddItem?: (item: Omit<LineItem, 'id' | 'confidencePercentage'>) => void;
+  selectedItems?: LineItem[];
+  onSelectionChange?: (selectedItems: LineItem[]) => void;
+  enableSelection?: boolean;
 }
 
 const LineItemsTable: React.FC<LineItemsTableProps> = ({
   items,
   onEditItem,
   onDeleteItem,
-  onAddItem
+  onAddItem,
+  selectedItems = [],
+  onSelectionChange,
+  enableSelection = false
 }) => {
   const [editingItemId, setEditingItemId] = useState<string | null>(null);
   const [editFormData, setEditFormData] = useState<LineItem | null>(null);
@@ -30,7 +37,7 @@ const LineItemsTable: React.FC<LineItemsTableProps> = ({
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const { language } = useLanguage();
   
-  // Filter items based on search query, now including weight
+  // Filter items based on search query
   const filteredItems = items.filter(item => {
     if (!searchQuery) return true;
     const query = searchQuery.toLowerCase();
@@ -72,6 +79,31 @@ const LineItemsTable: React.FC<LineItemsTableProps> = ({
       });
     }
   };
+
+  // Selection handlers
+  const handleToggleSelect = (item: LineItem) => {
+    if (!enableSelection || !onSelectionChange) return;
+    
+    const isSelected = selectedItems.some(selected => selected.id === item.id);
+    if (isSelected) {
+      onSelectionChange(selectedItems.filter(selected => selected.id !== item.id));
+    } else {
+      onSelectionChange([...selectedItems, item]);
+    }
+  };
+
+  const handleSelectAll = () => {
+    if (!enableSelection || !onSelectionChange) return;
+    onSelectionChange(filteredItems);
+  };
+
+  const handleClearSelection = () => {
+    if (!enableSelection || !onSelectionChange) return;
+    onSelectionChange([]);
+  };
+
+  const isAllSelected = enableSelection && filteredItems.length > 0 && 
+    filteredItems.every(item => selectedItems.some(selected => selected.id === item.id));
   
   const translations = {
     en: {
@@ -95,6 +127,19 @@ const LineItemsTable: React.FC<LineItemsTableProps> = ({
           </div>
         ) : (
           <>
+            {/* Batch Operations - only show when items are selected */}
+            {enableSelection && selectedItems.length > 0 && (
+              <BatchOperations
+                selectedItems={selectedItems}
+                onBatchValidate={() => {}}
+                onBatchEdit={() => {}}
+                onBatchExport={() => {}}
+                onSelectAll={handleSelectAll}
+                onClearSelection={handleClearSelection}
+                totalItems={filteredItems.length}
+              />
+            )}
+
             {/* Search, filter and add button */}
             <div className="mb-4 flex gap-2">
               <div className="relative flex-1">
@@ -126,7 +171,11 @@ const LineItemsTable: React.FC<LineItemsTableProps> = ({
             
             <div className="overflow-x-auto w-full rounded-md border border-gray-100 shadow-sm">
               <table className="w-full border-collapse">
-                <TableHeader hasSelection={false} />
+                <TableHeader 
+                  hasSelection={enableSelection}
+                  isAllSelected={isAllSelected}
+                  onSelectAll={handleSelectAll}
+                />
                 <tbody className="divide-y divide-gray-100">
                   {filteredItems.map((item) => (
                     editingItemId === item.id ? (
@@ -144,8 +193,9 @@ const LineItemsTable: React.FC<LineItemsTableProps> = ({
                         item={item}
                         onEdit={startEdit}
                         onDelete={handleDelete}
-                        isSelected={false}
-                        onToggleSelect={() => {}}
+                        isSelected={selectedItems.some(selected => selected.id === item.id)}
+                        onToggleSelect={() => handleToggleSelect(item)}
+                        hasSelection={enableSelection}
                       />
                     )
                   ))}
