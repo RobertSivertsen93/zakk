@@ -41,7 +41,8 @@ const AddInvoiceDialog: React.FC<AddInvoiceDialogProps> = ({
       totalAmount: 0, // Placeholder
       lineItems: [],
       status: 'pending' as const,
-      extractedData: {}
+      extractedData: {},
+      isProcessed: false // Add the missing isProcessed property
     };
 
     addInvoice(newInvoice);
