@@ -5,10 +5,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Calculator, Percent, DollarSign, Scale, AlertTriangle } from 'lucide-react';
+import { Calculator, Percent, AlertTriangle } from 'lucide-react';
 import { LineItem } from './types';
 import { toast } from "@/lib/toast";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import CurrencyConverter from './CurrencyConverter';
 
 interface BulkCalculationsProps {
   selectedItems: LineItem[];
@@ -19,9 +20,13 @@ const BulkCalculations: React.FC<BulkCalculationsProps> = ({ selectedItems, onUp
   const [adjustmentType, setAdjustmentType] = useState<'percentage' | 'fixed'>('percentage');
   const [adjustmentValue, setAdjustmentValue] = useState('');
   const [adjustmentField, setAdjustmentField] = useState<'amount' | 'weight' | 'quantity'>('amount');
-  const [conversionRate, setConversionRate] = useState('');
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [pendingOperation, setPendingOperation] = useState<string>('');
+  const [pendingConversionData, setPendingConversionData] = useState<{
+    rate: number;
+    fromCurrency: string;
+    toCurrency: string;
+  } | null>(null);
 
   if (selectedItems.length === 0) {
     return null;
@@ -43,18 +48,8 @@ const BulkCalculations: React.FC<BulkCalculationsProps> = ({ selectedItems, onUp
     setShowConfirmDialog(true);
   };
 
-  const handleCurrencyConversion = () => {
-    if (!conversionRate) {
-      toast.error('Please enter a conversion rate');
-      return;
-    }
-
-    const rate = parseFloat(conversionRate);
-    if (isNaN(rate) || rate <= 0) {
-      toast.error('Please enter a valid conversion rate');
-      return;
-    }
-
+  const handleCurrencyConversion = (rate: number, fromCurrency: string, toCurrency: string) => {
+    setPendingConversionData({ rate, fromCurrency, toCurrency });
     setPendingOperation('conversion');
     setShowConfirmDialog(true);
   };
@@ -76,8 +71,8 @@ const BulkCalculations: React.FC<BulkCalculationsProps> = ({ selectedItems, onUp
           ...item,
           [adjustmentField]: newValue.toFixed(2).toString()
         };
-      } else if (pendingOperation === 'conversion') {
-        const rate = parseFloat(conversionRate);
+      } else if (pendingOperation === 'conversion' && pendingConversionData) {
+        const { rate } = pendingConversionData;
         const currentAmount = parseFloat(item.amount) || 0;
         const newAmount = currentAmount * rate;
 
@@ -91,140 +86,126 @@ const BulkCalculations: React.FC<BulkCalculationsProps> = ({ selectedItems, onUp
 
     onUpdateItems(updatedItems);
     setShowConfirmDialog(false);
+    setPendingConversionData(null);
     
-    const operationType = pendingOperation === 'adjustment' ? 'Bulk adjustment' : 'Currency conversion';
-    toast.success(`${operationType} applied to ${selectedItems.length} items`);
+    if (pendingOperation === 'adjustment') {
+      toast.success(`Bulk adjustment applied to ${selectedItems.length} items`);
+    } else if (pendingOperation === 'conversion' && pendingConversionData) {
+      toast.success(`Currency converted from ${pendingConversionData.fromCurrency} to ${pendingConversionData.toCurrency} for ${selectedItems.length} items`);
+    }
   };
 
   return (
-    <Card className="mb-6 border border-gray-200 shadow-sm">
-      <CardHeader className="pb-4">
-        <CardTitle className="flex items-center gap-2 text-lg">
-          <Calculator className="h-5 w-5" />
-          Bulk Calculations ({selectedItems.length} items selected)
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-6">
-        {/* Value Adjustments */}
-        <div className="space-y-4">
-          <h3 className="font-medium flex items-center gap-2">
-            <Percent className="h-4 w-4" />
-            Value Adjustments
-          </h3>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="space-y-2">
-              <Label>Field to Adjust</Label>
-              <Select value={adjustmentField} onValueChange={(value: any) => setAdjustmentField(value)}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="amount">Amount</SelectItem>
-                  <SelectItem value="weight">Weight</SelectItem>
-                  <SelectItem value="quantity">Quantity</SelectItem>
-                </SelectContent>
-              </Select>
+    <div className="space-y-6 mb-6">
+      {/* Value Adjustments */}
+      <Card className="border border-gray-200 shadow-sm">
+        <CardHeader className="pb-4">
+          <CardTitle className="flex items-center gap-2 text-lg">
+            <Calculator className="h-5 w-5" />
+            Bulk Calculations ({selectedItems.length} items selected)
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div className="space-y-4">
+            <h3 className="font-medium flex items-center gap-2">
+              <Percent className="h-4 w-4" />
+              Value Adjustments
+            </h3>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="space-y-2">
+                <Label>Field to Adjust</Label>
+                <Select value={adjustmentField} onValueChange={(value: any) => setAdjustmentField(value)}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="amount">Amount</SelectItem>
+                    <SelectItem value="weight">Weight</SelectItem>
+                    <SelectItem value="quantity">Quantity</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div className="space-y-2">
+                <Label>Adjustment Type</Label>
+                <Select value={adjustmentType} onValueChange={(value: any) => setAdjustmentType(value)}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="percentage">Percentage (%)</SelectItem>
+                    <SelectItem value="fixed">Fixed Value</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div className="space-y-2">
+                <Label>
+                  Value {adjustmentType === 'percentage' ? '(%)' : '(Fixed)'}
+                </Label>
+                <Input
+                  type="number"
+                  step="0.01"
+                  value={adjustmentValue}
+                  onChange={(e) => setAdjustmentValue(e.target.value)}
+                  placeholder={adjustmentType === 'percentage' ? "10" : "100"}
+                />
+              </div>
             </div>
             
-            <div className="space-y-2">
-              <Label>Adjustment Type</Label>
-              <Select value={adjustmentType} onValueChange={(value: any) => setAdjustmentType(value)}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="percentage">Percentage (%)</SelectItem>
-                  <SelectItem value="fixed">Fixed Value</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            
-            <div className="space-y-2">
-              <Label>
-                Value {adjustmentType === 'percentage' ? '(%)' : '(Fixed)'}
-              </Label>
-              <Input
-                type="number"
-                step="0.01"
-                value={adjustmentValue}
-                onChange={(e) => setAdjustmentValue(e.target.value)}
-                placeholder={adjustmentType === 'percentage' ? "10" : "100"}
-              />
-            </div>
+            <Button onClick={handleAdjustment} className="w-full md:w-auto">
+              Apply Adjustment
+            </Button>
           </div>
-          
-          <Button onClick={handleAdjustment} className="w-full md:w-auto">
-            Apply Adjustment
-          </Button>
-        </div>
+        </CardContent>
+      </Card>
 
-        {/* Currency Conversion */}
-        <div className="space-y-4 border-t pt-4">
-          <h3 className="font-medium flex items-center gap-2">
-            <DollarSign className="h-4 w-4" />
-            Currency Conversion
-          </h3>
+      {/* Currency Conversion */}
+      <CurrencyConverter
+        onConvert={handleCurrencyConversion}
+        selectedItemsCount={selectedItems.length}
+      />
+
+      {/* Confirmation Dialog */}
+      <Dialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <AlertTriangle className="h-5 w-5 text-orange-500" />
+              Confirm Bulk Operation
+            </DialogTitle>
+          </DialogHeader>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label>Conversion Rate</Label>
-              <Input
-                type="number"
-                step="0.0001"
-                value={conversionRate}
-                onChange={(e) => setConversionRate(e.target.value)}
-                placeholder="1.2345"
-              />
-            </div>
+          <div className="space-y-4">
+            <p>
+              This operation will modify {selectedItems.length} selected items. 
+              {pendingOperation === 'adjustment' && (
+                <span className="block mt-2">
+                  Applying {adjustmentType === 'percentage' ? `${adjustmentValue}%` : adjustmentValue} 
+                  {adjustmentType === 'percentage' ? ' percentage change' : ' fixed adjustment'} to {adjustmentField}.
+                </span>
+              )}
+              {pendingOperation === 'conversion' && pendingConversionData && (
+                <span className="block mt-2">
+                  Converting amounts from {pendingConversionData.fromCurrency} to {pendingConversionData.toCurrency} 
+                  using rate: {pendingConversionData.rate.toFixed(4)}
+                </span>
+              )}
+            </p>
             
-            <div className="flex items-end">
-              <Button onClick={handleCurrencyConversion} className="w-full">
-                Convert Currency
+            <div className="flex gap-2 justify-end">
+              <Button variant="outline" onClick={() => setShowConfirmDialog(false)}>
+                Cancel
+              </Button>
+              <Button onClick={executeOperation}>
+                Confirm
               </Button>
             </div>
           </div>
-        </div>
-
-        {/* Confirmation Dialog */}
-        <Dialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle className="flex items-center gap-2">
-                <AlertTriangle className="h-5 w-5 text-orange-500" />
-                Confirm Bulk Operation
-              </DialogTitle>
-            </DialogHeader>
-            
-            <div className="space-y-4">
-              <p>
-                This operation will modify {selectedItems.length} selected items. 
-                {pendingOperation === 'adjustment' && (
-                  <span className="block mt-2">
-                    Applying {adjustmentType === 'percentage' ? `${adjustmentValue}%` : adjustmentValue} 
-                    {adjustmentType === 'percentage' ? ' percentage change' : ' fixed adjustment'} to {adjustmentField}.
-                  </span>
-                )}
-                {pendingOperation === 'conversion' && (
-                  <span className="block mt-2">
-                    Converting amounts using rate: {conversionRate}
-                  </span>
-                )}
-              </p>
-              
-              <div className="flex gap-2 justify-end">
-                <Button variant="outline" onClick={() => setShowConfirmDialog(false)}>
-                  Cancel
-                </Button>
-                <Button onClick={executeOperation}>
-                  Confirm
-                </Button>
-              </div>
-            </div>
-          </DialogContent>
-        </Dialog>
-      </CardContent>
-    </Card>
+        </DialogContent>
+      </Dialog>
+    </div>
   );
 };
 
