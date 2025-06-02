@@ -28,6 +28,9 @@ export interface InvoiceData {
     netWeight: number;
     unitCode: string;
     taxable: boolean;
+    customsCode?: string;
+    tariff?: number;
+    dutyFree?: boolean;
     alternativeProductNumbers?: string[];
   }[];
 }

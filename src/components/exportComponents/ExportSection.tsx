@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { toast } from "@/lib/toast";
 import { Card, CardContent } from "@/components/ui/card";
@@ -28,6 +29,13 @@ const ExportSection: React.FC = () => {
       documentNumber: sessionData.documentNumber || '',
       paymentMethod: sessionData.currency || '',
       notes: sessionData.notes || '',
+      customerNumber: sessionData.customerNumber || '',
+      customerName: sessionData.customerName || '',
+      customerAddress: sessionData.customerAddress || '',
+      currency: sessionData.currency || '',
+      reference: sessionData.reference || '',
+      vatNumber: sessionData.vatNumber || '',
+      goodsNumber: sessionData.goodsNumber || '',
       lineItems: sessionData.items || []
     };
 
@@ -41,7 +49,7 @@ const ExportSection: React.FC = () => {
       dataToExport = convertToTaksFormat(invoiceData);
       mimeType = 'text/plain';
       fileExtension = 'txt';
-      dataString = generateTaksFormat(dataToExport); // You'll need to implement this function
+      dataString = generateTaksFormat(dataToExport);
     } else {
       // Standard JSON export
       dataString = JSON.stringify(dataToExport, null, 2);
@@ -124,15 +132,17 @@ const ExportSection: React.FC = () => {
   );
 };
 
-// Helper function to generate TAKS format (implement according to your needs)
+// Helper function to generate TAKS format
 const generateTaksFormat = (data: InvoiceData): string => {
-  // Implement TAKS format generation logic here
-  // This is just a placeholder - implement according to your TAKS format requirements
   const lines = [
     "1;TOLL;00;" + new Date().toISOString() + ";314188",
-    ...data.lineItems.map((item, index) => 
-      `${index + 1};TOLL;50;${new Date().toISOString()};1;;${item.productNumber?.replace(/\./g, '')};${item.weight?.replace(".", ",")};${item.quantity};732;${item.amount?.replace(".", ",")};N`
-    )
+    ...data.lineItems.map((item, index) => {
+      const weightStr = typeof item.weight === 'string' ? item.weight : item.weight?.toString() || '0';
+      const quantityStr = typeof item.quantity === 'string' ? item.quantity : item.quantity?.toString() || '0';
+      const amountStr = typeof item.amount === 'string' ? item.amount : item.amount?.toString() || '0';
+      
+      return `${index + 1};TOLL;50;${new Date().toISOString()};1;;${item.productNumber?.replace(/\./g, '')};${weightStr.replace(".", ",")};${quantityStr};732;${amountStr.replace(".", ",")};N`
+    })
   ];
   return lines.join('\n');
 };
