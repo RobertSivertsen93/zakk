@@ -14,6 +14,7 @@ import Upload from "./pages/Upload";
 import NotFound from "./pages/NotFound";
 import Extract from "./pages/extract/index";
 import Shipment from "./pages/Shipment";
+import InvoiceApproval from "./pages/InvoiceApproval";
 import { LanguageProvider } from "./contexts/LanguageContext";
 import Loader from "./components/common/Loader";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -49,6 +50,10 @@ function App() {
     {
       path: "/shipment",
       element: <ProtectedRoute><Shipment /></ProtectedRoute>
+    },
+    {
+      path: "/invoice-approval",
+      element: <ProtectedRoute><InvoiceApproval /></ProtectedRoute>
     },
     {
       path: "*",
