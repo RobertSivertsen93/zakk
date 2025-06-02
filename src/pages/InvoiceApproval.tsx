@@ -17,7 +17,7 @@ const InvoiceApproval: React.FC = () => {
   const invoiceId = searchParams.get('id');
   const { invoices, updateInvoiceStatus } = useShipmentStore();
   
-  const [activeTab, setActiveTab] = useState<string>("info");
+  const [activeTab, setActiveTab] = useState<string>("invoice");
   const [completedSections, setCompletedSections] = useState<string[]>([]);
 
   const invoice = invoices.find(inv => inv.id === invoiceId);
@@ -40,7 +40,7 @@ const InvoiceApproval: React.FC = () => {
   };
 
   const isTabCompleted = (tabId: string) => {
-    return completedSections.includes(tabId === "info" ? "invoice-info" : "line-items");
+    return completedSections.includes(tabId === "invoice" ? "invoice-details" : "line-items");
   };
 
   const handleApprove = () => {
@@ -55,7 +55,7 @@ const InvoiceApproval: React.FC = () => {
     navigate("/shipment");
   };
 
-  const canApprove = completedSections.includes("invoice-info") && 
+  const canApprove = completedSections.includes("invoice-details") && 
                     completedSections.includes("line-items");
 
   return (
@@ -81,10 +81,10 @@ const InvoiceApproval: React.FC = () => {
         <div className="space-y-6 pb-20">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabsList className="relative mb-6 w-full overflow-hidden rounded-lg border shadow-sm">
-              <TabsTrigger value="info" className="flex-1 gap-2">
+              <TabsTrigger value="invoice" className="flex-1 gap-2">
                 <div className="flex items-center justify-center gap-2">
-                  <span>{t("invoiceInfo")}</span>
-                  {isTabCompleted("info") && (
+                  <span>{t("invoice")}</span>
+                  {isTabCompleted("invoice") && (
                     <CheckCircle2 className="ml-1 h-3.5 w-3.5 text-green-500" />
                   )}
                 </div>
@@ -100,14 +100,14 @@ const InvoiceApproval: React.FC = () => {
               </TabsTrigger>
             </TabsList>
 
-            <TabsContent value="info" className="animate-fade-in">
+            <TabsContent value="invoice" className="animate-fade-in">
               <InvoiceApprovalInfo
                 invoice={invoice}
                 onComplete={() => {
-                  handleCompleteSection("invoice-info");
+                  handleCompleteSection("invoice-details");
                   setActiveTab("lineitems");
                 }}
-                isCompleted={isTabCompleted("info")}
+                isCompleted={isTabCompleted("invoice")}
               />
             </TabsContent>
 
