@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { toast } from "@/lib/toast";
 import { Card, CardContent } from "@/components/ui/card";
@@ -26,8 +27,13 @@ const ExportSection: React.FC = () => {
       dueDate: sessionData.dueDate || '',
       sender: sessionData.sender || '',
       documentNumber: sessionData.documentNumber || '',
-      paymentMethod: sessionData.currency || '',
+      paymentMethod: sessionData.paymentMethod || '',
       notes: sessionData.notes || '',
+      customerNumber: sessionData.customerNumber || '',
+      customerName: sessionData.customerName || '',
+      customerAddress: sessionData.customerAddress || '',
+      currency: sessionData.currency || '',
+      reference: sessionData.reference || '',
       lineItems: sessionData.items || []
     };
 
@@ -41,7 +47,7 @@ const ExportSection: React.FC = () => {
       dataToExport = convertToTaksFormat(invoiceData);
       mimeType = 'text/plain';
       fileExtension = 'txt';
-      dataString = generateTaksFormat(dataToExport); // You'll need to implement this function
+      dataString = generateTaksFormat(dataToExport);
     } else {
       // Standard JSON export
       dataString = JSON.stringify(dataToExport, null, 2);
@@ -124,15 +130,17 @@ const ExportSection: React.FC = () => {
   );
 };
 
-// Helper function to generate TAKS format (implement according to your needs)
+// Helper function to generate TAKS format
 const generateTaksFormat = (data: InvoiceData): string => {
-  // Implement TAKS format generation logic here
-  // This is just a placeholder - implement according to your TAKS format requirements
   const lines = [
     "1;TOLL;00;" + new Date().toISOString() + ";314188",
-    ...data.lineItems.map((item, index) => 
-      `${index + 1};TOLL;50;${new Date().toISOString()};1;;${item.productNumber?.replace(/\./g, '')};${item.weight?.replace(".", ",")};${item.quantity};732;${item.amount?.replace(".", ",")};N`
-    )
+    ...data.lineItems.map((item, index) => {
+      const productNumber = item.productNumber?.toString().replace(/\./g, '') || '';
+      const weight = typeof item.weight === 'string' ? item.weight.replace(".", ",") : item.weight?.toString().replace(".", ",") || '';
+      const amount = typeof item.amount === 'string' ? item.amount.replace(".", ",") : item.amount?.toString().replace(".", ",") || '';
+      
+      return `${index + 1};TOLL;50;${new Date().toISOString()};1;;${productNumber};${weight};${item.quantity};732;${amount};N`;
+    })
   ];
   return lines.join('\n');
 };
