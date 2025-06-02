@@ -69,13 +69,13 @@ const InvoiceApproval: React.FC = () => {
             onClick={() => navigate("/shipment")}
           >
             <ArrowLeft className="mr-1 h-4 w-4" />
-            {t('backToShipment')}
+            Back to Shipment
           </Button>
           
           <h1 className="text-3xl font-bold text-gray-900">
-            {t('reviewAndApprove')}: {invoice.invoiceNumber}
+            Review & Approve: {invoice.invoiceNumber}
           </h1>
-          <p className="text-gray-600 mt-2">{t('reviewInvoiceDescription')}</p>
+          <p className="text-gray-600 mt-2">Review the invoice details and line items before approving.</p>
         </div>
 
         <div className="space-y-6 pb-20">
@@ -83,7 +83,7 @@ const InvoiceApproval: React.FC = () => {
             <TabsList className="relative mb-6 w-full overflow-hidden rounded-lg border shadow-sm">
               <TabsTrigger value="invoice" className="flex-1 gap-2">
                 <div className="flex items-center justify-center gap-2">
-                  <span>{t("invoice")}</span>
+                  <span>Invoice Data</span>
                   {isTabCompleted("invoice") && (
                     <CheckCircle2 className="ml-1 h-3.5 w-3.5 text-green-500" />
                   )}
@@ -92,7 +92,7 @@ const InvoiceApproval: React.FC = () => {
 
               <TabsTrigger value="lineitems" className="flex-1 gap-2">
                 <div className="flex items-center justify-center gap-2">
-                  <span>{t("lineItems")}</span>
+                  <span>Line Items</span>
                   {isTabCompleted("lineitems") && (
                     <CheckCircle2 className="ml-1 h-3.5 w-3.5 text-green-500" />
                   )}
@@ -125,7 +125,7 @@ const InvoiceApproval: React.FC = () => {
             <div className="container mx-auto px-6 py-4">
               <div className="flex items-center justify-between">
                 <div className="text-sm text-muted-foreground">
-                  {completedSections.length}/2 {t('sectionsCompleted')}
+                  {completedSections.length}/2 sections completed
                 </div>
                 
                 <div className="flex gap-2">
@@ -133,14 +133,14 @@ const InvoiceApproval: React.FC = () => {
                     variant="outline"
                     onClick={handleReject}
                   >
-                    {t('reject')}
+                    Reject
                   </Button>
                   <Button
                     onClick={handleApprove}
                     disabled={!canApprove}
                     className="bg-primary hover:bg-primary/90"
                   >
-                    {t('approve')}
+                    Approve
                   </Button>
                 </div>
               </div>

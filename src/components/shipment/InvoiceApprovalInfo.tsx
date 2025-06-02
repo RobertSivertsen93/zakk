@@ -55,7 +55,7 @@ const InvoiceApprovalInfo: React.FC<InvoiceApprovalInfoProps> = ({
       <CardContent className="p-4 md:p-6 space-y-4 md:space-y-6">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
-            <h2 className="font-semibold text-base">{t('invoiceInformation')}</h2>
+            <h2 className="font-semibold text-base">Invoice Data</h2>
             <p className="text-muted-foreground mt-1">Review and verify the invoice details below.</p>
           </div>
         </div>
@@ -89,7 +89,7 @@ const InvoiceApprovalInfo: React.FC<InvoiceApprovalInfoProps> = ({
           </div>
 
           <div className="flex flex-col space-y-3">
-            <h3 className="font-medium text-base">{t('pdfPreview')}</h3>
+            <h3 className="font-medium text-base">PDF Preview</h3>
             <div className="h-[500px] flex-1">
               {invoice.pdfUrl ? (
                 <PdfPreview pdfUrl={invoice.pdfUrl} />
