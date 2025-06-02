@@ -15,6 +15,7 @@ export interface InvoiceData {
   status: 'pending' | 'approved' | 'rejected';
   extractedData: any;
   createdAt: string;
+  isProcessed: boolean; // New field to track if invoice is ready/processed
 }
 
 export interface ShipmentState {
@@ -26,11 +27,13 @@ export interface ShipmentState {
   addInvoice: (invoice: Omit<InvoiceData, 'id' | 'createdAt'>) => void;
   removeInvoice: (id: string) => void;
   updateInvoiceStatus: (id: string, status: InvoiceData['status']) => void;
+  updateInvoiceProcessed: (id: string, isProcessed: boolean) => void; // New action
   toggleInvoiceSelection: (id: string) => void;
   selectAllInvoices: () => void;
   clearSelection: () => void;
   setShipmentName: (name: string) => void;
   getApprovedInvoices: () => InvoiceData[];
+  getProcessedInvoices: () => InvoiceData[]; // New getter
   clearShipment: () => void;
 }
 
@@ -46,6 +49,7 @@ export const useShipmentStore = create<ShipmentState>()(
           ...invoiceData,
           id: `invoice-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
           createdAt: new Date().toISOString(),
+          isProcessed: true, // Default to processed for demo purposes
         };
         
         set((state) => ({
@@ -64,6 +68,14 @@ export const useShipmentStore = create<ShipmentState>()(
         set((state) => ({
           invoices: state.invoices.map(invoice => 
             invoice.id === id ? { ...invoice, status } : invoice
+          )
+        }));
+      },
+
+      updateInvoiceProcessed: (id, isProcessed) => {
+        set((state) => ({
+          invoices: state.invoices.map(invoice => 
+            invoice.id === id ? { ...invoice, isProcessed } : invoice
           )
         }));
       },
@@ -94,6 +106,11 @@ export const useShipmentStore = create<ShipmentState>()(
       getApprovedInvoices: () => {
         const { invoices } = get();
         return invoices.filter(invoice => invoice.status === 'approved');
+      },
+
+      getProcessedInvoices: () => {
+        const { invoices } = get();
+        return invoices.filter(invoice => invoice.isProcessed);
       },
 
       clearShipment: () => {

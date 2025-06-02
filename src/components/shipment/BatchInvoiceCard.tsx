@@ -5,7 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
-import { MoreHorizontal, Eye, FileText, Trash2, Check, X } from 'lucide-react';
+import { MoreHorizontal, Eye, FileText, Trash2, Check, X, CheckCircle, Clock } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useShipmentStore, InvoiceData } from '@/stores/useShipmentStore';
 import {
@@ -77,13 +77,26 @@ const BatchInvoiceCard: React.FC<BatchInvoiceCardProps> = ({ invoice }) => {
           
           <div className="flex-1 min-w-0">
             <div className="flex items-start justify-between mb-2">
-              <div>
-                <h3 className="font-semibold text-sm truncate">
-                  {invoice.invoiceNumber}
-                </h3>
-                <p className="text-xs text-muted-foreground truncate">
-                  {invoice.customerName}
-                </p>
+              <div className="flex items-center gap-2">
+                <div>
+                  <h3 className="font-semibold text-sm truncate">
+                    {invoice.invoiceNumber}
+                  </h3>
+                  <p className="text-xs text-muted-foreground truncate">
+                    {invoice.customerName}
+                  </p>
+                </div>
+                {/* Processing Status Indicator */}
+                <div className="flex items-center gap-1">
+                  {invoice.isProcessed ? (
+                    <CheckCircle className="h-3 w-3 text-green-500" />
+                  ) : (
+                    <Clock className="h-3 w-3 text-yellow-500" />
+                  )}
+                  <span className="text-xs text-muted-foreground">
+                    {invoice.isProcessed ? 'Ready' : 'Processing'}
+                  </span>
+                </div>
               </div>
               
               <div className="flex items-center gap-2">

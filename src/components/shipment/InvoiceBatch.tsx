@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Search, Filter } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import BatchInvoiceCard from './BatchInvoiceCard';
+import BatchProgressHeader from './BatchProgressHeader';
 import EmptyStates from '../line-items/EmptyStates';
 
 const InvoiceBatch: React.FC = () => {
@@ -27,6 +28,9 @@ const InvoiceBatch: React.FC = () => {
 
   return (
     <div className="h-full flex flex-col">
+      {/* Batch Progress Header */}
+      <BatchProgressHeader />
+
       {/* Search and Filters */}
       <div className="mb-4 flex gap-2">
         <div className="relative flex-1">
