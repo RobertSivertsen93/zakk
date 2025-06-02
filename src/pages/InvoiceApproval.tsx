@@ -1,7 +1,6 @@
 
 import React, { useState, useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import Dashboard from "./Dashboard";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { CheckCircle2, ArrowLeft } from "lucide-react";
@@ -60,89 +59,96 @@ const InvoiceApproval: React.FC = () => {
                     completedSections.includes("line-items");
 
   return (
-    <Dashboard
-      title={`${t('reviewAndApprove')}: ${invoice.invoiceNumber}`}
-      description={t('reviewInvoiceDescription')}
-    >
-      <div className="space-y-6 pb-20 h-full">
-        <Button
-          variant="ghost"
-          size="sm"
-          className="text-muted-foreground hover:text-foreground mb-4 transition-all duration-300"
-          onClick={() => navigate("/shipment")}
-        >
-          <ArrowLeft className="mr-1 h-4 w-4" />
-          {t('backToShipment')}
-        </Button>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+      <div className="container mx-auto p-6">
+        <div className="mb-6">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-muted-foreground hover:text-foreground mb-4 transition-all duration-300"
+            onClick={() => navigate("/shipment")}
+          >
+            <ArrowLeft className="mr-1 h-4 w-4" />
+            {t('backToShipment')}
+          </Button>
+          
+          <h1 className="text-3xl font-bold text-gray-900">
+            {t('reviewAndApprove')}: {invoice.invoiceNumber}
+          </h1>
+          <p className="text-gray-600 mt-2">{t('reviewInvoiceDescription')}</p>
+        </div>
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="relative mb-6 w-full overflow-hidden rounded-lg border shadow-sm">
-            <TabsTrigger value="info" className="flex-1 gap-2">
-              <div className="flex items-center justify-center gap-2">
-                <span>{t("invoiceInfo")}</span>
-                {isTabCompleted("info") && (
-                  <CheckCircle2 className="ml-1 h-3.5 w-3.5 text-green-500" />
-                )}
-              </div>
-            </TabsTrigger>
+        <div className="space-y-6 pb-20">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+            <TabsList className="relative mb-6 w-full overflow-hidden rounded-lg border shadow-sm">
+              <TabsTrigger value="info" className="flex-1 gap-2">
+                <div className="flex items-center justify-center gap-2">
+                  <span>{t("invoiceInfo")}</span>
+                  {isTabCompleted("info") && (
+                    <CheckCircle2 className="ml-1 h-3.5 w-3.5 text-green-500" />
+                  )}
+                </div>
+              </TabsTrigger>
 
-            <TabsTrigger value="lineitems" className="flex-1 gap-2">
-              <div className="flex items-center justify-center gap-2">
-                <span>{t("lineItems")}</span>
-                {isTabCompleted("lineitems") && (
-                  <CheckCircle2 className="ml-1 h-3.5 w-3.5 text-green-500" />
-                )}
-              </div>
-            </TabsTrigger>
-          </TabsList>
+              <TabsTrigger value="lineitems" className="flex-1 gap-2">
+                <div className="flex items-center justify-center gap-2">
+                  <span>{t("lineItems")}</span>
+                  {isTabCompleted("lineitems") && (
+                    <CheckCircle2 className="ml-1 h-3.5 w-3.5 text-green-500" />
+                  )}
+                </div>
+              </TabsTrigger>
+            </TabsList>
 
-          <TabsContent value="info" className="animate-fade-in">
-            <InvoiceApprovalInfo
-              invoice={invoice}
-              onComplete={() => {
-                handleCompleteSection("invoice-info");
-                setActiveTab("lineitems");
-              }}
-              isCompleted={isTabCompleted("info")}
-            />
-          </TabsContent>
+            <TabsContent value="info" className="animate-fade-in">
+              <InvoiceApprovalInfo
+                invoice={invoice}
+                onComplete={() => {
+                  handleCompleteSection("invoice-info");
+                  setActiveTab("lineitems");
+                }}
+                isCompleted={isTabCompleted("info")}
+              />
+            </TabsContent>
 
-          <TabsContent value="lineitems" className="animate-fade-in">
-            <InvoiceApprovalLineItems
-              invoice={invoice}
-              onComplete={() => handleCompleteSection("line-items")}
-              isCompleted={isTabCompleted("lineitems")}
-            />
-          </TabsContent>
-        </Tabs>
+            <TabsContent value="lineitems" className="animate-fade-in">
+              <InvoiceApprovalLineItems
+                invoice={invoice}
+                onComplete={() => handleCompleteSection("line-items")}
+                isCompleted={isTabCompleted("lineitems")}
+              />
+            </TabsContent>
+          </Tabs>
 
-        {/* Bottom Action Bar */}
-        <div className="fixed bottom-0 left-0 right-0 bg-background border-t shadow-lg z-40">
-          <div className="container mx-auto px-6 py-4">
-            <div className="flex items-center justify-between">
-              <div className="text-sm text-muted-foreground">
-                {completedSections.length}/2 {t('sectionsCompleted')}
-              </div>
-              
-              <div className="flex gap-2">
-                <Button
-                  variant="outline"
-                  onClick={handleReject}
-                >
-                  {t('reject')}
-                </Button>
-                <Button
-                  onClick={handleApprove}
-                  disabled={!canApprove}
-                >
-                  {t('approve')}
-                </Button>
+          {/* Bottom Action Bar */}
+          <div className="fixed bottom-0 left-0 right-0 bg-background border-t shadow-lg z-40">
+            <div className="container mx-auto px-6 py-4">
+              <div className="flex items-center justify-between">
+                <div className="text-sm text-muted-foreground">
+                  {completedSections.length}/2 {t('sectionsCompleted')}
+                </div>
+                
+                <div className="flex gap-2">
+                  <Button
+                    variant="outline"
+                    onClick={handleReject}
+                  >
+                    {t('reject')}
+                  </Button>
+                  <Button
+                    onClick={handleApprove}
+                    disabled={!canApprove}
+                    className="bg-primary hover:bg-primary/90"
+                  >
+                    {t('approve')}
+                  </Button>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </Dashboard>
+    </div>
   );
 };
 

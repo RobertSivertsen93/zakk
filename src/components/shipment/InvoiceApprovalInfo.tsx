@@ -37,57 +37,64 @@ const InvoiceApprovalInfo: React.FC<InvoiceApprovalInfoProps> = ({
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-full">
-      {/* Form Section */}
-      <div className="space-y-4">
-        <Card>
-          <CardContent className="p-6 space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="invoiceNumber">{t('invoiceNumber')}</Label>
-                <Input
-                  id="invoiceNumber"
-                  value={formData.invoiceNumber}
-                  onChange={(e) => handleFieldChange('invoiceNumber', e.target.value)}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="invoiceDate">{t('invoiceDate')}</Label>
-                <Input
-                  id="invoiceDate"
-                  type="date"
-                  value={formData.invoiceDate}
-                  onChange={(e) => handleFieldChange('invoiceDate', e.target.value)}
-                />
-              </div>
+    <Card className="glass-panel shadow-lg border border-gray-100 bg-gradient-to-br from-white to-gray-50">
+      <CardContent className="p-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Form Section */}
+          <div className="space-y-6">
+            <div>
+              <h3 className="text-xl font-semibold text-gray-800 mb-4">{t('invoiceInformation')}</h3>
+              <p className="text-muted-foreground mb-6">Review and verify the invoice details below.</p>
             </div>
+            
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="invoiceNumber">{t('invoiceNumber')}</Label>
+                  <Input
+                    id="invoiceNumber"
+                    value={formData.invoiceNumber}
+                    onChange={(e) => handleFieldChange('invoiceNumber', e.target.value)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="invoiceDate">{t('invoiceDate')}</Label>
+                  <Input
+                    id="invoiceDate"
+                    type="date"
+                    value={formData.invoiceDate}
+                    onChange={(e) => handleFieldChange('invoiceDate', e.target.value)}
+                  />
+                </div>
+              </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="customerName">{t('customerName')}</Label>
-              <Input
-                id="customerName"
-                value={formData.customerName}
-                onChange={(e) => handleFieldChange('customerName', e.target.value)}
-              />
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="currency">{t('currency')}</Label>
+                <Label htmlFor="customerName">{t('customerName')}</Label>
                 <Input
-                  id="currency"
-                  value={formData.currency}
-                  onChange={(e) => handleFieldChange('currency', e.target.value)}
+                  id="customerName"
+                  value={formData.customerName}
+                  onChange={(e) => handleFieldChange('customerName', e.target.value)}
                 />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="totalAmount">{t('totalAmount')}</Label>
-                <Input
-                  id="totalAmount"
-                  type="number"
-                  value={formData.totalAmount}
-                  onChange={(e) => handleFieldChange('totalAmount', e.target.value)}
-                />
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="currency">{t('currency')}</Label>
+                  <Input
+                    id="currency"
+                    value={formData.currency}
+                    onChange={(e) => handleFieldChange('currency', e.target.value)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="totalAmount">{t('totalAmount')}</Label>
+                  <Input
+                    id="totalAmount"
+                    type="number"
+                    value={formData.totalAmount}
+                    onChange={(e) => handleFieldChange('totalAmount', e.target.value)}
+                  />
+                </div>
               </div>
             </div>
 
@@ -95,7 +102,7 @@ const InvoiceApprovalInfo: React.FC<InvoiceApprovalInfoProps> = ({
               <Button 
                 onClick={onComplete}
                 disabled={isCompleted}
-                className="w-full gap-2"
+                className="gap-2"
               >
                 {isCompleted ? (
                   <>
@@ -103,28 +110,28 @@ const InvoiceApprovalInfo: React.FC<InvoiceApprovalInfoProps> = ({
                     {t('completed')}
                   </>
                 ) : (
-                  t('markAsReviewed')
+                  <>
+                    <CheckCircle className="h-4 w-4" />
+                    {t('markAsReviewed')}
+                  </>
                 )}
               </Button>
             </div>
-          </CardContent>
-        </Card>
-      </div>
+          </div>
 
-      {/* PDF Preview Section */}
-      <div className="space-y-4">
-        <Card className="h-full">
-          <CardContent className="p-6 h-full">
-            <div className="space-y-4 h-full">
-              <h3 className="font-medium">{t('pdfPreview')}</h3>
-              <div className="h-[400px] border rounded-lg overflow-hidden">
-                <PdfPreview pdfUrl={invoice.pdfUrl} />
-              </div>
+          {/* PDF Preview Section */}
+          <div className="space-y-4">
+            <div>
+              <h3 className="font-medium text-lg">{t('pdfPreview')}</h3>
+              <p className="text-sm text-muted-foreground">Review the original invoice document</p>
             </div>
-          </CardContent>
-        </Card>
-      </div>
-    </div>
+            <div className="h-[500px] border rounded-lg overflow-hidden bg-white shadow-sm">
+              <PdfPreview pdfUrl={invoice.pdfUrl} />
+            </div>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 
