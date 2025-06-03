@@ -9,16 +9,11 @@ interface BulkOperationConfirmDialogProps {
   onClose: () => void;
   onConfirm: () => void;
   selectedItemsCount: number;
-  operationType: 'adjustment' | 'conversion' | '';
+  operationType: 'adjustment' | '';
   adjustmentData?: {
     type: 'percentage' | 'fixed';
     value: string;
     field: 'amount' | 'weight' | 'quantity';
-  };
-  conversionData?: {
-    rate: number;
-    fromCurrency: string;
-    toCurrency: string;
   };
 }
 
@@ -28,8 +23,7 @@ const BulkOperationConfirmDialog: React.FC<BulkOperationConfirmDialogProps> = ({
   onConfirm,
   selectedItemsCount,
   operationType,
-  adjustmentData,
-  conversionData
+  adjustmentData
 }) => {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -48,12 +42,6 @@ const BulkOperationConfirmDialog: React.FC<BulkOperationConfirmDialogProps> = ({
               <span className="block mt-2">
                 Applying {adjustmentData.type === 'percentage' ? `${adjustmentData.value}%` : adjustmentData.value} 
                 {adjustmentData.type === 'percentage' ? ' percentage change' : ' fixed adjustment'} to {adjustmentData.field}.
-              </span>
-            )}
-            {operationType === 'conversion' && conversionData && (
-              <span className="block mt-2">
-                Converting amounts from {conversionData.fromCurrency} to {conversionData.toCurrency} 
-                using rate: {conversionData.rate.toFixed(4)}
               </span>
             )}
           </p>
