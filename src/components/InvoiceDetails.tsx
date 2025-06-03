@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Save, Edit } from "lucide-react";
 import { toast } from "@/lib/toast";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -20,6 +21,9 @@ const InvoiceDetails: React.FC<InvoiceDetailsProps> = ({
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState<Record<string, string>>(extractedData);
+  const [receiptOfOrigin, setReceiptOfOrigin] = useState<boolean>(
+    extractedData.receiptOfOrigin === 'true' || false
+  );
   const { t } = useLanguage();
 
   const handleFieldChange = (id: string, value: string) => {
@@ -30,8 +34,13 @@ const InvoiceDetails: React.FC<InvoiceDetailsProps> = ({
   };
 
   const handleSave = () => {
+    const updatedData = {
+      ...formData,
+      receiptOfOrigin: receiptOfOrigin.toString()
+    };
+    
     if (onSaveChanges) {
-      onSaveChanges(formData);
+      onSaveChanges(updatedData);
     } else {
       // Default save behavior if no callback provided
       toast.success("Invoice details updated");
@@ -164,6 +173,24 @@ const InvoiceDetails: React.FC<InvoiceDetailsProps> = ({
               readOnly={!isEditing}
               className={!isEditing ? "bg-muted border-gray-200 min-h-[80px]" : "border-gray-300 focus:border-primary focus:ring-1 focus:ring-primary/30 min-h-[80px] transition-all"}
             />
+          </div>
+
+          <div className="space-y-2 md:col-span-2">
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="receiptOfOrigin"
+                checked={receiptOfOrigin}
+                onCheckedChange={(checked) => setReceiptOfOrigin(!!checked)}
+                disabled={!isEditing}
+                className={!isEditing ? "opacity-50" : ""}
+              />
+              <Label 
+                htmlFor="receiptOfOrigin" 
+                className="text-sm font-medium text-gray-700 cursor-pointer"
+              >
+                {t('receiptOfOrigin')}
+              </Label>
+            </div>
           </div>
         </div>
       </CardContent>

@@ -1,4 +1,3 @@
-
 import React, { createContext, useState, useContext, useEffect, ReactNode } from 'react';
 
 // Define our supported languages
@@ -52,6 +51,10 @@ export const translations: Translations = {
   goodsNumber: {
     en: 'Goods Number',
     fo: 'Góðsnummar',
+  },
+  receiptOfOrigin: {
+    en: 'Receipt of Origin',
+    fo: 'Upprunaváttan',
   },
   // Shipment/Customs translations
   customsShipment: {

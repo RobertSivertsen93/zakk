@@ -43,6 +43,7 @@ const InvoiceApprovalInfo: React.FC<InvoiceApprovalInfoProps> = ({
     notes: "", // Not available in invoice data, set empty
     vatNumber: "", // Not available in invoice data, set empty
     goodsNumber: "", // Not available in invoice data, set empty
+    receiptOfOrigin: "false", // Default to false for approval flow
   };
 
   const handleSaveInvoiceDetails = (updatedData: Record<string, string>) => {

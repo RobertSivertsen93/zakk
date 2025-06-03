@@ -25,6 +25,7 @@ interface PdfData {
   notes?: string;
   vatNumber?: string;
   goodsNumber?: string;
+  receiptOfOrigin?: string;
 }
 
 const formatDate = (dateString: string | undefined) => {
@@ -54,6 +55,7 @@ const InvoiceDataSection: React.FC<InvoiceDataSectionProps> = ({
     notes: parsedPdfData.notes || "",
     vatNumber: parsedPdfData.vatNumber || "",
     goodsNumber: parsedPdfData.goodsNumber || "",
+    receiptOfOrigin: parsedPdfData.receiptOfOrigin || "false",
   });
 
   const { language } = useLanguage();
@@ -85,6 +87,7 @@ const InvoiceDataSection: React.FC<InvoiceDataSectionProps> = ({
       notes: updatedData.notes,
       vatNumber: updatedData.vatNumber,
       goodsNumber: updatedData.goodsNumber,
+      receiptOfOrigin: updatedData.receiptOfOrigin,
     };
     
     setExtractedData(newData);
@@ -101,7 +104,8 @@ const InvoiceDataSection: React.FC<InvoiceDataSectionProps> = ({
       currency: newData.paymentMethod,    // Note: using currency instead of paymentMethod to match the expected format
       notes: newData.notes,
       vatNumber: newData.vatNumber,
-      goodsNumber: newData.goodsNumber
+      goodsNumber: newData.goodsNumber,
+      receiptOfOrigin: newData.receiptOfOrigin
     };
     
     // Update session storage with merged data
