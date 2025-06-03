@@ -164,6 +164,24 @@ const InvoiceDetails: React.FC<InvoiceDetailsProps> = ({
             />
           </div>
           
+          <div className="space-y-3 md:col-span-2">
+            <div className="flex items-center space-x-3 p-3 rounded-lg border border-gray-200 bg-gray-50/50">
+              <Checkbox
+                id="receiptOfOrigin"
+                checked={receiptOfOrigin}
+                onCheckedChange={(checked) => setReceiptOfOrigin(!!checked)}
+                disabled={!isEditing}
+                className={`h-5 w-5 ${!isEditing ? "opacity-50" : ""} data-[state=checked]:bg-green-600 data-[state=checked]:border-green-600`}
+              />
+              <Label 
+                htmlFor="receiptOfOrigin" 
+                className="text-sm font-medium text-gray-700 cursor-pointer flex-1"
+              >
+                {t('receiptOfOrigin')}
+              </Label>
+            </div>
+          </div>
+
           <div className="space-y-2 md:col-span-2">
             <Label htmlFor="notes" className="text-sm font-medium text-gray-700">Notes</Label>
             <Textarea
@@ -173,24 +191,6 @@ const InvoiceDetails: React.FC<InvoiceDetailsProps> = ({
               readOnly={!isEditing}
               className={!isEditing ? "bg-muted border-gray-200 min-h-[80px]" : "border-gray-300 focus:border-primary focus:ring-1 focus:ring-primary/30 min-h-[80px] transition-all"}
             />
-          </div>
-
-          <div className="space-y-2 md:col-span-2">
-            <div className="flex items-center space-x-2">
-              <Checkbox
-                id="receiptOfOrigin"
-                checked={receiptOfOrigin}
-                onCheckedChange={(checked) => setReceiptOfOrigin(!!checked)}
-                disabled={!isEditing}
-                className={!isEditing ? "opacity-50" : ""}
-              />
-              <Label 
-                htmlFor="receiptOfOrigin" 
-                className="text-sm font-medium text-gray-700 cursor-pointer"
-              >
-                {t('receiptOfOrigin')}
-              </Label>
-            </div>
           </div>
         </div>
       </CardContent>
