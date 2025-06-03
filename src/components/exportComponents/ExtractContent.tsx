@@ -8,17 +8,18 @@ import { useExport } from "@/hooks/useExport";
 import ExtractTabs from "./ExtractTabs";
 import BottomActionBar from "./BottomActionBar";
 import ExportDialog from "./ExportDialog";
+import { secureStorage } from "@/lib/secureStorage";
 
 const ExtractContent = () => {
+  // Use secure storage instead of direct sessionStorage access
   const [fileName, setFileName] = useState(
-    sessionStorage.getItem("pdf-file-name") || ""
+    secureStorage.getItem("pdf-file-name") || ""
   );
-  const [pdfUrl, setPdfUrl] = useState(sessionStorage.getItem("pdf-url") || "");
+  const [pdfUrl, setPdfUrl] = useState(secureStorage.getItem("pdf-url") || "");
   const [currentStep, setCurrentStep] = useState(2);
-  const [activeTab, setActiveTab] = useState<string>(
-    "invoice"
-  );
+  const [activeTab, setActiveTab] = useState<string>("invoice");
   const [completedSections, setCompletedSections] = useState<string[]>([]);
+  
   const { 
     exportDialogOpen, 
     setExportDialogOpen, 
@@ -29,14 +30,25 @@ const ExtractContent = () => {
   const { t } = useLanguage();
 
   const handlePdfSelected = (file: File) => {
+    // Validate file before processing
+    const maxSize = 10 * 1024 * 1024; // 10MB
+    if (file.size > maxSize) {
+      throw new Error('File size must be less than 10MB');
+    }
+    
+    if (file.type !== 'application/pdf') {
+      throw new Error('Only PDF files are allowed');
+    }
+
     const url = URL.createObjectURL(file);
     setPdfUrl(url);
     setFileName(file.name);
     setCurrentStep(2);
     setActiveTab("invoice");
 
-    sessionStorage.setItem("pdf-url", url);
-    sessionStorage.setItem("pdf-file-name", file.name);
+    // Store in secure storage with expiration (4 hours)
+    secureStorage.setItem("pdf-url", url, 240);
+    secureStorage.setItem("pdf-file-name", file.name, 240);
   };
 
   const handleBackToUpload = () => {
