@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import { CheckCircle } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { secureStorage } from "@/lib/secureStorage";
 
 interface InvoiceDataSectionProps {
   pdfUrl: string;
@@ -43,9 +42,8 @@ const InvoiceDataSection: React.FC<InvoiceDataSectionProps> = ({
   fileName,
   onComplete,
 }) => {
-  // Use secure storage instead of direct sessionStorage access
-  const parsedPdfData: PdfData = secureStorage.getItem("pdf-data") || {};
-  
+  const parsedPdfData: PdfData = JSON.parse(sessionStorage.getItem("pdf-data") || "{}");
+  console.log('parsedPdfData', parsedPdfData)
   const [extractedData, setExtractedData] = useState({
     invoiceNumber: parsedPdfData.invoiceNumber || "",
     invoiceDate: formatDate(parsedPdfData.invoiceDate),
@@ -92,7 +90,7 @@ const InvoiceDataSection: React.FC<InvoiceDataSectionProps> = ({
     setExtractedData(newData);
     
     // Get existing data and preserve it while updating invoice details
-    const existingData = secureStorage.getItem("pdf-data") || {};
+    const existingData = JSON.parse(sessionStorage.getItem("pdf-data") || "{}");
     const updatedPdfData = {
       ...existingData,                    // Preserve all existing data
       invoiceNumber: newData.invoiceNumber,
@@ -106,8 +104,8 @@ const InvoiceDataSection: React.FC<InvoiceDataSectionProps> = ({
       goodsNumber: newData.goodsNumber
     };
     
-    // Update secure storage with merged data (expires in 4 hours)
-    secureStorage.setItem("pdf-data", updatedPdfData, 240);
+    // Update session storage with merged data
+    sessionStorage.setItem("pdf-data", JSON.stringify(updatedPdfData));
     
     toast.success("Invoice details updated successfully");
   };
